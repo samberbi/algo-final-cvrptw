@@ -16,6 +16,18 @@ reste **15,262 %** ; 863 essais sur 1 000 sont strictement sous 7 %.
 Les quinze tests passent. Ces résultats décrivent le protocole et les temps
 cumulés publiés, sans garantie de ce seuil pour chaque exécution.
 
+## Interface web : lancer ses propres expériences
+
+Installer `requirements-web.txt`, puis lancer `python -m streamlit run web/app.py`
+depuis l'environnement Python du projet. Ouvrir http://127.0.0.1:8501.
+Le raccourci Windows `lancer_web.bat` est également disponible.
+
+L'interface permet de choisir librement les instances, graines, répétitions,
+budgets et configurations, puis affiche l'avancement, les tableaux, les gaps
+BKS, les boîtes à moustaches, la convergence, les tournées et les horaires.
+Les nouvelles campagnes sont enregistrées séparément des résultats publiés.
+Voir le [guide de l'interface](docs/INTERFACE_WEB.md).
+
 ## Installation sur un autre ordinateur
 
 Le guide [INSTALLATION_PORTABLE.md](docs/INSTALLATION_PORTABLE.md) explique

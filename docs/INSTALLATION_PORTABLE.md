@@ -54,9 +54,10 @@ nouveaux essais sans modifier ces protocoles. Les commandes `..\.venv` présente
 dans le livrable correspondent à l'ancienne arborescence : pour ce dépôt autonome,
 utiliser `.\.venv`.
 
-## Interface web envisagée
+## Interface web
 
-La prochaine étape est une interface branchée sur ce moteur pour choisir une
-instance, un budget et une graine, lancer une résolution, vérifier sa faisabilité
-et afficher les tournées, la convergence et le gap DIMACS. Elle devra distinguer
-les nouveaux essais des campagnes historiques et garder les résultats complets.
+L'interface est disponible : installer `requirements-web.txt` puis lancer
+`python -m streamlit run web/app.py` avec l'environnement du projet.
+Elle utilise notre moteur pour choisir les instances, budgets et graines,
+lancer les résolutions, vérifier leur faisabilité et afficher les tournées,
+la convergence, les statistiques et les gaps DIMACS. Voir [INTERFACE_WEB.md](INTERFACE_WEB.md).
