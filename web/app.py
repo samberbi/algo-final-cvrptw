@@ -27,20 +27,22 @@ st.markdown('''<style>
 
 st.sidebar.title('CVRPTW')
 st.sidebar.caption('LABORATOIRE D’EXPÉRIMENTATION')
-page = st.sidebar.radio('Navigation', ['Vue d’ensemble', 'Nouvelle expérience', 'Mes campagnes', 'Résultats historiques'])
+page = st.sidebar.radio('Navigation', ['Simulation', 'Vue d’ensemble', 'Nouvelle expérience', 'Mes campagnes', 'Résultats historiques'])
 st.sidebar.divider()
 st.sidebar.write('**Objectif : distance minimale**')
 st.sidebar.caption('Référence DIMACS · fenêtres strictes · capacité et flotte maximale respectées')
 st.sidebar.caption('Les calculs tournent sur cet ordinateur. Les campagnes continuent si la page est fermée.')
 
 
-@st.cache_data
 def historical(source):
+    if source.startswith('ILS / recuit'):
+        path = ROOT / 'results/revision_ils/flat.json'
+        return pd.read_json(path) if path.exists() else pd.DataFrame()
     path = ROOT / 'results/report' / ('mille_executions.csv' if source == 'Extension · 1 000 runs' else 'etude_principale_80.csv')
     df = pd.read_csv(path)
     if 'id' in df:
         df = df.rename(columns={'id': 'run'})
-    df['profile'] = 'Historique publié'
+    df['profile'] = 'Historique ALNS'
     df['valid'] = df['status'].eq('feasible') if 'status' in df else True
     if 'status' not in df:
         df['status'] = 'feasible'
@@ -108,16 +110,16 @@ def new_experiment():
     with st.form('campaign_form'):
         name = st.text_input('Nom de l’expérience', 'Ma campagne CVRPTW')
         a, b, c = st.columns(3)
-        seconds = a.number_input('Secondes ALNS par run', min_value=.1, max_value=3600., value=5., step=1.)
+        seconds = a.number_input('Secondes de recherche par run', min_value=.1, max_value=3600., value=5., step=1.)
         repetitions = b.number_input('Répétitions par instance et configuration', min_value=1, max_value=1000, value=3)
         first_seed = c.number_input('Première graine', min_value=0, max_value=2147482647, value=11)
         custom = st.text_input('Graines manuelles (facultatif)', placeholder='11, 22, 33')
-        profiles = st.multiselect('Configurations à comparer', list(PROFILES), default=['ALNS complet'])
+        profiles = st.multiselect('Configurations à comparer', list(PROFILES), default=['ILS'])
         polish = st.number_input('Secondes supplémentaires de décomposition par run (0 = désactivée)',
                                  min_value=0., max_value=3600., value=0., step=1.)
-        st.caption('Sans adaptation / sans recherche locale / sans recuit : ablations de notre moteur. '
-                   'La décomposition est une phase distincte utilisant son propre ALNS complet, '
-                   'identique pour toutes les configurations sélectionnées.')
+        st.caption('ILS : perturbation et recherche locale. Recuit : mouvements directs et refroidissement. '
+                   'La décomposition facultative ajoute une phase ILS et un budget distinct ; '
+                   'elle est désactivée dans le benchmark principal publié.')
         submitted = st.form_submit_button('Lancer la campagne', type='primary')
     try:
         seeds = [int(s.strip()) for s in custom.split(',') if s.strip()] if custom.strip() else list(range(int(first_seed), int(first_seed + repetitions)))
@@ -165,6 +167,10 @@ def run_details(items, key):
     d.metric('Véhicules', f"{checked['vehicles']} / {ins.vehicles} max")
     st.plotly_chart(charts.convergence(result, item['reference_distance']), width='stretch', key=key + '_trace')
     st.plotly_chart(charts.routes_map(ins, result['routes']), width='stretch', key=key + '_map')
+    with st.expander('Simuler cette tournée · camions animés'):
+        from web.simulation import timeline, simulation_html
+        import streamlit.components.v1 as components
+        components.html(simulation_html(timeline(ins, result['routes'])), height=850, scrolling=True)
     schedules = charts.schedule_frame(ins, checked, result['routes'])
     if not schedules.empty:
         st.plotly_chart(charts.gantt(schedules), width='stretch', key=key + '_gantt')
@@ -223,8 +229,11 @@ def campaigns():
 
 def history():
     st.title('Résultats historiques')
-    source = st.selectbox('Campagne publiée', ['Extension · 1 000 runs', 'Étude principale · 80 runs'])
+    source = st.selectbox('Campagne publiée', ['ILS / recuit · 1 120 runs', 'Étude principale · 80 runs', 'Extension · 1 000 runs'])
     data = historical(source)
+    if data.empty:
+        st.info('La synthèse de la nouvelle campagne sera disponible à la fin du calcul. Les runs terminés sont déjà simulables.')
+        return
     sizes = st.multiselect('Tailles à afficher', sorted(data.n.unique().tolist()), default=sorted(data.n.unique().tolist()))
     choices = sorted(data[data.n.isin(sizes)].instance.unique())
     names = st.multiselect('Instances (vide = toutes les instances des tailles choisies)', choices)
@@ -236,7 +245,77 @@ def history():
     analysis(filtered, 'historical')
 
 
-if page == 'Nouvelle expérience':
+def simulation_page():
+    import streamlit.components.v1 as components
+    from algo.data import load
+    from web.simulation import timeline, simulation_html
+
+    st.title('Simulation des livraisons')
+    st.write('Suis les camions sur leurs tournées : déplacements, attente avant ouverture, service et retour au dépôt.')
+    source = st.radio('Solution à simuler', ['ILS / recuit · nouvelle étude', 'Historique ALNS · 80 runs', 'Mes campagnes'], horizontal=True)
+    if source == 'Mes campagnes':
+        ids = list_campaigns()
+        if not ids:
+            st.info('Aucune campagne locale. La simulation est déjà disponible avec les résultats de l’étude principale.')
+            return
+        identifier = st.selectbox('Campagne à simuler', ids,
+                                  format_func=lambda x: read_json(campaign_path(x) / 'protocol.json')['name'] + ' · ' + x)
+        candidates = [dict(name=x['job']['instance'], seed=x['job']['seed'],
+                           profile=x['job']['profile'], routes=x['result']['routes'],
+                           id=x['job']['id'], result=x['result'], reference=x['reference_distance'])
+                      for x in records(identifier) if x.get('valid')]
+    elif source.startswith('ILS / recuit') and (ROOT/'results/revision_ils/simulation_index.json').exists():
+        candidates = read_json(ROOT/'results/revision_ils/simulation_index.json')
+    else:
+        candidates = []
+        folder = 'results/revision_ils/runs' if source.startswith('ILS / recuit') else 'results/focused/runs'
+        for path in sorted((ROOT / folder).glob('*.json')):
+            item = read_json(path)
+            if item['result']['status'] == 'feasible':
+                candidates.append(dict(name=item['job']['instance'], seed=item['job']['seed'],
+                                       profile=item['job'].get('profile', 'Historique ALNS'), routes=item['result']['routes'], id=item['job']['id'],
+                                       result=item['result'], reference=item['job']['reference_distance']))
+    if not candidates:
+        st.info('Aucune solution réalisable terminée à simuler dans cette campagne.')
+        return
+    left, right = st.columns(2)
+    name = left.selectbox('Instance à simuler', sorted({c['name'] for c in candidates}))
+    choices = [c for c in candidates if c['name'] == name]
+    selected = right.selectbox('Run à simuler', range(len(choices)),
+                               format_func=lambda i: f"Graine {choices[i]['seed']} · {choices[i]['profile']} · #{choices[i]['id']}")
+    item = choices[selected]
+    if 'file' in item:
+        stored = read_json(ROOT/'results/revision_ils/runs'/item['file'])
+        item = dict(item, routes=stored['result']['routes'], result=stored['result'],
+                    reference=stored['reference_distance'])
+    ins = load(ROOT / 'data/instances' / (name + '.vrp'))
+    try:
+        data = timeline(ins, item['routes'])
+    except ValueError as exc:
+        st.error(str(exc))
+        return
+    a, b, c = st.columns(3)
+    a.metric('Clients', data['clients'])
+    b.metric('Camions', len(data['vehicles']))
+    c.metric('Distance de la solution', f"{data['distance']:.1f}")
+    from web.constraint_views import controls, graphs, method
+    animation, audit, figures, explanation = st.tabs(['Simulation et contrôles en direct', 'Vérifier toutes les contraintes',
+                                                      'Graphiques du run', 'Schémas et méthode'])
+    with animation:
+        components.html(simulation_html(data), height=1150, scrolling=True)
+        st.caption('La simulation rejoue une solution vérifiée : elle ne relance pas l’optimisation. '
+                   'Les temps sont ceux du benchmark ; les trajets relient ses coordonnées, sans trafic variable.')
+    with audit:
+        controls(data)
+    with figures:
+        graphs(ins, data, item['result'], item['reference'])
+    with explanation:
+        method(ROOT)
+
+
+if page == 'Simulation':
+    simulation_page()
+elif page == 'Nouvelle expérience':
     new_experiment()
 elif page == 'Mes campagnes':
     campaigns()
@@ -245,13 +324,20 @@ elif page == 'Résultats historiques':
 else:
     st.title('Le laboratoire CVRPTW')
     st.write('Lance tes propres expériences, vérifie les solutions et explore leurs résultats.')
-    st.subheader('Campagne de couverture · 356 instances')
-    display_metrics(historical('Extension · 1 000 runs'))
-    st.info('Ces chiffres proviennent de la campagne historique de 1 000 runs. '
-            'Tes nouvelles expériences sont enregistrées séparément dans « Mes campagnes ».')
+    st.subheader('ILS contre recuit · 28 instances · 20 graines')
+    display_metrics(historical('ILS / recuit · 1 120 runs'), 1120)
+    st.info('La comparaison principale utilise les mêmes solutions initiales et budgets par paire. '
+            'Les anciennes campagnes ALNS restent disponibles dans « Résultats historiques ».')
+    for filename, caption in [('convergence_100.png', 'À 100 clients : gap moyen au fil du calcul ; bande interquartile, pas un intervalle de confiance.'),
+                              ('convergence_1000.png', 'À 1 000 clients : même lecture, avec un budget de 25 secondes.'),
+                              ('sensitivity.png', 'Sensibilité exploratoire : six instances de développement et trois graines par variante.')]:
+        path = ROOT / 'livraison/ils_figures' / filename
+        if path.exists():
+            st.image(str(path), width='stretch')
+            st.caption(caption)
     a, b, c = st.columns(3)
     a.markdown('### 01 · Configurer\nChoisis des instances de 100 à 1 000 clients, tes graines et ton budget de recherche.')
-    b.markdown('### 02 · Exécuter\nLe moteur ALNS calcule et le vérificateur contrôle chaque solution avant tout gap.')
+    b.markdown('### 02 · Exécuter\nLe moteur ILS ou recuit calcule et le vérificateur contrôle chaque solution avant tout gap.')
     c.markdown('### 03 · Comprendre\nCompare les statistiques, explore les tournées et exporte les tableaux et résultats bruts.')
     st.subheader('Comment lire le gap ?')
     st.latex(r'\mathrm{gap}(\%) = 100\,\frac{D_{\mathrm{solution}}-D_{\mathrm{BKS}}}{D_{\mathrm{BKS}}}')

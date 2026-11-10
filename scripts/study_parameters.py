@@ -1,3 +1,4 @@
+# HISTORICAL ALNS experiment: never pool with results/revision_ils.
 """Post-fixed sensitivity study: never change the frozen 1,000-run profile."""
 from pathlib import Path
 import sys
@@ -5,7 +6,7 @@ ROOT=Path(__file__).resolve().parents[1];sys.path.insert(0,str(ROOT))
 from dataclasses import replace,asdict
 import json,random,psutil
 from algo.data import load,reference
-from algo.solver import Settings,solve,warmup
+from algo.legacy_alns import Settings,solve,warmup
 
 
 def main():

@@ -1,0 +1,4 @@
+-r requirements-lock.txt
+# Optional COM adapter for Windows with Microsoft Word installed.
+# The local Anaconda build used for export was 305.1; public wheels start at 306.
+pywin32>=306,<313; sys_platform == "win32"

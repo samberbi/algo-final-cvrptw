@@ -1,120 +1,44 @@
-# Comprendre et présenter le projet
+# Guide oral — CVRPTW, ILS contre recuit simulé
 
-## Le message principal
+## Trame indicative pour huit à dix minutes
 
-Nous organisons des livraisons sous contraintes de capacité et d'horaires.
-Notre moteur construit une solution réalisable, puis améliore sa distance.
-Le nombre de camions ne doit pas dépasser la limite du fichier. Nous n'imposons
-pas de priorité à la diminution de ce nombre dans le benchmark DIMACS.
+1. **Contexte et objectif.** Organiser des livraisons en réduisant la distance, sous capacité, fenêtres de début de service, flotte maximale et retour au dépôt. Le contexte durable ne permet pas de transformer nos unités abstraites en kilogrammes de CO₂.
+2. **Modèle.** Définir C, les véhicules, les arcs et les variables. Montrer C1 pour l'unicité, C4 pour la capacité, C5–C7 pour les horaires et C8 contre les cycles isolés. Lire les quantificateurs : « pour chaque client appartenant à C et chaque véhicule appartenant à l'ensemble des véhicules ». Le PLNE fixe les règles ; il n'est pas le constructeur des métaheuristiques.
+3. **Choix de l'ILS.** Le constructeur regret-2 donne un départ. Une perturbation modifie plusieurs positions par mouvements réalisables ; la recherche locale cherche ensuite des gains ; la règle de tolérance décide de la poursuite ; l'archive garde le record. Les voisinages sont fixes. La recherche locale est bornée, sans preuve d'optimum local complet.
+4. **Comparateur recuit.** Même départ et mêmes contraintes, propositions directes. Toute amélioration est acceptée ; une hausse peut l'être selon exp(-delta/T). La température diminue avec le temps consommé. L'archive protège le meilleur résultat et aucune température n'autorise un retard.
+5. **Résultats.** 28 instances, vingt graines et deux méthodes donnent 1 120 essais. ILS : gap moyen 1.199 %, pire 10.768 %, 539/560 sous 7 %. Recuit : moyenne 1.798 %, pire 25.748 %. Montrer aussi les lignes à 1 000 clients et les cas où le recuit est meilleur ; ne pas s'arrêter à la moyenne globale.
+6. **Convergence et sensibilité.** La ligne représente une moyenne d'archives et la bande les quartiles, pas un intervalle de confiance. Commenter les gains tardifs. Sans recherche locale, le gap ILS atteint environ 8,38 % sur le lot exploratoire, contre 0,95 % avec elle. Huit perturbations ne sont pas automatiquement meilleures qu'une ou quatre à temps fixé.
+7. **Validation et limites.** Dix petits PLNE, neuf optimalités certifiées et une limite de temps. Les grandes références sont des BKS compatibles, pas toutes des optimums prouvés. Ressources partagées, lot connu, seulement deux grandes instances et budgets imposés limitent la généralisation. Conclure par des améliorations à tester.
 
-Le rapport et ses tableaux donnent les valeurs mesurées. Les chiffres ne
-doivent pas être remplacés par le meilleur résultat trouvé après plusieurs essais.
+## Démonstration
 
-## Déroulé conseillé
+L'étude supplémentaire à 50 000 propositions donne, pour l'ILS, environ 0,125 s à 100 clients, 0,187 s à 200 et 1,676 s à 1 000. Ces moyennes concernent six essais par taille ; les évaluations internes de recherche locale ne sont pas comptées comme des propositions. Elles montrent une augmentation observée sur ce lot, sans prouver une loi asymptotique ni une vitesse universelle.
 
-1. Présenter les clients, les demandes et les fenêtres, puis la liste de tournées.
-2. Utiliser l'exemple à deux clients pour distinguer trajet, attente et service.
-3. Expliquer une itération : retrait, réparation, recherche locale, décision.
-4. Montrer les statistiques globales et le tableau par taille.
-5. Commenter un cas difficile, son historique et les limites observées.
-6. Exécuter un petit cas dans le Notebook ou la CLI.
+Avant la soutenance, lancer le serveur et ouvrir http://127.0.0.1:8501. Les résultats sauvegardés sont disponibles sans relancer le benchmark.
 
-## Pourquoi une ALNS ?
+```powershell
+.\.venv\Scripts\python.exe cli.py C101 --method ils --seconds 2 --seed 101
+.\.venv\Scripts\python.exe -m streamlit run web/app.py
+```
 
-Les fenêtres et les capacités lient les décisions. Un client ne peut pas être
-placé partout. Retirer plusieurs clients permet de revoir des affectations que
-ne change pas un échange isolé. La réparation reconstruit une solution complète.
-L'adaptation favorise progressivement les retraits qui ont apporté des résultats.
+Dans **Simulation**, sélectionner la nouvelle étude, une instance et un run ; lancer Lecture, mettre Pause et changer la vitesse. Ouvrir **Vérifier toutes les contraintes** : couverture unique, charge ≤ capacité, début du service dans la fenêtre et retour ≤ fermeture. Dans les graphiques, une arrivée avant ouverture entraîne de l'attente ; la fin du service peut dépasser la fermeture client. Expliquer ensuite une courbe de convergence de la Vue d'ensemble. L'horloge de livraison n'est pas l'horloge de calcul du solveur.
 
-L'ALNS est une méthode de recherche, pas une preuve d'optimalité. Un budget
-fini signifie que nous conservons le meilleur résultat observé jusqu'à l'arrêt.
+## Réponses aux questions probables
 
-## Pourquoi regret-2 et regret-3 ?
+**Qui produit la première solution ?** Le constructeur regret-2, essayé douze fois. Le PLNE sert aux petites comparaisons exactes et n'est pas appelé pour initialiser le benchmark principal.
 
-Nous considérons les meilleures possibilités dans des tournées distinctes.
-Un client coûtant 4 dans une tournée et 20 dans une autre perdrait beaucoup
-si sa meilleure place disparaissait. Son regret est 16. Un client coûtant 5
-ou 7 a davantage de souplesse : son regret est seulement 2.
+**Est-ce toujours de l'ALNS renommé ?** Non. Les cycles ILS et recuit utilisent des mouvements directs sur des tournées complètes. Le mécanisme de retrait/réparation n'est pas appelé pendant la recherche ; un test le vérifie. L'insertion regret-2 sert uniquement à construire le départ.
 
-Le regret donne une priorité d'insertion, pas la certitude d'une décision
-globalement optimale. Les clients sans insertion possible font échouer la
-réparation ; ils ne sont pas supprimés de la liste des livraisons à réaliser.
+**Pourquoi l'ILS plutôt qu'une méthode déjà prise ?** Elle réutilise des voisins vérifiables et associe perturbation et amélioration locale dans une structure explicable. Le choix doit être défendu par nos résultats, pas par une promesse de supériorité universelle.
 
-## Pourquoi accepter un résultat moins bon ?
+**Pourquoi vingt runs ?** Pour observer une variabilité aléatoire plus solidement qu'avec quelques essais, à un coût de calcul raisonnable. Ce nombre est notre choix, pas une obligation écrite du sujet. Plusieurs graines ne remplacent pas plusieurs instances.
 
-La solution courante peut être coincée dans un minimum local. Le recuit accepte
-certaines augmentations de distance pour explorer un autre secteur. La probabilité
-est exp(-delta/T) : plus la dégradation est forte ou la température basse,
-moins elle est probable. La meilleure solution reste conservée séparément.
+**Le gap est-il à l'optimum ?** Sur les petits cas certifiés, oui. Pour le benchmark principal, il est calculé par rapport à la meilleure référence connue figée, avec la même troncature DIMACS. Un gap nul ne constitue pas, seul, une preuve d'optimalité.
 
-La température n'a aucun rapport avec celle du camion. Elle règle la tolérance
-de la recherche aux détours temporaires. Les retards de livraison restent interdits.
+**Peut-on annoncer que tous les cas passent sous 7 % ?** Non : citer le nombre exact sous le seuil et le pire résultat. Une moyenne faible ne masque pas un mauvais run.
 
-## Pourquoi ne pas minimiser les véhicules d'abord ?
+**La courbe plate prouve-t-elle la convergence vers l'optimum ?** Non. Elle montre seulement que l'archive n'a plus été améliorée dans le temps observé. Le tableau du gain des derniers 20 % complète cette lecture.
 
-Le critère de référence choisi ici est la distance totale, avec une limite
-maximale de véhicules. Ce choix correspond aux BKS du dossier VRPTW de
-PyVRP/Instances. Ajouter un coût fixe de camion changerait le problème.
-Nous publions néanmoins le nombre utilisé, car il reste utile pour comprendre
-les solutions et contrôler leur faisabilité.
+**Le temps augmente-t-il avec la taille ?** Nos budgets sont imposés et changent avec la taille ; ces temps ne démontrent pas une loi de complexité. Les matrices sont quadratiques en mémoire et l'évaluation d'une tournée est linéaire en sa longueur.
 
-## Pourquoi tronquer les distances ?
-
-Le benchmark DIMACS définit chaque arc par une troncature à une décimale.
-Nous appliquons cette convention avant la recherche, également aux trajets.
-Changer de précision peut changer les horaires réalisables et les BKS.
-Il faut donc comparer un résultat et une référence calculés selon les mêmes règles.
-
-## Que signifie un gap de 3 % ?
-
-Pour cette exécution et cette référence, la distance trouvée dépasse la BKS de
-3 %. Si la référence vaut 1 000, une distance de 1 030 donne 3 %.
-La moyenne porte sur des pourcentages par exécution, pas sur un rapport de
-sommes de distances. Le pire gap et les effectifs complètent cette moyenne.
-
-Une BKS est une meilleure solution publiée, pas nécessairement un optimum
-démontré. Un gap nul signifie égalité de coût avec cette référence.
-
-## Que prouvent les mille exécutions ?
-
-Elles couvrent les 356 problèmes VRPTW de la révision retenue, avec deux ou
-trois graines chacun. Une graine change les décisions aléatoires ; elle ne crée
-pas un nouveau problème géographique. Les répétitions renseignent la dispersion,
-mais restent peu nombreuses pour estimer un événement rare sur chaque instance.
-
-Les budgets varient selon la taille. Le graphe des temps ne démontre donc pas
-une loi pure du temps de calcul en fonction du nombre de clients. La mémoire
-des matrices denses augmente quadratiquement.
-
-Après un pilote apparié sur six cas difficiles connus, les trajectoires d'au
-moins 400 clients reçoivent cinq secondes de recherche par groupes de tournées.
-Les cas de 1 000 clients reçoivent une seconde passe de cinq secondes ; leur
-budget cumulé est de 25 secondes.
-Nous conservons les états avant et après et indiquons le temps cumulé. Ce ne
-sont pas de nouveaux problèmes ni des répétitions indépendantes supplémentaires.
-L'ajout décidé après observation est une amélioration exploratoire déclarée,
-pas une validation entièrement aveugle.
-
-## Quelles limites annoncer ?
-
-Les données ne modélisent pas le trafic variable, une flotte hétérogène ou
-plusieurs dépôts. Le faible gap moyen ne garantit pas un seuil sur chaque
-recherche. Les grands cas peuvent nécessiter davantage de temps ou une meilleure
-réparation. Les quatre processus partagent les ressources physiques de la machine.
-
-La comparaison en durée reste une expérience séparée, sans BKS optimale en durée.
-L'étude ne chiffre aucune économie réelle d'émissions.
-
-## Courte introduction en anglais
-
-Our project addresses vehicle routing with capacity constraints and strict time
-windows. We developed an adaptive large neighbourhood search that removes and
-reinserts customers while preserving feasibility. Simulated annealing allows
-temporary increases in distance, and a separate archive keeps the best solution.
-For benchmarking, we minimise total distance under the DIMACS convention and
-the fleet limit provided by each instance. We validate routes independently
-and report all runs, including difficult cases. The campaign covers 356 public
-instances through one thousand runs with fixed seeds and declared time budgets.
-The average gap, worst gap, feasibility rate and runtime must be read together.
-We also study route duration separately because waiting time can change the
-ranking of solutions.
+**Pourquoi ne pas afficher de gap pour une capacité modifiée ?** La référence de l'instance originale ne résout plus le même problème. On compare succès, distances, attentes et variations appariées sans inventer une BKS.

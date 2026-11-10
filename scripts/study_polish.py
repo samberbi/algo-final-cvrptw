@@ -1,10 +1,11 @@
+# HISTORICAL ALNS experiment: never pool with results/revision_ils.
 """Equal-time paired pilot on six observed difficult large trajectories."""
 from pathlib import Path
 import sys
 ROOT=Path(__file__).resolve().parents[1];sys.path.insert(0,str(ROOT))
 import json,hashlib,psutil
 from algo.data import load
-from algo.solver import solve,Settings,warmup
+from algo.legacy_alns import solve,Settings,warmup
 from ameliorations.decomposition import polish
 
 

@@ -1,3 +1,4 @@
+# HISTORICAL ALNS experiment: never pool with results/revision_ils.
 """Second fixed five-second pass on every 1,000-client trajectory only.
 
 Triggered by size, never by a BKS threshold. Previous states stay immutable.
@@ -8,7 +9,7 @@ for variable in ['OMP_NUM_THREADS','OPENBLAS_NUM_THREADS','MKL_NUM_THREADS','NUM
 ROOT=Path(__file__).resolve().parents[1];sys.path.insert(0,str(ROOT))
 import concurrent.futures as cf,multiprocessing as mp,psutil,json,time,hashlib
 from algo.data import load
-from algo.solver import warmup
+from algo.legacy_alns import warmup
 from algo.verify import verify
 from ameliorations.decomposition import polish
 

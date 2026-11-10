@@ -1,3 +1,4 @@
+# HISTORICAL ALNS experiment: never pool with results/revision_ils.
 """Exactly 1,000 predeclared fresh solves across all 356 DIMACS instances.
 
 Four single-threaded workers have separate CPU affinities. This is a new
@@ -13,7 +14,7 @@ ROOT=Path(__file__).resolve().parents[1];sys.path.insert(0,str(ROOT))
 import hashlib,json,multiprocessing as mp,random,time,traceback
 import psutil
 from algo.data import load
-from algo.solver import Settings,solve,warmup
+from algo.legacy_alns import Settings,solve,warmup
 from algo.verify import verify
 
 

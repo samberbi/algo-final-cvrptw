@@ -1,98 +1,15 @@
-# Interface web du laboratoire CVRPTW
+# Interface web et simulation
 
-L'interface utilise notre moteur Python, sans changer le code des campagnes
-publiées. Elle fonctionne localement dans le navigateur ; GitHub héberge le code,
-pas le serveur de calcul.
+Lancer `.\.venv\Scripts\python.exe -m streamlit run web/app.py`, puis ouvrir http://127.0.0.1:8501.
 
-## Installer et lancer
+La page **Simulation** propose les solutions de la nouvelle étude ILS/recuit, les anciennes solutions ALNS clairement étiquetées et les campagnes locales. Choisir une instance et un run, puis **Lecture**. Les commandes permettent de mettre en pause, changer la vitesse, revenir au début et déplacer l'horloge. Les camions roulent, attendent l'ouverture, servent puis reviennent au dépôt.
 
-Depuis le dossier cloné, avec Python 3.12 :
+L'onglet **Vérifier toutes les contraintes** contrôle la couverture unique des clients, chaque fenêtre, la charge de chaque camion, la flotte et les retours. Une arrivée avant ouverture est autorisée avec attente ; le début du service doit être dans la fenêtre, pas nécessairement sa fin. La charge de livraison décroît après le service. Les contrôles portent à la fois sur le plan complet et sur la progression animée.
 
-```powershell
-py -3.12 -m venv .venv
-.\.venv\Scripts\python.exe -m pip install -r requirements-web.txt
-.\.venv\Scripts\python.exe -m streamlit run web/app.py
-```
+**Graphiques du run** montre fenêtres et débuts de service, charge restante, retours, décomposition trajet/attente/service et convergence. Chaque graphique est expliqué. **Schémas et méthode** décrit ILS, recuit et voisins. La **Vue d'ensemble** donne les courbes agrégées de convergence et la sensibilité. **Résultats historiques** permet de sélectionner la nouvelle comparaison ou une ancienne campagne ALNS ; leurs statistiques restent séparées.
 
-Ouvrir **http://127.0.0.1:8501**. Le raccourci `lancer_web.bat` démarre
-également l'application avec l'environnement du projet ou celui du dossier parent.
+**Nouvelle expérience** propose ILS et recuit sur une ou plusieurs instances, avec répétitions, graines et budget. Le budget local commence à l'entrée du solveur et inclut la construction ; le préchauffage et le chargement sont hors budget. La décomposition facultative ajoute une phase ILS et un budget distinct : elle n'est pas utilisée dans le benchmark principal. Les campagnes locales sont séquentielles. Les résultats restent sur cet ordinateur et la fermeture du navigateur ne les arrête pas.
 
-## Créer une expérience
+La comparaison publiée utilise un protocole plus contrôlé : départ commun calculé une seule fois par paire, puis même budget d'amélioration pour les deux méthodes. Elle est reproduite par `scripts/run_ils_benchmark.py`, et non en mélangeant les campagnes locales.
 
-1. Ouvrir **Nouvelle expérience**.
-2. Filtrer les tailles et familles, puis choisir une ou plusieurs instances,
-   ou toutes les instances du filtre.
-3. Choisir le budget ALNS par run, le nombre de répétitions et la première graine.
-   Les graines automatiques sont consécutives. Une liste manuelle remplace ce choix.
-4. Choisir une ou plusieurs configurations : ALNS complet, sans adaptation,
-   sans recherche locale ou sans recuit.
-5. Facultativement ajouter un budget de décomposition par run. Cette phase
-   utilise son propre ALNS complet ; les ablations désactivent les mécanismes
-   uniquement dans la première phase.
-6. Cliquer sur **Lancer la campagne**, puis aller dans **Mes campagnes**.
-
-Exemple : deux instances, vingt graines et deux configurations produisent
-80 résolutions. Les configurations partagent les mêmes instances, graines et
-budgets. Les runs sont séquentiels ; une campagne active bloque un nouveau
-lancement depuis l'interface pour limiter la concurrence entre calculs.
-
-Le budget nominal ne comprend pas le chargement, le préchauffage Numba ni
-l'affichage. Une opération atomique peut dépasser légèrement le budget.
-Le préchauffage initial peut être long sur un nouvel ordinateur.
-
-## Suivre et comprendre
-
-L'avancement s'actualise toutes les trois secondes. Les résultats et graphiques
-sont disponibles après chaque run terminé ; la courbe d'un run en cours n'est
-pas diffusée en direct. Fermer le navigateur ou le serveur Streamlit ne termine
-pas le processus de campagne. Éteindre l'ordinateur l'interrompt ; les runs
-déjà terminés restent disponibles. La reprise d'un run interrompu n'est pas
-automatique : créer une nouvelle campagne pour les essais manquants.
-
-Le bouton d'arrêt laisse finir le run en cours, puis arrête la campagne.
-Les erreurs sont conservées avec leur cause et ne reçoivent pas de gap fictif.
-
-Pour chaque run réalisable, un vérificateur indépendant contrôle les clients,
-la capacité, les fenêtres, le retour au dépôt et la flotte maximale. La BKS
-n'est utilisée qu'après la résolution pour calculer le gap de distance DIMACS.
-
-Les écrans affichent les gaps moyens, médians, extrêmes et écarts-types,
-les nombres de solutions réalisables et sous les seuils, les boîtes à
-moustaches et les temps de calcul. Un run peut être exploré avec sa carte,
-sa convergence et son Gantt. Les unités temporelles et de distance internes
-sont divisées par dix pour l'affichage. Les axes cartographiques sont des
-coordonnées de benchmark, pas une carte routière.
-
-La moyenne des gaps concerne les runs réalisables avec référence, et le
-dénominateur est toujours indiqué. Un seul run ne définit pas d'écart-type.
-La moyenne pondérée par run peut différer d'une moyenne donnant le même poids
-à chaque instance quand leurs nombres de répétitions diffèrent.
-
-## Conserver et exporter
-
-- Les nouvelles campagnes sont dans `results/local/web/<identifiant>/`.
-- `protocol.json` contient les paramètres, graines et empreintes des sources.
-- `runs/*.json` conserve les solutions, contrôles, traces et erreurs.
-- `progress.json` contient l'état et `worker.log` le journal du processus.
-- Les boutons permettent d'exporter les runs et statistiques en CSV et un run
-  complet en JSON. Les graphiques Plotly offrent leur téléchargement en image.
-
-Les campagnes historiques de 1 000 et 80 runs restent séparées, disponibles
-dans **Résultats historiques**. Les filtres indiquent le périmètre affiché.
-Les nouveaux calculs locaux sont ignorés par Git : pour les transférer sur un
-autre ordinateur, copier leur dossier ou conserver les exports. Un `git push`
-du code ne transfère pas automatiquement ces expériences locales.
-
-## Vérifier l'application
-
-```powershell
-.\.venv\Scripts\python.exe -m pytest tests
-```
-
-Les tests web nécessitent `requirements-web.txt` ; ils couvrent des résolutions
-réelles via le processus détaché, la validation des paramètres, l'arrêt,
-l'enregistrement d'erreurs et la navigation Streamlit.
-
-L'application écoute uniquement sur la boucle locale et n'a pas de système
-de comptes. Une publication multi-utilisateur nécessiterait une authentification,
-une file de travaux et des limites de ressources adaptées.
+La simulation rejoue des horaires fixes et vérifiés sur les coordonnées du benchmark. Elle ne simule pas le trafic réel, les pannes ou des demandes dynamiques. L'animation n'est pas une visualisation des itérations du solveur.

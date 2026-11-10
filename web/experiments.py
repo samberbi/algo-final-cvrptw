@@ -10,6 +10,7 @@ import os
 import re
 import subprocess
 import sys
+import time
 import uuid
 
 import pandas as pd
@@ -18,10 +19,8 @@ import psutil
 ROOT = Path(__file__).resolve().parents[1]
 STORE = ROOT / 'results' / 'local' / 'web'
 PROFILES = {
-    'ALNS complet': {},
-    'Sans adaptation': {'adaptive': False},
-    'Sans recherche locale': {'local_search': False},
-    'Sans recuit': {'annealing': False},
+    'ILS': {'method': 'ils'},
+    'Recuit simulé': {'method': 'sa'},
 }
 
 
@@ -30,7 +29,14 @@ def now():
 
 
 def read_json(path):
-    return json.loads(Path(path).read_text(encoding='utf-8'))
+    for attempt in range(6):
+        try:
+            return json.loads(Path(path).read_text(encoding='utf-8'))
+        except PermissionError:
+            # A concurrent replacement can briefly deny a reader on Windows.
+            if attempt == 5:
+                raise
+            time.sleep(.01 * 2**attempt)
 
 
 def atomic_json(path, data):
@@ -38,7 +44,18 @@ def atomic_json(path, data):
     path.parent.mkdir(parents=True, exist_ok=True)
     temporary = path.with_name(path.name + '.' + uuid.uuid4().hex + '.tmp')
     temporary.write_text(json.dumps(data, ensure_ascii=False, allow_nan=False), encoding='utf-8')
-    os.replace(temporary, path)
+    try:
+        for attempt in range(6):
+            try:
+                os.replace(temporary, path)
+                return
+            except PermissionError:
+                # Windows can briefly lock the destination while the UI reads it.
+                if attempt == 5:
+                    raise
+                time.sleep(.01 * 2**attempt)
+    finally:
+        temporary.unlink(missing_ok=True)
 
 
 def catalog():
@@ -61,7 +78,7 @@ def make_protocol(instances, seeds, seconds, profiles, polish_seconds=0, name='E
     if not profiles or not set(profiles) <= PROFILES.keys() or len(profiles) != len(set(profiles)):
         raise ValueError('Configuration inconnue ou dupliquée')
     if not math.isfinite(seconds) or not .05 <= seconds <= 3600:
-        raise ValueError('Budget ALNS entre 0,05 et 3 600 secondes')
+        raise ValueError('Budget de recherche entre 0,05 et 3 600 secondes')
     if not math.isfinite(polish_seconds) or not 0 <= polish_seconds <= 3600:
         raise ValueError('Budget de décomposition entre 0 et 3 600 secondes')
     count = len(instances) * len(seeds) * len(profiles)

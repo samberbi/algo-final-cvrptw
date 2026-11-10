@@ -11,7 +11,8 @@ def main():
     p.add_argument('instance',help='Nom fourni, par exemple R202 ou R1_10_1, ou chemin .vrp')
     p.add_argument('--seconds',type=float,default=10.)
     p.add_argument('--seed',type=int,default=11)
-    p.add_argument('--objective',choices=['distance','duration'],default='distance')
+    p.add_argument('--method', choices=['ils','sa'], default='ils')
+    p.add_argument('--objective',choices=['distance'],default='distance')
     p.add_argument('--intensify',action='store_true',help='Ajoute cinq secondes dès 400 clients et une seconde passe à 1 000')
     p.add_argument('--output',default='results/solution.json')
     a=p.parse_args();root=Path(__file__).resolve().parent
@@ -19,13 +20,7 @@ def main():
     path=Path(a.instance)
     if not path.is_file():path=root/'data/instances'/(a.instance+'.vrp')
     ins=load(path);startup=warmup()
-    if a.objective=='distance':result=solve(ins,Settings(seconds=a.seconds,seed=a.seed))
-    else:
-        from metier.solver import solve as business,Settings as BusinessSettings
-        from algo.model import Objective
-        result=business(ins,BusinessSettings(objective=Objective.DURATION,time_limit=a.seconds),a.seed)
-        if result['status']=='feasible':
-            check=verify(result['routes'],ins);result['cost']=check['duration']/10
+    result=solve(ins,Settings(seconds=a.seconds,seed=a.seed,method=a.method))
     if a.intensify and ins.n>=400 and result['status']=='feasible':
         from ameliorations.decomposition import polish
         result['stages']=[]

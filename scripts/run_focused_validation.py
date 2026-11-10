@@ -1,3 +1,4 @@
+# HISTORICAL ALNS experiment: never pool with results/revision_ils.
 """Fresh 80-run study fixed by instance identifiers, with full coverage separate.
 
 Known instances: this is a new repeated measurement, not an unseen test set.
@@ -11,7 +12,7 @@ import sys
 ROOT=Path(__file__).resolve().parents[1];sys.path.insert(0,str(ROOT))
 import json,hashlib,time,multiprocessing as mp,psutil,traceback
 from algo.data import load
-from algo.solver import solve,Settings,warmup
+from algo.legacy_alns import solve,Settings,warmup
 from algo.verify import verify
 from ameliorations.decomposition import polish
 

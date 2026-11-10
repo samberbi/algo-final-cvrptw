@@ -4,6 +4,7 @@ venv/
 .tools/
 .vscode/
 .idea/
+anaconda_projects/
 __pycache__/
 *.py[cod]
 *.nbc
@@ -23,6 +24,8 @@ htmlcov/
 # Sorties temporaires ; les campagnes publiées restent versionnées
 *.tmp
 *.log
+!results/revision_ils/tests.log
+!results/revision_ils/final_tests.log
 results/solution.json
 results/local/
 Thumbs.db

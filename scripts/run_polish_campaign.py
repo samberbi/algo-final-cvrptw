@@ -1,3 +1,4 @@
+# HISTORICAL ALNS experiment: never pool with results/revision_ils.
 """Five-second post-hoc intensification on every >=400-client trajectory.
 
 The original 1,000 attempts remain immutable. Derived files retain the base
@@ -8,7 +9,7 @@ import sys
 ROOT=Path(__file__).resolve().parents[1];sys.path.insert(0,str(ROOT))
 import concurrent.futures as cf,multiprocessing as mp,psutil,json,time,os,hashlib
 from algo.data import load
-from algo.solver import warmup
+from algo.legacy_alns import warmup
 from algo.verify import verify
 from ameliorations.decomposition import polish
 

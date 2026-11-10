@@ -8,7 +8,7 @@ import base64,hashlib,io,json,re,subprocess,urllib.request,zipfile
 import nbformat
 import pandas as pd
 from docx import Document
-from docx.shared import Cm,Pt,RGBColor
+from docx.shared import Cm,Pt,RGBColor,Inches
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
@@ -50,20 +50,29 @@ def pandoc():
 
 
 def reference_document():
+    # documents skill: compact_reference_guide + editorial_cover, shared Letter geometry.
     doc=Document();section=doc.sections[0]
-    section.page_width=Cm(21);section.page_height=Cm(29.7)
-    section.top_margin=Cm(2);section.bottom_margin=Cm(2)
-    section.left_margin=Cm(2);section.right_margin=Cm(2)
+    section.page_width=Inches(8.5);section.page_height=Inches(11)
+    section.top_margin=Inches(1);section.bottom_margin=Inches(1)
+    section.left_margin=Inches(1);section.right_margin=Inches(1)
+    section.header_distance=Inches(.492);section.footer_distance=Inches(.492)
     style=doc.styles['Normal'];style.font.name='Calibri';style.font.size=Pt(11)
-    style.paragraph_format.line_spacing=1.12;style.paragraph_format.space_after=Pt(6)
-    style.paragraph_format.alignment=WD_ALIGN_PARAGRAPH.JUSTIFY
+    style.paragraph_format.line_spacing=1.25;style.paragraph_format.space_after=Pt(6)
+    style.paragraph_format.alignment=WD_ALIGN_PARAGRAPH.LEFT
     style.element.get_or_add_rPr().append(OxmlElement('w:lang'))
     style.element.rPr.find(qn('w:lang')).set(qn('w:val'),'fr-FR')
-    for name,size in [('Title',26),('Heading 1',17),('Heading 2',13),('Heading 3',11.5)]:
+    for name,size in [('Title',26),('Heading 1',16),('Heading 2',13),('Heading 3',12)]:
         s=doc.styles[name];s.font.name='Calibri';s.font.size=Pt(size)
-        s.font.color.rgb=RGBColor.from_string('17365D')
+        s.font.color.rgb=RGBColor.from_string('1F4D78' if name=='Heading 3' else '2E74B5')
         s.paragraph_format.keep_with_next=True
-    doc.styles['Heading 1'].paragraph_format.page_break_before=True
+    for name,before,after in [('Heading 1',18,10),('Heading 2',14,7),('Heading 3',10,5)]:
+        doc.styles[name].paragraph_format.space_before=Pt(before)
+        doc.styles[name].paragraph_format.space_after=Pt(after)
+    for name in ['List Bullet','List Number']:
+        doc.styles[name].paragraph_format.left_indent=Inches(.375)
+        doc.styles[name].paragraph_format.first_line_indent=Inches(-.188)
+        doc.styles[name].paragraph_format.space_after=Pt(4)
+        doc.styles[name].paragraph_format.line_spacing=1.25
     header=section.header.paragraphs[0]
     header.text='CESI  |  CVRPTW  |  Livrable final'
     header.style=doc.styles['Caption']
@@ -113,7 +122,7 @@ def main():
     text=re.sub(r'## Sommaire\n.*?(?=## Introduction)', '',text,flags=re.S)
     # A report has its own automatic contents; the title is provided as metadata.
     text=re.sub(r'^# Livrable final[^\n]*\n','',text)
-    text='---\ntitle: "Optimisation de tournées de livraison CVRPTW"\nsubtitle: "Livrable final — Modélisation, conception et évaluation expérimentale"\nlang: fr-FR\n---\n\n'+text
+    text='---\ntitle: "Optimisation de tournées de livraison CVRPTW"\nsubtitle: "ILS et recuit simulé — Modèle et étude expérimentale"\ntoc-title: "Sommaire"\nlang: fr-FR\n---\n\n'+text
     assert '<!-- EXEC:' not in text,'Unresolved executable section'
     md=OUT/'RAPPORT_CVRPTW.md';md.write_text(text,encoding='utf-8')
     exe=pandoc();ref=reference_document();target=OUT/'RAPPORT_CVRPTW.docx'
@@ -123,13 +132,54 @@ def main():
     (OUT/'conversion_pandoc.log').write_text(completed.stdout+completed.stderr,encoding='utf-8')
     completed.check_returncode()
     doc=Document(target)
+    for paragraph in doc.paragraphs:
+        if paragraph.text.startswith('1. Contexte, objectif'):
+            paragraph.paragraph_format.page_break_before=True
+        if paragraph._p.xpath('.//w:drawing') or paragraph.text.startswith('Figure '):
+            paragraph.paragraph_format.keep_with_next=True
+        if paragraph.text.startswith(('Lecture ','Interprétation à')):
+            paragraph.paragraph_format.keep_together=True
+        if paragraph.text.startswith('Le run illustré'):paragraph.paragraph_format.keep_with_next=True
+        if re.match(r'^C[1-8] —',paragraph.text):paragraph.paragraph_format.keep_with_next=True
+    if 'Source Code' in doc.styles:
+        doc.styles['Source Code'].font.size=Pt(8)
+        doc.styles['Source Code'].paragraph_format.line_spacing=1.05
     for table in doc.tables:
-        for row in table.rows:
-            for cell in row.cells:
+        table.autofit=False
+        cols=len(table.columns);widths=[9360//cols]*cols;widths[-1]+=9360-sum(widths)
+        prop=table._tbl.tblPr
+        for tag,attrs in [('tblW',{'w':'9360','type':'dxa'}),('tblInd',{'w':'120','type':'dxa'})]:
+            element=prop.find(qn('w:'+tag))
+            if element is None:element=OxmlElement('w:'+tag);prop.append(element)
+            for key,value in attrs.items():element.set(qn('w:'+key),value)
+        margins=prop.find(qn('w:tblCellMar'))
+        if margins is None:margins=OxmlElement('w:tblCellMar');prop.append(margins)
+        for edge,width in [('top',80),('bottom',80),('start',120),('end',120)]:
+            element=OxmlElement('w:'+edge);element.set(qn('w:w'),str(width));element.set(qn('w:type'),'dxa');margins.append(element)
+        for column,width in zip(table._tbl.tblGrid.gridCol_lst,widths):column.set(qn('w:w'),str(width))
+        for row_index,row in enumerate(table.rows):
+            row_property=row._tr.get_or_add_trPr()
+            no_split=OxmlElement('w:cantSplit');row_property.append(no_split)
+            for i,cell in enumerate(row.cells):
+                cell.width=Inches(widths[min(i,cols-1)]/1440)
                 for paragraph in cell.paragraphs:
+                    paragraph.paragraph_format.space_after=Pt(3)
+                    paragraph.paragraph_format.line_spacing=1.05
                     for run in paragraph.runs:run.font.size=Pt(8.5)
+                    if len(table.rows)<=15 and row_index<len(table.rows)-1:
+                        paragraph.paragraph_format.keep_with_next=True
         if table.rows:
             prop=table.rows[0]._tr.get_or_add_trPr();repeat=OxmlElement('w:tblHeader');prop.append(repeat)
+            for cell in table.rows[0].cells:
+                shade=OxmlElement('w:shd');shade.set(qn('w:fill'),'E8EEF5');cell._tc.get_or_add_tcPr().append(shade)
+                for p in cell.paragraphs:
+                    for run in p.runs:run.bold=True
+    # Fit native diagrams to the writable page area.
+    for index,shape in enumerate(doc.inline_shapes):
+        ratio=shape.height/shape.width
+        if shape.width>Inches(6.5):shape.width=Inches(6.5);shape.height=int(shape.width*ratio)
+        if images==20 and index==18:
+            shape.width=Inches(5.4);shape.height=int(shape.width*ratio)
     doc.save(target)
     with zipfile.ZipFile(target) as archive:
         document=archive.read('word/document.xml').decode()
@@ -137,7 +187,10 @@ def main():
     payload=dict(images=images,paragraphs=len(doc.paragraphs),tables=len(doc.tables),
         word_equations=document.count('<m:oMath>'),all_sections_resolved=True,
         notebook_sha256=hashlib.sha256((ROOT/'notebooks/Livrable_Final_CVRPTW.ipynb').read_bytes()).hexdigest(),
-        docx_sha256=hashlib.sha256(target.read_bytes()).hexdigest())
+        docx_sha256=hashlib.sha256(target.read_bytes()).hexdigest(),
+        design_preset='compact_reference_guide',header_pattern='editorial_cover',page_geometry='Letter, 1-inch margins',
+        named_overrides={'tables':'8.5 pt, 1.05 line spacing, 3 pt paragraph after for experimental data',
+                         'route_illustration':'5.4-inch width to retain illustration and explanation on the same page'})
     (OUT/'validation_rapport.json').write_text(json.dumps(payload,indent=2),encoding='utf-8')
     print(json.dumps(payload,indent=2))
 

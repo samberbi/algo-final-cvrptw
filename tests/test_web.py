@@ -8,6 +8,22 @@ from web.experiments import (ROOT, PROFILES, atomic_json, campaign_path, create_
                              frame, launch, make_protocol, progress, read_json, records, statistics, stop)
 
 
+def test_atomic_json_retries_a_temporary_windows_file_lock(tmp_path, monkeypatch):
+    from web import experiments
+    replace = experiments.os.replace
+    attempts = []
+    def temporarily_locked(source, target):
+        attempts.append(target)
+        if len(attempts) < 3:
+            raise PermissionError('Temporary Windows reader lock')
+        return replace(source, target)
+    monkeypatch.setattr(experiments.os, 'replace', temporarily_locked)
+    target = tmp_path / 'progress.json'
+    atomic_json(target, {'completed': 1})
+    assert read_json(target) == {'completed': 1}
+    assert len(attempts) == 3 and not list(tmp_path.glob('*.tmp'))
+
+
 def test_protocol_rejects_invalid_parameters():
     for kwargs in [dict(instances=['../../secret']), dict(seeds=[11, 11]), dict(seconds=float('nan')),
                    dict(profiles=['unknown']), dict(polish_seconds=-1), dict(seeds=[-1])]:
@@ -15,6 +31,23 @@ def test_protocol_rejects_invalid_parameters():
         args.update(kwargs)
         with pytest.raises(ValueError):
             make_protocol(**args)
+
+
+def test_read_json_retries_a_temporary_windows_file_lock(tmp_path, monkeypatch):
+    from pathlib import Path
+    target = tmp_path / 'progress.json'
+    atomic_json(target, {'completed': 2})
+    read = Path.read_text
+    attempts = []
+    def temporarily_locked(path, *args, **kwargs):
+        if path == target:
+            attempts.append(path)
+            if len(attempts) < 3:
+                raise PermissionError('Temporary Windows replacement lock')
+        return read(path, *args, **kwargs)
+    monkeypatch.setattr(Path, 'read_text', temporarily_locked)
+    assert read_json(target) == {'completed': 2}
+    assert len(attempts) == 3
 
 
 def test_real_detached_campaign(tmp_path):
