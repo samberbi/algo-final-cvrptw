@@ -1,0 +1,33 @@
+@page {
+  size: A4; margin: 18mm 17mm 18mm;
+  @bottom-center { content: counter(page); font: 9pt Arial; color: #536174; }
+}
+html { font-family: Cambria, Georgia, serif; color: #192535; font-size: 10.5pt; }
+body { line-height: 1.32; }
+header { padding: 25mm 0 10mm; border-bottom: 2px solid #23476a; }
+header::before { content: 'CESI — Algorithmique et optimisation'; font: 12pt Calibri, Arial, sans-serif; color: #536174; }
+header h1 { font: bold 27pt Calibri, Arial, sans-serif; color: #17365d; }
+header .subtitle { font: 15pt Calibri, Arial, sans-serif; color: #536174; }
+h1, h2, h3 { font-family: Calibri, Arial, sans-serif; color: #17365d; break-after: avoid; }
+section.level1, body > h1 { break-before: page; }
+h1 { font-size: 19pt; margin-top: 20pt; }
+h2 { font-size: 14pt; margin-top: 17pt; }
+h3 { font-size: 11.5pt; }
+p { text-align: justify; orphans: 3; widows: 3; }
+a { color: #23476a; text-decoration: none; overflow-wrap: anywhere; }
+#TOC { break-before: page; break-after: page; font: 10pt/1.45 Calibri, Arial, sans-serif; }
+#TOC::before { content: 'Sommaire'; display: block; color: #17365d; font: bold 20pt Calibri, Arial, sans-serif; margin-bottom: 15pt; }
+#TOC ul { list-style: none; padding-left: 12pt; }
+table { width: 100%; border-collapse: collapse; margin: 10pt 0; font: 8pt/1.2 Calibri, Arial, sans-serif; table-layout: fixed; }
+th, td { border-bottom: 0.4pt solid #ced6df; padding: 4pt; vertical-align: top; overflow-wrap: anywhere; }
+th { background: #eaf0f6; font-weight: bold; color: #17365d; }
+thead { display: table-header-group; }
+tr { break-inside: avoid; }
+figure { margin: 10pt 0; break-inside: avoid; text-align: center; }
+img { max-width: 100%; max-height: 210mm; object-fit: contain; }
+figcaption { font: 9pt Calibri, Arial, sans-serif; color: #536174; margin-top: 4pt; }
+pre { white-space: pre-wrap; overflow-wrap: anywhere; font: 8.3pt/1.25 Consolas, monospace; background: #f3f5f7; padding: 8pt; }
+code { font-family: Consolas, monospace; font-size: .88em; }
+math { font-family: 'Cambria Math', math; }
+math[display=block] { margin: 10pt auto; font-size: 1.02em; }
+blockquote { border-left: 2pt solid #536174; margin-left: 0; padding-left: 10pt; }

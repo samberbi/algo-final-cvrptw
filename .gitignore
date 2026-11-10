@@ -1,0 +1,29 @@
+# Environnements et outils propres à chaque ordinateur
+.venv/
+venv/
+.tools/
+.vscode/
+.idea/
+__pycache__/
+*.py[cod]
+*.nbc
+*.nbi
+.pytest_cache/
+.ipynb_checkpoints/
+.coverage
+htmlcov/
+
+# Identifiants et configuration privée
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Sorties temporaires ; les campagnes publiées restent versionnées
+*.tmp
+*.log
+results/solution.json
+results/local/
+Thumbs.db
+.DS_Store

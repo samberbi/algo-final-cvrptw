@@ -1,0 +1,37 @@
+{
+  "names": [
+    "C105",
+    "C205",
+    "R105",
+    "R205",
+    "RC105",
+    "RC205"
+  ],
+  "seeds": [
+    801,
+    802
+  ],
+  "seconds": 2.0,
+  "configs": {
+    "reference": {},
+    "sans_adaptation": {
+      "adaptive": false
+    },
+    "sans_recuit": {
+      "annealing": false
+    },
+    "temperature_basse": {
+      "temperature_ratio": 0.005
+    },
+    "temperature_haute": {
+      "temperature_ratio": 0.05
+    },
+    "petits_retraits": {
+      "max_removed": 10
+    }
+  },
+  "scope": "post-fixed sensitivity; no retrospective selection or change to campaign",
+  "cpu_affinity": [
+    10
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "expected_trajectories": 1000,
+  "initial_protocol_sha256": "cdebc35328ffc41415f69da3735f09f10be56f366390e845bf5cc7063bed1de3",
+  "additional_seconds": 5.0,
+  "eligible_sizes": [
+    400,
+    600,
+    800,
+    1000
+  ],
+  "selection": "post-hoc after six difficult observed cases; 5 paired wins, 1 loss; not independent validation",
+  "method_sha256": "d737fd1f468ea7f031aaa07eb66bbd1be4142d4e5339a5ccc70be1acaee8ea4d",
+  "workers": 2,
+  "cpu_affinities": [
+    8,
+    10
+  ],
+  "concurrency": "postprocessing may run on other physical cores while initial workers continue; shared thermal/cache resources",
+  "budget_rule": "initial size-dependent budget plus five seconds for every >=400 case, not conditioned on BKS gap"
+}
