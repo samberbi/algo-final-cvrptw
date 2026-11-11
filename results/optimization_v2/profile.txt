@@ -1,0 +1,27 @@
+Diagnostic only: profiling overhead; not a new benchmark quality result.
+         696223 function calls (695800 primitive calls) in 3.019 seconds
+
+   Ordered by: cumulative time
+   List reduced from 122 to 20 due to restriction <20>
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+        1    0.008    0.008    3.019    3.019 optimized.py:73(solve)
+       14    2.575    0.184    2.756    0.197 iterated.py:137(solve)
+       44    0.084    0.002    0.227    0.005 verify.py:7(verify)
+     2291    0.009    0.000    0.109    0.000 {built-in method builtins.any}
+    20471    0.014    0.000    0.100    0.000 verify.py:13(<genexpr>)
+    33825    0.025    0.000    0.082    0.000 random.py:291(randrange)
+    40032    0.012    0.000    0.078    0.000 {built-in method builtins.isinstance}
+    18180    0.005    0.000    0.066    0.000 <frozen abc>:117(__instancecheck__)
+    18180    0.014    0.000    0.060    0.000 {built-in method _abc._abc_instancecheck}
+    33825    0.031    0.000    0.048    0.000 random.py:242(_randbelow_with_getrandbits)
+    18180    0.040    0.000    0.047    0.000 <frozen abc>:121(__subclasscheck__)
+       14    0.007    0.001    0.025    0.002 optimized.py:56(select_group)
+    14050    0.024    0.000    0.024    0.000 {method 'copy' of 'numpy.ndarray' objects}
+       14    0.001    0.000    0.023    0.002 model.py:31(__post_init__)
+    81117    0.022    0.000    0.022    0.000 serialize.py:30(_numba_unpickle)
+     2117    0.018    0.000    0.018    0.000 {method 'reduce' of 'numpy.ufunc' objects}
+     1723    0.001    0.000    0.017    0.000 {method 'mean' of 'numpy.ndarray' objects}
+     1723    0.007    0.000    0.016    0.000 _methods.py:115(_mean)
+      112    0.000    0.000    0.012    0.000 {method 'any' of 'numpy.ndarray' objects}
+      112    0.000    0.000    0.012    0.000 _methods.py:55(_any)

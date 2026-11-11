@@ -1,52 +1,82 @@
-# CVRPTW : ILS et recuit simulé
+# CVRPTW — ILS optimisée et recuit décomposé
 
-Solveur Python de tournées avec capacité et fenêtres horaires strictes. La méthode principale est la **recherche locale itérée (ILS)** ; le comparateur est un **recuit simulé sur mouvements directs**. La distance DIMACS est minimisée, sans priorité au nombre de véhicules. Le PLNE complet est implémenté avec SciPy/HiGHS pour les petits cas.
+Le moteur minimise la **distance DIMACS**, avec capacité, fenêtres strictes,
+couverture unique et flotte maximale. Les contraintes et données restent inchangées.
 
-## Lire le livrable
+## Résultats et périmètre
 
-- [Livrable Markdown](LIVRABLE_FINAL.md) : modèle, méthodes, résultats et explications sous chaque schéma.
-- [Notebook exécuté](notebooks/Livrable_Final_CVRPTW.ipynb) : lectures reproductibles, figures et démonstration courte.
-- [Rapport PDF](livraison/RAPPORT_CVRPTW.pdf) et [Word avec équations modifiables](livraison/RAPPORT_CVRPTW.docx).
-- [Guide oral](docs/GUIDE_ORAL.md) et [interface web](docs/INTERFACE_WEB.md).
+La validation équilibrée contient **36 instances, cinq graines et deux méthodes :
+360 trajectoires**. Chaque taille (100, 200, 1 000 clients) contient douze instances.
+La calibration séparée comporte 324 essais sur douze instances. La comparaison
+avant/après comporte 80 essais sur C204 et R1_10_1, avec vingt graines et des
+départs/budgets appariés, y compris la réexécution des sources v1 figées.
 
-La nouvelle campagne contient **28 instances × 20 graines × 2 méthodes = 1 120 essais**, avec départs communs et budgets appariés. Les dix petits cas PLNE, 100 essais heuristiques associés, 144 essais de sensibilité et 252 observations sur contraintes modifiées sont séparés. Les chiffres ALNS antérieurs sont historiques ; ils ne décrivent pas le nouveau moteur.
+- ILS : gap moyen équilibré **4.933 %**, pire gap **24.321 %**.
+- ILS à 1 000 clients : moyenne **10.055 %** sur douze instances.
+- R1_10_1, à 25 secondes : moyenne v1 **9.746 %**, optimisée **4.234 %**.
 
-Une étude complémentaire de 36 essais mesure le temps à **50 000 propositions fixées** : `scripts/run_ils_scaling.py`. Elle distingue les effets de taille des budgets imposés, sans assimiler les unités de travail des deux méthodes.
+Les grands cas de la validation conservent un état à 25 secondes puis une
+continuation fixée de 15 secondes. Le total est 40 secondes de recherche, plus
+construction et préchauffage. Cette continuation n'est pas un nouveau run.
+Les cas dépassant les seuils restent visibles. Les anciennes moyennes v1 portent
+sur un lot dominé par 100 clients ; elles ne se soustraient pas à la moyenne équilibrée.
 
-## Installation et démonstration
+La cible sous 6 % n'est pas atteinte sur tout le lot des grandes instances.
+En CLI, le budget inclut la construction lorsqu'aucun départ n'est fourni ;
+dans la comparaison appariée, celle-ci est mesurée séparément.
+
+## Ouvrir les livrables
+
+- [Notebook exécuté](notebooks/Livrable_Final_CVRPTW.ipynb).
+- [Lecture HTML](notebooks/Livrable_Final_CVRPTW.html).
+- [Rapport PDF](livraison/RAPPORT_CVRPTW.pdf) et [Word](livraison/RAPPORT_CVRPTW.docx).
+- [Tous les résultats v2](livraison/RESULTATS_OPTIMISES.html) et [CSV](livraison/RESULTATS_OPTIMISES.csv).
+- [Tableau par instance](results/optimization_v2/validation/instances.csv).
+- [Guide oral](docs/GUIDE_ORAL.md).
+
+## Installation et exécution
 
 Python 3.12, depuis ce dossier :
 
 ```powershell
 py -3.12 -m venv .venv
 .\.venv\Scripts\python.exe -m pip install -r requirements-web.txt
-.\.venv\Scripts\python.exe -m pytest
-.\.venv\Scripts\python.exe cli.py C101 --method ils --seconds 2 --seed 101
-.\.venv\Scripts\python.exe cli.py C101 --method sa --seconds 2 --seed 101
+.\.venv\Scripts\python.exe -m pytest tests
+.\.venv\Scripts\python.exe cli.py R1_10_1 --method ils --seconds 25 --seed 101
 .\.venv\Scripts\python.exe -m streamlit run web/app.py
 ```
 
-L'interface est sur http://127.0.0.1:8501 lorsque le serveur local tourne. Elle anime les tournées avec lecture/pause et vitesse réglable ; les tableaux permettent de contrôler chaque client, la capacité et le retour au dépôt. La simulation rejoue une solution calculée, sans représenter un trafic réel.
+Le raccourci `lancer_web.bat` ouvre aussi le serveur local. L'interface permet de
+choisir instances, graines, budgets, méthodes et répétitions ; elle sauvegarde
+chaque nouveau run, affiche les statistiques, tournées, horaires et convergence.
+Les nouveaux calculs dans `results/local/` restent locaux et ne sont pas envoyés
+automatiquement par Git. Voir [INTERFACE_WEB.md](docs/INTERFACE_WEB.md).
 
-## Organisation et reproduction
+## Code et décisions
 
-`algo/iterated.py` orchestre les deux recherches ; `algo/direct.py` propose les mouvements ; `algo/kernels.py` contient les routines compilées de construction et de recherche locale. `algo/verify.py` recalcule indépendamment toute solution. `controle/plne.py` résout réellement la formulation sur les petits cas.
+`algo/optimized.py` traite les groupes de tournées complètes ; `algo/iterated.py`
+contient la recherche directe et le constructeur regret-2 ; `algo/direct.py`
+propose les mouvements ; `algo/profiles.py` fige les configurations retenues.
+Le vérificateur indépendant est `algo/verify.py`. Le PLNE de petits cas est
+`controle/plne.py`. Les BKS sont réservées au calcul des résultats.
 
-Les protocoles, départs, résultats et sources figées sont dans `results/revision_ils/`. Le manifeste des références est `data/manifest.json`. La bibliothèque vrplib lit les données ; elle ne prescrit ni les instances à tester ni le nombre de runs.
+SWAP*, le voisinage temporel et les températures alternatives sont testés et
+conservés comme options. Ils ne sont pas activés par défaut sans gain mesuré.
+Les constructeurs et descentes exploratoires de `results/optimization_v3/`
+restent des recherches complémentaires, pas des résultats de la version active.
+
+## Reproduire et vérifier
 
 ```powershell
-.\.venv\Scripts\python.exe scripts\run_ils_benchmark.py --workers 4
-.\.venv\Scripts\python.exe scripts\run_ils_studies.py
-.\.venv\Scripts\python.exe scripts\build_ils_report.py
-.\.venv\Scripts\python.exe scripts\export_report.py
+.\.venv\Scripts\python.exe scripts\analyze_optimization_v2.py --stage validation
+.\.venv\Scripts\python.exe scripts\analyze_optimization_v2.py --stage regression
+.\.venv\Scripts\python.exe scripts\build_optimization_report.py
+.\.venv\Scripts\python.exe scripts\validate_optimization_delivery.py
 ```
 
-Les deux premières commandes reprennent les fichiers déjà présents sous protocole identique. Une reproduction indépendante nécessite un nouveau dossier de campagne et un protocole distinct. Le constructeur est mesuré séparément dans la comparaison appariée ; en CLI son temps est inclus. Le premier préchauffage Numba peut être long.
-
-Pour régénérer l'ensemble des figures, exécuter aussi `scripts/run_ils_scaling.py` avant le constructeur de rapport. `scripts/validate_ils_artifacts.py` recalcule les contraintes et coûts de toutes les nouvelles solutions. Le PDF livré est exporté avec Microsoft Word ; sur Windows avec Word et pywin32 installés, `scripts/render_ils_word.py` le régénère et produit les PNG de contrôle.
-
-## Historique et limites
-
-`livraison/historique_alns_avant_refonte/` préserve les documents antérieurs ; `algo/legacy_alns.py`, `metier/` et les anciens scripts de campagne restent des outils historiques. Les nouvelles expériences utilisent exclusivement ILS/recuit. La CLI actuelle optimise la distance ; les expériences de durée de l'ancienne édition ne sont pas réattribuées à ces méthodes.
-
-Les BKS doivent correspondre aux mêmes contraintes et à la même troncature par arc. Elles ne sont pas toutes des optimums prouvés. Les budgets imposés et les ressources partagées ne permettent pas de déduire une loi de complexité ni une vitesse universelle. Le rapport publie moyenne, dispersion, pire cas et limites.
+Les protocoles et sources figées sont dans `results/optimization_v2/`.
+Les reprises ne remplacent pas les fichiers terminés. Une reproduction neuve
+nécessite un nouveau dossier et protocole, avec les affinités CPU du nouveau poste.
+Les versions de l'environnement mesuré figurent dans `environment.json` de ce dossier.
+Les anciens résultats ILS et ALNS restent dans leurs archives. `livraison/VALIDATION.json`
+désigne exclusivement la validation de la livraison courante.

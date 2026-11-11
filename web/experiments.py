@@ -177,10 +177,11 @@ def statistics(df):
     data = df.copy()
     data['feasible'] = data['valid'].astype(bool)
     data['under5'] = data['feasible'] & data['gap_pct'].lt(5)
+    data['under6'] = data['feasible'] & data['gap_pct'].lt(6)
     data['under7'] = data['feasible'] & data['gap_pct'].lt(7)
     data.loc[~data['feasible'], 'gap_pct'] = float('nan')
     return data.groupby(['instance', 'profile'], dropna=False).agg(
         runs=('status', 'size'), feasible=('feasible', 'sum'), reference=('reference_distance', 'first'),
         mean_gap=('gap_pct', 'mean'), median_gap=('gap_pct', 'median'), std_gap=('gap_pct', 'std'),
-        best_gap=('gap_pct', 'min'), worst_gap=('gap_pct', 'max'), under5=('under5', 'sum'), under7=('under7', 'sum'),
+        best_gap=('gap_pct', 'min'), worst_gap=('gap_pct', 'max'), under5=('under5', 'sum'), under6=('under6','sum'), under7=('under7', 'sum'),
         mean_time_s=('runtime_s', 'mean')).reset_index()

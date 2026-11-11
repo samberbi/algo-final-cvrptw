@@ -35,6 +35,11 @@ st.sidebar.caption('Les calculs tournent sur cet ordinateur. Les campagnes conti
 
 
 def historical(source):
+    if source.startswith('Optimisation v2'):
+        path=ROOT/'results/optimization_v2/validation/flat.csv'
+        data=pd.read_csv(path)
+        data['profile']=data['profile'].replace({'optimized_ils':'ILS optimisée','optimized_sa':'Recuit décomposé'})
+        return data
     if source.startswith('ILS / recuit'):
         path = ROOT / 'results/revision_ils/flat.json'
         return pd.read_json(path) if path.exists() else pd.DataFrame()
@@ -55,12 +60,13 @@ def display_metrics(df, expected=None):
         return
     valid = df['valid'].astype(bool)
     gaps = df.loc[valid, 'gap_pct'].dropna()
-    cols = st.columns(5)
+    cols = st.columns(6)
     cols[0].metric('Essais terminés', f'{len(df)}' + (f' / {expected}' if expected else ''))
     cols[1].metric('Réalisables', f'{int(valid.sum())} / {len(df)}')
     cols[2].metric('Gap moyen', f'{gaps.mean():.3f} %' if len(gaps) else '—')
     cols[3].metric('Sous 5 %', f'{int((valid & df.gap_pct.lt(5)).sum())} / {len(df)}')
-    cols[4].metric('Sous 7 %', f'{int((valid & df.gap_pct.lt(7)).sum())} / {len(df)}')
+    cols[4].metric('Sous 6 %', f'{int((valid & df.gap_pct.lt(6)).sum())} / {len(df)}')
+    cols[5].metric('Sous 7 %', f'{int((valid & df.gap_pct.lt(7)).sum())} / {len(df)}')
     st.caption(f'Moyenne arithmétique des gaps sur {len(gaps)} essais réalisables avec BKS, '
                f'parmi {len(df)} essais terminés. Chaque run a le même poids. Les échecs restent dans le tableau.')
 
@@ -229,7 +235,9 @@ def campaigns():
 
 def history():
     st.title('Résultats historiques')
-    source = st.selectbox('Campagne publiée', ['ILS / recuit · 1 120 runs', 'Étude principale · 80 runs', 'Extension · 1 000 runs'])
+    sources=['ILS / recuit · 1 120 runs', 'Étude principale · 80 runs', 'Extension · 1 000 runs']
+    if (ROOT/'results/optimization_v2/validation/flat.csv').exists():sources.append('Optimisation v2 · 360 trajectoires équilibrées')
+    source = st.selectbox('Campagne publiée', sources,index=len(sources)-1 if len(sources)>3 else 0)
     data = historical(source)
     if data.empty:
         st.info('La synthèse de la nouvelle campagne sera disponible à la fin du calcul. Les runs terminés sont déjà simulables.')
@@ -240,6 +248,8 @@ def history():
     filtered = data[data.n.isin(sizes)]
     if names:
         filtered = filtered[filtered.instance.isin(names)]
+    methods=st.multiselect('Méthodes à afficher',sorted(filtered.profile.unique()),default=sorted(filtered.profile.unique()))
+    filtered=filtered[filtered.profile.isin(methods)]
     st.caption('Les filtres changent le périmètre des statistiques affichées. Les deux campagnes restent séparées.')
     display_metrics(filtered)
     analysis(filtered, 'historical')
@@ -252,7 +262,9 @@ def simulation_page():
 
     st.title('Simulation des livraisons')
     st.write('Suis les camions sur leurs tournées : déplacements, attente avant ouverture, service et retour au dépôt.')
-    source = st.radio('Solution à simuler', ['ILS / recuit · nouvelle étude', 'Historique ALNS · 80 runs', 'Mes campagnes'], horizontal=True)
+    sources=['ILS / recuit · nouvelle étude', 'Historique ALNS · 80 runs', 'Mes campagnes']
+    if (ROOT/'results/optimization_v2/validation/analysis.json').exists():sources.insert(0,'Optimisation v2')
+    source = st.radio('Solution à simuler', sources, horizontal=True)
     if source == 'Mes campagnes':
         ids = list_campaigns()
         if not ids:
@@ -264,6 +276,14 @@ def simulation_page():
                            profile=x['job']['profile'], routes=x['result']['routes'],
                            id=x['job']['id'], result=x['result'], reference=x['reference_distance'])
                       for x in records(identifier) if x.get('valid')]
+    elif source=='Optimisation v2':
+        candidates=[]
+        for path in sorted((ROOT/'results/optimization_v2/validation/runs').glob('*.json')):
+            item=read_json(path)
+            if item.get('valid'):
+                candidates.append(dict(name=item['job']['instance'],seed=item['job']['seed'],
+                    profile=item['job']['variant'],routes=item['result']['routes'],id=item['job']['id'],
+                    result=item['result'],reference=item['reference_distance']))
     elif source.startswith('ILS / recuit') and (ROOT/'results/revision_ils/simulation_index.json').exists():
         candidates = read_json(ROOT/'results/revision_ils/simulation_index.json')
     else:
@@ -324,14 +344,24 @@ elif page == 'Résultats historiques':
 else:
     st.title('Le laboratoire CVRPTW')
     st.write('Lance tes propres expériences, vérifie les solutions et explore leurs résultats.')
-    st.subheader('ILS contre recuit · 28 instances · 20 graines')
-    display_metrics(historical('ILS / recuit · 1 120 runs'), 1120)
-    st.info('La comparaison principale utilise les mêmes solutions initiales et budgets par paire. '
-            'Les anciennes campagnes ALNS restent disponibles dans « Résultats historiques ».')
-    for filename, caption in [('convergence_100.png', 'À 100 clients : gap moyen au fil du calcul ; bande interquartile, pas un intervalle de confiance.'),
+    optimized=(ROOT/'results/optimization_v2/validation/flat.csv').exists()
+    st.subheader('Validation équilibrée · 36 instances · cinq graines' if optimized else 'ILS contre recuit · 28 instances · 20 graines')
+    if optimized:
+        current=historical('Optimisation v2')
+        chosen=st.radio('Méthode de la synthèse',['ILS optimisée','Recuit décomposé'],horizontal=True)
+        display_metrics(current[current.profile.eq(chosen)],180)
+        st.info('Douze instances par taille : 100, 200 et 1 000 clients. Chaque taille pèse un tiers dans cette moyenne. '
+                'Aux grandes tailles : 25 + 15 secondes, construction séparée ; les résultats historiques restent disponibles.')
+    else:
+        display_metrics(historical('ILS / recuit · 1 120 runs'), 1120)
+        st.info('Étude initiale ILS/recuit ; les campagnes historiques restent disponibles.')
+    images=[('v2_convergence.png','Validation v2 : douze grandes instances, cinq graines par méthode ; continuation prévue à 25 secondes.'),
+            ('v2_regression.png','Avant/après à budget égal sur C204 et R1_10_1, vingt graines chacun.'),
+            ('v2_development.png','Calibration séparée sur les six familles à 1 000 clients.')] if optimized else [('convergence_100.png', 'À 100 clients : gap moyen au fil du calcul ; bande interquartile, pas un intervalle de confiance.'),
                               ('convergence_1000.png', 'À 1 000 clients : même lecture, avec un budget de 25 secondes.'),
-                              ('sensitivity.png', 'Sensibilité exploratoire : six instances de développement et trois graines par variante.')]:
-        path = ROOT / 'livraison/ils_figures' / filename
+                              ('sensitivity.png', 'Sensibilité exploratoire : six instances de développement et trois graines par variante.')]
+    for filename,caption in images:
+        path = ROOT / ('livraison/optimization_figures' if optimized else 'livraison/ils_figures') / filename
         if path.exists():
             st.image(str(path), width='stretch')
             st.caption(caption)

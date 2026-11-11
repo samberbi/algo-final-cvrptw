@@ -1,5 +1,14 @@
 # Corrections demandées et réalisation
 
+> Édition active du 11 novembre 2026 : `LIVRABLE_FINAL.md` et le Notebook final
+> présentent la validation optimisée v2 : 36 instances, cinq graines par méthode,
+> douze instances par taille, plus 80 essais avant/apres a vingt graines sur deux
+> cas. La calibration séparée comporte 324 essais, avec six familles à 1 000 clients.
+> Les 1 120 essais décrits dans le tableau historique ci-dessous restent une
+> référence v1 ; ils ne sont pas réattribués au code optimisé. Le bilan complet
+> et les limites de gap sont publiés dans `results/optimization_v2/`.
+
+
 Ce document traduit la consigne du projet et les remarques de l'enseignante rapportées dans la conversation. Le ZIP du groupe G5 a servi d'exemple de présentation ; ses hypothèses, résultats ou erreurs ne sont pas adoptés comme cahier des charges.
 
 | Demande | Réponse dans la nouvelle édition |

@@ -10,7 +10,7 @@ import time
 import traceback
 
 from algo.data import load
-from algo.solver import Settings, solve, warmup
+from algo.solver import Settings, solve, warmup, production_settings
 from algo.verify import verify
 from web.experiments import ROOT, PROFILES, atomic_json, now, read_json
 
@@ -44,7 +44,7 @@ def run(folder):
             try:
                 path = ROOT / 'data/instances' / (job['instance'] + '.vrp')
                 ins = load(path)
-                result = solve(ins, Settings(seconds=protocol['seconds'], seed=job['seed'], **PROFILES[job['profile']]))
+                result = solve(ins, production_settings(seconds=protocol['seconds'], seed=job['seed'], **PROFILES[job['profile']]))
                 if result['status'] == 'feasible' and protocol['polish_seconds'] > 0:
                     from ameliorations.decomposition import polish
                     offset = result['runtime_s']

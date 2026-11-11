@@ -1,2 +1,5 @@
 # Préserver les octets des sources et mesures dont les empreintes sont publiées.
 * -text
+* whitespace=blank-at-eol,blank-at-eof,cr-at-eol
+# Les exports Pandoc et nbconvert conservent leurs styles générés.
+*.html -whitespace

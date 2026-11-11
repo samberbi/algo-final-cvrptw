@@ -97,12 +97,19 @@ def test_javascript_playback_controls_and_schedule_boundaries():
     assert result.returncode == 0, result.stderr
 
 
-def test_simulation_page_accepts_a_large_saved_solution():
+@pytest.mark.parametrize('source,instance',[
+    ('ILS / recuit · nouvelle étude','R1_10_1'),
+    ('Optimisation v2','R1_10_3'),
+])
+def test_simulation_page_accepts_a_large_saved_solution(source,instance):
     from streamlit.testing.v1 import AppTest
     at = AppTest.from_file('web/app.py', default_timeout=30).run()
     assert not at.exception
     assert at.sidebar.radio[0].value == 'Simulation'
-    at.selectbox[0].select('R1_10_1').run()
+    if source not in at.radio[0].options:
+        pytest.skip('Campaign not available in this checkout')
+    at.radio[0].set_value(source).run()
+    at.selectbox[0].select(instance).run()
     assert not at.exception
     assert any(m.label == 'Clients' and m.value == '1000' for m in at.metric)
     assert any('Vérifier toutes les contraintes' == tab.label for tab in at.tabs)

@@ -84,10 +84,12 @@ def test_stop_keeps_completed_results(tmp_path):
 def test_failures_not_counted_as_low_gaps():
     df = pd.DataFrame([
         dict(instance='C101', profile='test', status='feasible', valid=True, reference_distance=100., gap_pct=2., runtime_s=1.),
+        dict(instance='C101', profile='test', status='feasible', valid=True, reference_distance=100., gap_pct=5.5, runtime_s=1.),
         dict(instance='C101', profile='test', status='error', valid=False, reference_distance=100., gap_pct=None, runtime_s=1.),
     ])
     row = statistics(df).iloc[0]
-    assert row.runs == 2 and row.feasible == 1 and row.under5 == 1 and row.mean_gap == 2
+    assert row.runs == 3 and row.feasible == 2 and row.under5 == 1
+    assert row.under6 == 2 and row.under7 == 2 and row.mean_gap == 3.75
 
 
 def test_worker_records_error_and_continues(tmp_path, monkeypatch):

@@ -1,44 +1,41 @@
-# Guide oral — CVRPTW, ILS contre recuit simulé
+# Préparer la présentation
 
-## Trame indicative pour huit à dix minutes
+Le notebook actif est `notebooks/Livrable_Final_CVRPTW.ipynb`.
+Le rapport présente le CVRPTW statique, à distance DIMACS et contraintes strictes.
 
-1. **Contexte et objectif.** Organiser des livraisons en réduisant la distance, sous capacité, fenêtres de début de service, flotte maximale et retour au dépôt. Le contexte durable ne permet pas de transformer nos unités abstraites en kilogrammes de CO₂.
-2. **Modèle.** Définir C, les véhicules, les arcs et les variables. Montrer C1 pour l'unicité, C4 pour la capacité, C5–C7 pour les horaires et C8 contre les cycles isolés. Lire les quantificateurs : « pour chaque client appartenant à C et chaque véhicule appartenant à l'ensemble des véhicules ». Le PLNE fixe les règles ; il n'est pas le constructeur des métaheuristiques.
-3. **Choix de l'ILS.** Le constructeur regret-2 donne un départ. Une perturbation modifie plusieurs positions par mouvements réalisables ; la recherche locale cherche ensuite des gains ; la règle de tolérance décide de la poursuite ; l'archive garde le record. Les voisinages sont fixes. La recherche locale est bornée, sans preuve d'optimum local complet.
-4. **Comparateur recuit.** Même départ et mêmes contraintes, propositions directes. Toute amélioration est acceptée ; une hausse peut l'être selon exp(-delta/T). La température diminue avec le temps consommé. L'archive protège le meilleur résultat et aucune température n'autorise un retard.
-5. **Résultats.** 28 instances, vingt graines et deux méthodes donnent 1 120 essais. ILS : gap moyen 1.199 %, pire 10.768 %, 539/560 sous 7 %. Recuit : moyenne 1.798 %, pire 25.748 %. Montrer aussi les lignes à 1 000 clients et les cas où le recuit est meilleur ; ne pas s'arrêter à la moyenne globale.
-6. **Convergence et sensibilité.** La ligne représente une moyenne d'archives et la bande les quartiles, pas un intervalle de confiance. Commenter les gains tardifs. Sans recherche locale, le gap ILS atteint environ 8,38 % sur le lot exploratoire, contre 0,95 % avec elle. Huit perturbations ne sont pas automatiquement meilleures qu'une ou quatre à temps fixé.
-7. **Validation et limites.** Dix petits PLNE, neuf optimalités certifiées et une limite de temps. Les grandes références sont des BKS compatibles, pas toutes des optimums prouvés. Ressources partagées, lot connu, seulement deux grandes instances et budgets imposés limitent la généralisation. Conclure par des améliorations à tester.
+## Déroulé court
 
-## Démonstration
+1. Expliquer client, dépôt, capacité, fenêtre et attente.
+2. Dire pourquoi début et fin de service diffèrent, puis présenter C1–C8.
+3. Décrire construction regret-2, perturbation ILS, recherche locale et archive.
+4. Montrer un groupe de tournées : mêmes données, remappage et contrôle global.
+5. Comparer les résultats, annoncer leurs budgets et montrer aussi les cas difficiles.
 
-L'étude supplémentaire à 50 000 propositions donne, pour l'ILS, environ 0,125 s à 100 clients, 0,187 s à 200 et 1,676 s à 1 000. Ces moyennes concernent six essais par taille ; les évaluations internes de recherche locale ne sont pas comptées comme des propositions. Elles montrent une augmentation observée sur ce lot, sans prouver une loi asymptotique ni une vitesse universelle.
+## Chiffres à citer avec leur périmètre
 
-Avant la soutenance, lancer le serveur et ouvrir http://127.0.0.1:8501. Les résultats sauvegardés sont disponibles sans relancer le benchmark.
+- Validation : 36 instances, cinq graines, deux méthodes ; trois tailles équilibrées.
+- ILS : moyenne globale équilibrée 4.933 % ; grands cas 10.055 %.
+- Avant/après R1_10_1 : 9.746 % contre 4.234 %, à 25 secondes identiques.
+- Une moyenne favorable ne garantit ni chaque instance ni chaque futur essai.
 
-```powershell
-.\.venv\Scripts\python.exe cli.py C101 --method ils --seconds 2 --seed 101
-.\.venv\Scripts\python.exe -m streamlit run web/app.py
-```
+## Exemple d'introduction en anglais
 
-Dans **Simulation**, sélectionner la nouvelle étude, une instance et un run ; lancer Lecture, mettre Pause et changer la vitesse. Ouvrir **Vérifier toutes les contraintes** : couverture unique, charge ≤ capacité, début du service dans la fenêtre et retour ≤ fermeture. Dans les graphiques, une arrivée avant ouverture entraîne de l'attente ; la fin du service peut dépasser la fermeture client. Expliquer ensuite une courbe de convergence de la Vue d'ensemble. L'horloge de livraison n'est pas l'horloge de calcul du solveur.
+We study delivery routes with vehicle capacity and strict time windows. Our
+objective is the total DIMACS distance. We implemented iterated local search
+and a simulated annealing comparator, with an independent solution checker.
+The optimized search works on groups of complete routes without changing the
+original demands, time windows or fleet limit. We compare measured results on
+a balanced set and report both average quality and difficult cases.
 
-## Réponses aux questions probables
+## Questions cruciales
 
-**Qui produit la première solution ?** Le constructeur regret-2, essayé douze fois. Le PLNE sert aux petites comparaisons exactes et n'est pas appelé pour initialiser le benchmark principal.
-
-**Est-ce toujours de l'ALNS renommé ?** Non. Les cycles ILS et recuit utilisent des mouvements directs sur des tournées complètes. Le mécanisme de retrait/réparation n'est pas appelé pendant la recherche ; un test le vérifie. L'insertion regret-2 sert uniquement à construire le départ.
-
-**Pourquoi l'ILS plutôt qu'une méthode déjà prise ?** Elle réutilise des voisins vérifiables et associe perturbation et amélioration locale dans une structure explicable. Le choix doit être défendu par nos résultats, pas par une promesse de supériorité universelle.
-
-**Pourquoi vingt runs ?** Pour observer une variabilité aléatoire plus solidement qu'avec quelques essais, à un coût de calcul raisonnable. Ce nombre est notre choix, pas une obligation écrite du sujet. Plusieurs graines ne remplacent pas plusieurs instances.
-
-**Le gap est-il à l'optimum ?** Sur les petits cas certifiés, oui. Pour le benchmark principal, il est calculé par rapport à la meilleure référence connue figée, avec la même troncature DIMACS. Un gap nul ne constitue pas, seul, une preuve d'optimalité.
-
-**Peut-on annoncer que tous les cas passent sous 7 % ?** Non : citer le nombre exact sous le seuil et le pire résultat. Une moyenne faible ne masque pas un mauvais run.
-
-**La courbe plate prouve-t-elle la convergence vers l'optimum ?** Non. Elle montre seulement que l'archive n'a plus été améliorée dans le temps observé. Le tableau du gain des derniers 20 % complète cette lecture.
-
-**Le temps augmente-t-il avec la taille ?** Nos budgets sont imposés et changent avec la taille ; ces temps ne démontrent pas une loi de complexité. Les matrices sont quadratiques en mémoire et l'évaluation d'une tournée est linéaire en sa longueur.
-
-**Pourquoi ne pas afficher de gap pour une capacité modifiée ?** La référence de l'instance originale ne résout plus le même problème. On compare succès, distances, attentes et variations appariées sans inventer une BKS.
+- Pourquoi la distance ? Pour comparer à la même référence DIMACS. La durée avec
+  attente et service est différente ; notre périmètre statique doit être annoncé.
+- Pourquoi des groupes ? Pour consacrer davantage de recherche aux tournées
+  qui peuvent interagir, puis revérifier la solution globale.
+- Pourquoi pas tous les opérateurs ? SWAP* a été testé ; son ajout n'a pas été
+  retenu par défaut lorsque le coût de calcul dégradait le résultat sous budget.
+- Pourquoi cinq graines dans le nouveau lot ? Elles complètent la diversité des
+  douze grandes instances ; l'étude diagnostique conserve vingt graines.
+- Pourquoi le temps total dépasse le budget ? Construction séparée et fin des
+  opérations atomiques. Ne pas inclure silencieusement le préchauffage Numba.

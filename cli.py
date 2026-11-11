@@ -2,7 +2,7 @@
 from pathlib import Path
 import argparse,json,time
 from algo.data import load
-from algo.solver import solve,Settings,warmup
+from algo.solver import solve,Settings,warmup,production_settings
 from algo.verify import verify
 
 
@@ -20,7 +20,7 @@ def main():
     path=Path(a.instance)
     if not path.is_file():path=root/'data/instances'/(a.instance+'.vrp')
     ins=load(path);startup=warmup()
-    result=solve(ins,Settings(seconds=a.seconds,seed=a.seed,method=a.method))
+    result=solve(ins,production_settings(method=a.method,seconds=a.seconds,seed=a.seed))
     if a.intensify and ins.n>=400 and result['status']=='feasible':
         from ameliorations.decomposition import polish
         result['stages']=[]

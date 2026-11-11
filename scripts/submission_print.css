@@ -16,7 +16,8 @@ h3 { font-size: 11.5pt; }
 p { text-align: justify; orphans: 3; widows: 3; }
 a { color: #23476a; text-decoration: none; overflow-wrap: anywhere; }
 #TOC { break-before: page; break-after: page; font: 10pt/1.45 Calibri, Arial, sans-serif; }
-#TOC::before { content: 'Sommaire'; display: block; color: #17365d; font: bold 20pt Calibri, Arial, sans-serif; margin-bottom: 15pt; }
+#TOC::before { content: none; }
+#TOC > h2 { color: #17365d; font: bold 20pt Calibri, Arial, sans-serif; margin-bottom: 15pt; }
 #TOC ul { list-style: none; padding-left: 12pt; }
 table { width: 100%; border-collapse: collapse; margin: 10pt 0; font: 8pt/1.2 Calibri, Arial, sans-serif; table-layout: fixed; }
 th, td { border-bottom: 0.4pt solid #ced6df; padding: 4pt; vertical-align: top; overflow-wrap: anywhere; }
