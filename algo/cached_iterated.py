@@ -51,6 +51,7 @@ class Settings:
 
 
 def arrays(ins):
+    """Rassemble les matrices et vecteurs dans l’ordre attendu par les noyaux compilés."""
     return (
         ins.travel,
         ins.distance,
@@ -64,6 +65,8 @@ def arrays(ins):
 
 
 def encode(routes, ins):
+    """Convertit les listes de tournées en matrice et vecteur de longueurs.
+    Le dépôt 0 est implicite ; seules les cases avant chaque longueur sont utiles."""
     a = np.zeros((min(ins.n, ins.vehicles) + 1, ins.n + 2), np.int64)
     l = np.zeros(len(a), np.int64)
     for i, r in enumerate(routes):
@@ -73,16 +76,15 @@ def encode(routes, ins):
 
 
 def decode(a, l):
+    """Reconstruit les listes de clients à partir des lignes non vides de la matrice."""
     return [list(map(int, a[i, :n])) for i, n in enumerate(l) if n]
 
 
 def construct(ins, seed=0, attempts=12):
-    """Try regret-2 starts and return the cheapest feasible complete solution.
-
-    Inputs are the immutable instance, a random seed and the number of attempts.
-    The returned pair contains route lists (or None) and construction metrics.
-    No BKS or stored benchmark solution is read by the constructor.
-    """
+    """Construit plusieurs solutions initiales par insertion regret-2.
+    Le premier essai est déterministe, les suivants diversifient les insertions.
+    Renvoie les meilleures tournées réalisables et les mesures de construction ;
+    renvoie None comme solution si tous les essais échouent. Aucune BKS n’est lue."""
     start = time.perf_counter()
     rng = random.Random(seed)
     best = math.inf
@@ -110,7 +112,10 @@ def construct(ins, seed=0, attempts=12):
 
 
 def build_neighbors(ins, count=24, mode="geographic"):
-    """Mix geometric proximity with earliest-service temporal compatibility."""
+    """Sélectionne les clients candidats aux mouvements locaux.
+    Le mode géographique utilise la distance ; le mode mixte ajoute une estimation
+    d’attente et de retard. Cette estimation guide la recherche, sans prouver
+    la faisabilité : chaque mouvement reste contrôlé sur ses horaires réels."""
     width = min(count, max(0, ins.n - 1))
     geographic = np.array(ins.distance, copy=True)
     np.fill_diagonal(geographic, np.inf)
@@ -136,6 +141,9 @@ def build_neighbors(ins, count=24, mode="geographic"):
 
 
 def solve(ins, settings=None, initial=None):
+    """Résout une instance par ILS ou recuit et renvoie la meilleure solution vérifiée.
+    initial fournit éventuellement des tournées déjà réalisables. Le résultat
+    contient routes, coût, chronométrage, trace et diagnostics de la recherche."""
     cfg = settings or Settings()
     start = time.perf_counter()
     cpu_start = time.process_time()
@@ -172,6 +180,7 @@ def solve(ins, settings=None, initial=None):
     rng = random.Random(cfg.seed)
     current = k.total(a, l, *args)[1]
     initial_cost = current
+    # Copies indépendantes : l’archive ne doit pas être modifiée par les mouvements courants.
     ba, bl, best = a.copy(), l.copy(), current
     neighbors = build_neighbors(ins, cfg.neighbor_count, cfg.neighbor_mode)
     enabled = np.ones(4, np.bool_)
@@ -252,6 +261,7 @@ def solve(ins, settings=None, initial=None):
                     swap_star(work, wl, *args, neighbors, 3, rng.randrange(2**31))
             value = k.total(work, wl, *args)[1]
             wa = work
+            # Critère ILS : tolérer un léger écart autour du meilleur, puis intensifier à nouveau.
             if value <= best * (1 + cfg.acceptance_tolerance) + 1e-8:
                 a, l, current = work, wl, value
                 accepted += 1
@@ -259,6 +269,7 @@ def solve(ins, settings=None, initial=None):
             ba, bl, best = wa.copy(), wl.copy(), value
             improved += 1
             last_improvement = cycles
+        # Après stagnation, repartir de l’archive ; il ne s’agit pas d’une nouvelle construction.
         if cfg.method == "ils" and cycles - last_improvement >= 100:
             a, l, current = ba.copy(), bl.copy(), best
             last_improvement = cycles
@@ -267,6 +278,7 @@ def solve(ins, settings=None, initial=None):
             log()
             next_log = elapsed + max(0.025, cfg.seconds / 100)
     routes = decode(ba, bl)
+    # Dernier contrôle complet indépendant avant de publier la solution.
     checked = verify(routes, ins)
     if not checked["valid"] or abs(checked["distance"] - best) > 1e-6:
         raise AssertionError(checked)
@@ -306,6 +318,7 @@ def solve(ins, settings=None, initial=None):
 
 
 def warmup():
+    """Compile les noyaux Numba sur une petite instance avant les mesures de performance."""
     from .model import Instance
 
     xy = np.array([[0, 0], [3, 0], [6, 0], [0, 3]], float)

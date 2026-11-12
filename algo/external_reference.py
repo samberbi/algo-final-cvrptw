@@ -6,10 +6,15 @@ from .verify import verify
 
 
 def solve(ins, seconds=40.0, seed=0, initial=None):
+    """Adapte nos données au HGS externe PyVRP 0.12.2 et contrôle sa sortie.
+    Aucun nouvel arrondi n’est autorisé dans cet adaptateur. Avec initial,
+    la solution réalisable fournie est ajoutée à la population de départ.
+    Le coût minimise la distance ; la flotte constitue une borne supérieure."""
     import pyvrp
     from pyvrp.stop import MaxRuntime
 
     started = time.perf_counter()
+    # Les unités DIMACS sont déjà préparées au chargement : aucun arrondi supplémentaire ici.
     integer_arrays = [
         ins.distance,
         ins.travel,
@@ -97,6 +102,7 @@ def solve(ins, seconds=40.0, seed=0, initial=None):
         return dict(
             status="not_found", routes=None, runtime_s=time.perf_counter() - started
         )
+    # Vérification indépendante : on ne se contente pas du statut annoncé par la bibliothèque.
     routes = [list(map(int, r.visits())) for r in result.best.routes()]
     checked = verify(routes, ins)
     if not checked["valid"]:

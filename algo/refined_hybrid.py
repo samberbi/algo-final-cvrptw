@@ -29,6 +29,10 @@ class Settings:
 
 
 def solve(ins, settings=None, initial=None):
+    """Exécute le profil court ILS puis HGS, évalué dans l’étude v9.
+    À 120 s, le partage par défaut est 20 s / 100 s. Pour un budget plus court,
+    l’ILS est plafonnée à la moitié du budget afin de laisser du temps au HGS.
+    La construction, les composants et leur temps réel restent dans le résultat."""
     cfg = settings or Settings()
     started = time.perf_counter()
     construction_s = 0.0
@@ -45,6 +49,7 @@ def solve(ins, settings=None, initial=None):
     checked = verify(initial, ins)
     if not checked["valid"]:
         raise ValueError("Invalid initial solution")
+    # Le partage concerne la recherche ; le chronomètre global inclut aussi construction et préparation.
     first_seconds = min(cfg.ils_seconds, cfg.search_seconds / 2)
     first = ils(
         ins, production_settings("ils", seconds=first_seconds, seed=cfg.seed), initial
@@ -56,10 +61,12 @@ def solve(ins, settings=None, initial=None):
         first["routes"],
         cfg.neighbor_count,
     )
+    # L’appel externe ne suffit pas : on recalcule la validité et la non-dégradation sur nos données.
     final = verify(second["routes"], ins)
     assert final["valid"] and second["cost"] <= first["cost"] + 1e-7
     elapsed = time.perf_counter() - started
     trace = [dict(elapsed_s=0.0, best=checked["distance"] / 10, phase="construction")]
+    # Les traces locales sont décalées pour former une chronologie globale cohérente.
     trace.extend(
         dict(elapsed_s=construction_s + p["elapsed_s"], best=p["best"], phase="our-ils")
         for p in first.get("trace", [])

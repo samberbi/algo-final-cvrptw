@@ -47,3 +47,7 @@ Le réglage 20/100 est évalué sur sept cas et deux nouvelles graines : moyenne
 ## Revue finale de livraison
 
 La dernière passe explicite la population, les tournois, SREX, la recherche locale et les pénalités du HGS externe, avec les paramètres réellement utilisés. Les extraits sont synchronisés avec le code livré. Les modules d’intégration sont remis en forme et les graines invalides sont rejetées. Ces corrections de présentation et de validation des entrées ne constituent pas un gain numérique mesuré : les campagnes figées et leurs résultats restent inchangés. Voir la [revue de conformité](REVUE_FINALE_CONFORMITE.md).
+
+## Documentation du code
+
+Une passe ajoute ou traduit les descriptions de 45 fonctions dans 17 fichiers et commente les étapes sensibles : conversion des unités DIMACS, représentation en tableaux, insertion regret-2, caches temporels, mouvements, acceptation, archive et réintégration des groupes. La CLI et le worker web explicitent leur rôle. Les extraits du notebook sont synchronisés avec ces sources. La comparaison des arbres syntaxiques, après retrait des docstrings, confirme que les instructions exécutables restent identiques. Les sources figées des campagnes ne sont pas modifiées ; cette passe ne revendique aucun nouveau gain de gap.

@@ -24,6 +24,8 @@ def cache_route(
     road,
     quantity,
 ):
+    """Mémorise horaire de départ, distance et charge de chaque préfixe de tournée.
+    Les valeurs à la position p décrivent les p premiers clients déjà servis."""
     clock = cost = load = 0.0
     previous = 0
     depart[r, 0] = road[r, 0] = quantity[r, 0] = 0.0
@@ -61,6 +63,9 @@ def evaluate_tail(
     road,
     quantity,
 ):
+    """Rejoue la tournée à partir de la première position modifiée.
+    Le préfixe avant start doit être inchangé et son cache à jour ; le suffixe
+    et le retour au dépôt sont recalculés pour conserver les contrôles stricts."""
     clock, cost, load = depart[r, start], road[r, start], quantity[r, start]
     previous = seq[start - 1] if start else 0
     for p in range(start, length):
@@ -96,6 +101,9 @@ def local_search(
     seed,
     enabled,
 ):
+    """Explore les mêmes mouvements avec réutilisation des préfixes inchangés.
+    Les caches doivent être rafraîchis après une modification de tournée ;
+    ils accélèrent l’évaluation sans relâcher les contraintes du problème."""
     np.random.seed(seed)
     n = len(demand) - 1
     changes = 0

@@ -8209,12 +8209,10 @@ $$\sum_{j\in C}f_{oj}^k=\sum_{i\in C}y_i^k
 <h2 id="4.-M%C3%A9thodes-et-am%C3%A9liorations-retenues">4. Méthodes et améliorations retenues<a class="anchor-link" href="#4.-M%C3%A9thodes-et-am%C3%A9liorations-retenues">¶</a></h2><h3 id="4.1.-Construire-un-d%C3%A9part-commun">4.1. Construire un départ commun<a class="anchor-link" href="#4.1.-Construire-un-d%C3%A9part-commun">¶</a></h3><p>Le constructeur essaie douze insertions par regret-2 : une sans bruit, puis onze avec un classement perturbé. Pour un client i, si les deux meilleurs surcoûts réalisables dans des tournées distinctes sont $\Delta_i^{(1)}\le\Delta_i^{(2)}$, son regret est $r_i=\Delta_i^{(2)}-\Delta_i^{(1)}$. Les clients avec peu d'alternatives sont prioritaires. Le meilleur départ complet est gardé ; un échec de construction ne prouve pas une impossibilité.</p>
 <p><strong>Entrées :</strong> instance, graine et nombre d'essais. <strong>Sorties :</strong> listes de tournées et coût/temps de construction. La recherche ne lit aucune BKS. Le même départ est donné aux méthodes comparées et son temps est publié séparément.</p>
 <div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">construct</span><span class="p">(</span><span class="n">ins</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">attempts</span><span class="o">=</span><span class="mi">12</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">"""Try regret-2 starts and return the cheapest feasible complete solution.</span>
-
-<span class="sd">    Inputs are the immutable instance, a random seed and the number of attempts.</span>
-<span class="sd">    The returned pair contains route lists (or None) and construction metrics.</span>
-<span class="sd">    No BKS or stored benchmark solution is read by the constructor.</span>
-<span class="sd">    """</span>
+<span class="w">    </span><span class="sd">"""Construit plusieurs solutions initiales par insertion regret-2.</span>
+<span class="sd">    Le premier essai est déterministe, les suivants diversifient les insertions.</span>
+<span class="sd">    Renvoie les meilleures tournées réalisables et les mesures de construction ;</span>
+<span class="sd">    renvoie None comme solution si tous les essais échouent. Aucune BKS n’est lue."""</span>
     <span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
     <span class="n">rng</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">Random</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
     <span class="n">best</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">inf</span>
@@ -8285,6 +8283,7 @@ $$\sum_{j\in C}f_{oj}^k=\sum_{i\in C}y_i^k
 <p><strong><code>walk</code> :</strong> reçoit les tableaux et paramètres, propose les mouvements et renvoie le meilleur état ainsi que des compteurs. Le passage ci-dessous est extrait du vrai corps de fonction.</p>
 <div class="highlight"><pre><span></span>        <span class="n">delta</span> <span class="o">=</span> <span class="n">ca</span> <span class="o">-</span> <span class="n">costs</span><span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">cb</span> <span class="o">-</span> <span class="n">costs</span><span class="p">[</span><span class="n">b</span><span class="p">]</span> <span class="k">if</span> <span class="n">b</span> <span class="o">!=</span> <span class="n">a</span> <span class="k">else</span> <span class="mf">0.0</span><span class="p">)</span>
         <span class="n">valid</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="c1"># Une dégradation peut aider à sortir d’un optimum local, mais jamais au prix de la faisabilité.</span>
         <span class="n">take</span> <span class="o">=</span> <span class="n">mode</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">delta</span> <span class="o">&lt;=</span> <span class="mf">1e-9</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">take</span> <span class="ow">and</span> <span class="n">mode</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
             <span class="n">take</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">math</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span>
@@ -8339,10 +8338,12 @@ $$\sum_{j\in C}f_{oj}^k=\sum_{i\in C}y_i^k
         <span class="n">proposal</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span>
             <span class="p">[[</span><span class="n">mapping</span><span class="p">[</span><span class="n">client</span><span class="p">]</span> <span class="k">for</span> <span class="n">client</span> <span class="ow">in</span> <span class="n">route</span><span class="p">]</span> <span class="k">for</span> <span class="n">route</span> <span class="ow">in</span> <span class="n">result</span><span class="p">[</span><span class="s2">"routes"</span><span class="p">]]</span>
         <span class="p">)</span>
+        <span class="c1"># Un sous-problème valide ne suffit pas : la solution complète est contrôlée après réintégration.</span>
         <span class="n">candidate</span> <span class="o">=</span> <span class="n">verify</span><span class="p">(</span><span class="n">proposal</span><span class="p">,</span> <span class="n">ins</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">candidate</span><span class="p">[</span><span class="s2">"valid"</span><span class="p">]:</span>
             <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="n">candidate</span><span class="p">[</span><span class="s2">"errors"</span><span class="p">])</span>
         <span class="n">distance</span> <span class="o">=</span> <span class="n">candidate</span><span class="p">[</span><span class="s2">"distance"</span><span class="p">]</span> <span class="o">/</span> <span class="mi">10</span>
+        <span class="c1"># L’archive globale ne remplace son résultat que par une amélioration de distance.</span>
         <span class="k">if</span> <span class="n">distance</span> <span class="o">&lt;</span> <span class="n">best</span> <span class="o">-</span> <span class="mf">1e-8</span><span class="p">:</span>
             <span class="n">routes</span><span class="p">,</span> <span class="n">best</span> <span class="o">=</span> <span class="n">proposal</span><span class="p">,</span> <span class="n">distance</span>
             <span class="n">improvements</span> <span class="o">+=</span> <span class="mi">1</span>
@@ -8508,6 +8509,7 @@ Distance avant : 45.1 ; après : 26.0
         <span class="p">),</span>
         <span class="n">initial</span><span class="p">,</span>
     <span class="p">)</span>
+    <span class="c1"># Phase externe : même instance et même objectif, avec une graine distincte.</span>
     <span class="n">second</span> <span class="o">=</span> <span class="n">external</span><span class="p">(</span>
         <span class="n">ins</span><span class="p">,</span>
         <span class="n">cfg</span><span class="o">.</span><span class="n">search_seconds</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">cfg</span><span class="o">.</span><span class="n">ils_fraction</span><span class="p">),</span>
@@ -8516,6 +8518,7 @@ Distance avant : 45.1 ; après : 26.0
     <span class="p">)</span>
     <span class="k">if</span> <span class="n">second</span><span class="p">[</span><span class="s2">"status"</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">"feasible"</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">"External phase failed; its failure must not be hidden"</span><span class="p">)</span>
+    <span class="c1"># La solution finale doit rester réalisable et au moins aussi bonne que celle transmise.</span>
     <span class="n">checked</span> <span class="o">=</span> <span class="n">verify</span><span class="p">(</span><span class="n">second</span><span class="p">[</span><span class="s2">"routes"</span><span class="p">],</span> <span class="n">ins</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">checked</span><span class="p">[</span><span class="s2">"valid"</span><span class="p">]</span> <span class="ow">or</span> <span class="n">second</span><span class="p">[</span><span class="s2">"cost"</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">first</span><span class="p">[</span><span class="s2">"cost"</span><span class="p">]</span> <span class="o">+</span> <span class="mf">1e-7</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s2">"External phase must preserve its feasible incumbent"</span><span class="p">)</span>

@@ -6,6 +6,9 @@ from .model import Instance
 
 
 def load(path):
+    """Lit une instance VRPLIB et applique les unités DIMACS du projet.
+    Distances : troncature à un dixième, stockée en unités entières ×10.
+    Horaires et services sont aussi multipliés par 10 ; les demandes ne changent pas."""
     raw=vrplib.read_instance(str(path))
     xy=np.asarray(raw['node_coord'],dtype=float)
     distance=np.floor(10*np.asarray(raw['edge_weight'],dtype=float))
@@ -20,5 +23,7 @@ def load(path):
 
 
 def reference(path):
+    """Lit une solution de référence pour l’évaluation après résolution.
+    Les tournées et le coût BKS ne sont pas transmis au moteur de recherche."""
     raw=vrplib.read_solution(str(path))
     return raw['routes'],float(raw['cost'])

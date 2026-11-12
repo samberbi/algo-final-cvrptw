@@ -45,7 +45,8 @@ PRODUCTION_CONFIGS = {
 
 
 def production_settings(method="ils", **overrides):
-    """Apply the measured per-method configuration, then explicit user overrides."""
+    """Copie le profil mesuré puis applique les paramètres explicitement demandés.
+    Les profils ne dépendent ni du nom de l’instance ni de sa BKS."""
     if method not in PRODUCTION_CONFIGS:
         raise ValueError("Choose ils or sa")
     parameters = dict(PRODUCTION_CONFIGS[method])

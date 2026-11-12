@@ -241,12 +241,10 @@ Le constructeur essaie douze insertions par regret-2 : une sans bruit, puis onze
 
 ```python
 def construct(ins, seed=0, attempts=12):
-    """Try regret-2 starts and return the cheapest feasible complete solution.
-
-    Inputs are the immutable instance, a random seed and the number of attempts.
-    The returned pair contains route lists (or None) and construction metrics.
-    No BKS or stored benchmark solution is read by the constructor.
-    """
+    """Construit plusieurs solutions initiales par insertion regret-2.
+    Le premier essai est déterministe, les suivants diversifient les insertions.
+    Renvoie les meilleures tournées réalisables et les mesures de construction ;
+    renvoie None comme solution si tous les essais échouent. Aucune BKS n’est lue."""
     start = time.perf_counter()
     rng = random.Random(seed)
     best = math.inf
@@ -294,6 +292,7 @@ Une archive indépendante protège le record. Avec un budget local b et le temps
 ```python
         delta = ca - costs[a] + (cb - costs[b] if b != a else 0.0)
         valid += 1
+        # Une dégradation peut aider à sortir d’un optimum local, mais jamais au prix de la faisabilité.
         take = mode == 0 or delta <= 1e-9
         if not take and mode == 1:
             take = np.random.random() < math.exp(
@@ -324,10 +323,12 @@ Un groupe contient au plus douze tournées. La sous-recherche dispose de 0,2 sec
         proposal.extend(
             [[mapping[client] for client in route] for route in result["routes"]]
         )
+        # Un sous-problème valide ne suffit pas : la solution complète est contrôlée après réintégration.
         candidate = verify(proposal, ins)
         if not candidate["valid"]:
             raise AssertionError(candidate["errors"])
         distance = candidate["distance"] / 10
+        # L’archive globale ne remplace son résultat que par une amélioration de distance.
         if distance < best - 1e-8:
             routes, best = proposal, distance
             improvements += 1
@@ -393,6 +394,7 @@ L’extrait suivant présente le code d’intégration développé dans le proje
         ),
         initial,
     )
+    # Phase externe : même instance et même objectif, avec une graine distincte.
     second = external(
         ins,
         cfg.search_seconds * (1 - cfg.ils_fraction),
@@ -401,6 +403,7 @@ L’extrait suivant présente le code d’intégration développé dans le proje
     )
     if second["status"] != "feasible":
         raise RuntimeError("External phase failed; its failure must not be hidden")
+    # La solution finale doit rester réalisable et au moins aussi bonne que celle transmise.
     checked = verify(second["routes"], ins)
     if not checked["valid"] or second["cost"] > first["cost"] + 1e-7:
         raise AssertionError("External phase must preserve its feasible incumbent")

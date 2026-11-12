@@ -12,6 +12,10 @@ from .verify import verify
 
 
 def solve(ins, seconds=100.0, seed=0, initial=None, neighbor_count=40):
+    """Lance le HGS externe avec un voisinage configurable et une trace observée.
+    Exige une solution initiale complète et réalisable ; conserve au moins sa qualité.
+    Les statistiques proviennent des itérations exécutées, pas d’une interpolation.
+    Le temps de préparation s’ajoute au budget de recherche seconds."""
     import pyvrp
     from pyvrp.search import NeighbourhoodParams
     from pyvrp.stop import MaxRuntime
@@ -25,6 +29,7 @@ def solve(ins, seconds=100.0, seed=0, initial=None, neighbor_count=40):
     if initial is None or not verify(initial, ins)["valid"]:
         raise ValueError("A complete feasible incumbent is required")
     started = time.perf_counter()
+    # Refuser des valeurs non entières évite une seconde conversion qui changerait le benchmark.
     values = [ins.distance, ins.travel, ins.demand, ins.service, ins.early, ins.late]
     if any(not np.array_equal(a, np.rint(a)) for a in values):
         raise ValueError("Exact integer representation required; no rounding")
@@ -85,6 +90,7 @@ def solve(ins, seconds=100.0, seed=0, initial=None, neighbor_count=40):
             local.add_route_operator(operator(data))
     manager = pyvrp.PenaltyManager.init_from(data, params.penalty)
     population = pyvrp.Population(api.bpd, params.population)
+    # La population contient notre solution réalisable et des départs aléatoires pour la diversité.
     starts = [pyvrp.Solution(data, initial)] + [
         pyvrp.Solution.make_random(data, rng)
         for _ in range(params.population.min_pop_size - 1)
@@ -92,6 +98,7 @@ def solve(ins, seconds=100.0, seed=0, initial=None, neighbor_count=40):
     algorithm = pyvrp.GeneticAlgorithm(
         data, manager, rng, population, local, api.srex, starts, params.genetic
     )
+    # La préparation est mesurée séparément ; MaxRuntime limite ensuite la recherche HGS.
     setup = time.perf_counter() - started
     output = algorithm.run(MaxRuntime(seconds), collect_stats=True, display=False)
     if not output.is_feasible():
@@ -104,6 +111,7 @@ def solve(ins, seconds=100.0, seed=0, initial=None, neighbor_count=40):
     clock = 0.0
     best = parent["distance"] / 10
     trace = [dict(elapsed_s=setup, best=best, phase="external-start")]
+    # Les durées et coûts ci-dessous sont réellement enregistrés par le moteur à chaque itération.
     for duration, datum in zip(output.stats.runtimes, output.stats.feas_stats):
         clock += float(duration)
         if math.isfinite(datum.best_cost):

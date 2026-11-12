@@ -44,7 +44,9 @@ class Settings(iterated.Settings):
 
 
 def core_settings(config, n, seconds, seed):
-    """Build a direct-search configuration; scale SA temperature by route size."""
+    """Prépare les paramètres du moteur direct pour un sous-problème.
+    En mode edge, diviser le ratio par n évite une température proportionnelle
+    à toute la distance lorsque seul un petit nombre d’arcs change."""
     fields = iterated.Settings.__dataclass_fields__
     parameters = {key: value for key, value in asdict(config).items() if key in fields}
     parameters.update(seconds=seconds, seed=seed)
@@ -54,7 +56,8 @@ def core_settings(config, n, seconds, seed):
 
 
 def select_group(ins, routes, rng, target):
-    """Use nearby whole routes; a large route is always admissible on its own."""
+    """Choisit des tournées entières autour d’un centre de tournée tiré au hasard.
+    Le nombre de clients visé limite la taille, sans couper une tournée en deux."""
     centers = np.array([ins.xy[route].mean(axis=0) for route in routes])
     pivot = rng.randrange(len(routes))
     order = np.argsort(np.linalg.norm(centers - centers[pivot], axis=1))
@@ -71,12 +74,10 @@ def select_group(ins, routes, rng, target):
 
 
 def solve(ins, settings=None, initial=None):
-    """Return a verified best archive under one overall wall-clock budget.
-
-    The same entry point serves CLI, dashboard and experiments. Supplying initial
-    routes excludes their external construction from this call's search budget.
-    Without initial routes, construction is included in the requested budget.
-    """
+    """Optimise les tournées sous un budget global de temps réel.
+    Petite instance : appel direct de l’ILS/recuit. Grande instance : résolution
+    de groupes de tournées, puis contrôle de leur réintégration dans la solution.
+    Sans initial, la construction fait partie de ce budget."""
     config = settings or Settings()
     if not config.decomposition or ins.n <= config.group_size:
         result = iterated.solve(
@@ -135,11 +136,14 @@ def solve(ins, settings=None, initial=None):
             target = max(120, min(360, 8 * math.ceil(ins.n / len(routes))))
         selected = select_group(ins, routes, rng, target)
         selected_set = set(selected)
+        # Numérotation locale : le dépôt reste 0 ; mapping permet ensuite le retour aux identifiants originaux.
         mapping = [0] + [client for index in selected for client in routes[index]]
         reverse = {client: index for index, client in enumerate(mapping)}
         ids = np.asarray(mapping)
+        # Les tournées hors du groupe consomment déjà une partie de la flotte autorisée.
         unused_fleet = ins.vehicles - (len(routes) - len(selected))
         group_fleet = min(unused_fleet, len(selected) + 3, len(mapping) - 1)
+        # On extrait les matrices originales : aucune fenêtre ni demande n’est assouplie.
         group = Instance(
             "group",
             ins.xy[ids],
@@ -178,10 +182,12 @@ def solve(ins, settings=None, initial=None):
         proposal.extend(
             [[mapping[client] for client in route] for route in result["routes"]]
         )
+        # Un sous-problème valide ne suffit pas : la solution complète est contrôlée après réintégration.
         candidate = verify(proposal, ins)
         if not candidate["valid"]:
             raise AssertionError(candidate["errors"])
         distance = candidate["distance"] / 10
+        # L’archive globale ne remplace son résultat que par une amélioration de distance.
         if distance < best - 1e-8:
             routes, best = proposal, distance
             improvements += 1
@@ -226,7 +232,8 @@ def solve(ins, settings=None, initial=None):
 
 
 def warmup():
-    """Compile optional kernels before measured solves, never inside a budget."""
+    """Préchauffe les noyaux et SWAP* avant les résolutions chronométrées.
+    Le temps de compilation est retourné séparément par les points d’entrée."""
     started = time.perf_counter()
     iterated.warmup()
     from .intensify import swap_star

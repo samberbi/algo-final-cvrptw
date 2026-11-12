@@ -26,3 +26,5 @@ La confirmation indépendante du réglage 20 s ILS / 100 s HGS porte sur sept ca
 ## Corrections de cette passe
 
 Les mécanismes internes du moteur externe sont expliqués avec les valeurs de sa version installée, les extraits d’intégration sont actualisés, les entrées de graines sont contrôlées et les modules concernés sont remis en forme. Le reçu courant contient le nombre de tests réellement exécutés et les empreintes des fichiers livrés. Aucune mesure historique n’a été réécrite pour améliorer le bilan.
+
+La passe de documentation du code décrit 45 fonctions dans 17 fichiers, avec des commentaires ciblés en français. Elle conserve les instructions exécutables, les paramètres et les résultats historiques. Les extraits du notebook suivent les versions commentées ; le journal distingue cette amélioration de lisibilité des améliorations numériques de l’algorithme.

@@ -9,6 +9,9 @@ sys.path.insert(0, str(ROOT))
 
 import nbformat
 from algo.hybrid_reference import solve
+from algo.iterated import construct
+from algo.direct import walk
+from algo.optimized import solve as grouped_solve
 from scripts.build_ils_v5_delivery import execute
 from scripts.hgs_method_notes import HGS_DETAILS
 
@@ -25,6 +28,17 @@ def main():
     excerpt = source[source.index('    first = ils('):source.index('    elapsed = time.perf_counter()')]
     cell = next(c for c in nb.cells if c.cell_type == 'markdown' and 'first = ils(' in c.source)
     cell.source = re.sub(r'```python\n.*?```', '```python\n' + excerpt.rstrip() + '\n```', cell.source, count=1, flags=re.S)
+    # Keep the teaching excerpts identical to the current, commented source.
+    move_source = inspect.getsource(walk.py_func)
+    group_source = inspect.getsource(grouped_solve)
+    excerpts = {
+        'def construct(': inspect.getsource(construct),
+        'delta = ca - costs[a]': move_source[move_source.index('        delta = ca - costs[a]'):move_source.index('        if not take:\n')],
+        'proposal = [': group_source[group_source.index('        proposal = ['):group_source.index('        trace.append(')],
+    }
+    for marker, snippet in excerpts.items():
+        cell = next(c for c in nb.cells if c.cell_type == 'markdown' and marker in c.source)
+        cell.source = re.sub(r'```python\n.*?```', lambda m: '```python\n' + snippet.rstrip() + '\n```', cell.source, count=1, flags=re.S)
     execute(nb, path)
     text = '\n\n'.join(c.source for c in nb.cells if c.cell_type == 'markdown')
     for name in ['LIVRABLE_FINAL.md', 'docs/LIVRABLE_OPTIMISE_SOURCE.md']:

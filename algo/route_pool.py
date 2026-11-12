@@ -30,7 +30,8 @@ class RoutePool:
         self.solutions_added = 0
 
     def add_solution(self, routes):
-        """Validate a complete solution; keep the cheapest ordering per client set."""
+        """Ajoute les tournées d’une solution complète vérifiée au réservoir.
+        Pour un même ensemble de clients, seul l’ordre réalisable le moins coûteux est gardé."""
         checked = verify(routes, self.instance)
         if not checked["valid"]:
             raise ValueError(
@@ -49,11 +50,10 @@ class RoutePool:
                 self.columns[key] = RouteColumn(tuple(route), metrics["distance"])
 
     def recombine(self, seconds=5.0, relative_gap=0.001):
-        """Minimize distance with one coverage equality per client and a fleet bound.
-
-        SciPy does not accept a MIP incumbent. The known feasible archive is kept
-        externally, and an objective cutoff excludes worse returned solutions.
-        """
+        """Sélectionne des tournées du réservoir par partitionnement en nombres entiers.
+        Chaque client est couvert exactement une fois et la borne de flotte est respectée.
+        Une preuve d’optimalité ne concerne que ce réservoir fini de tournées.
+        L’archive réalisable est conservée même si le solveur atteint sa limite de temps."""
         if not math.isfinite(seconds) or seconds <= 0:
             raise ValueError("Positive finite solver time required")
         if self.best_routes is None:

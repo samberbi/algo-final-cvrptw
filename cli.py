@@ -9,6 +9,8 @@ from algo.verify import verify
 
 
 def main():
+    """Lit les options, charge l’instance, préchauffe et lance le profil choisi.
+    Vérifie ensuite la solution et écrit les résultats ; la BKS sert uniquement au bilan."""
     p = argparse.ArgumentParser(
         description="CVRPTW : distance DIMACS, capacité et fenêtres strictes"
     )

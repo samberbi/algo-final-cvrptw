@@ -17,6 +17,9 @@ from web.experiments import ROOT, PROFILES, atomic_json, now, read_json
 
 
 def run(folder):
+    """Exécute séquentiellement les essais décrits par un protocole enregistré.
+    Contrôle les empreintes du code et des données avant de commencer, puis publie
+    la progression et chaque résultat. Les échecs sont enregistrés, sans disparaître du bilan."""
     folder = Path(folder)
     protocol = read_json(folder / 'protocol.json')
     total = protocol['total']

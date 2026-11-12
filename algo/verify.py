@@ -5,6 +5,10 @@ from .model import EPS
 
 
 def verify(routes, ins):
+    """Recalcule toutes les contraintes indépendamment des noyaux de recherche.
+    Entrées : listes de clients par tournée et instance originale.
+    Sortie : validité, erreurs, distance, charge et horaires détaillés.
+    Les métriques restent dans les unités internes ; un coût affiché est divisé par 10."""
     errors, details, seen = [], [], []
     used = [list(r) for r in routes if len(r)]
     if len(used) > ins.vehicles:
@@ -19,6 +23,7 @@ def verify(routes, ins):
         schedule = []
         for client in route:
             arrival = clock + float(ins.travel[previous][client])
+            # Arriver trop tôt impose une attente ; la fenêtre porte sur le début du service.
             begin = max(float(ins.early[client]), arrival)
             finish = begin + float(ins.service[client])
             if begin > float(ins.late[client]) + EPS:
@@ -29,6 +34,7 @@ def verify(routes, ins):
             quantity += float(ins.demand[client])
             schedule.append(dict(client=int(client), arrival=arrival, start=begin, finish=finish))
             clock, previous = finish, client
+        # Le trajet de retour compte dans la distance et doit respecter la fermeture du dépôt.
         clock += float(ins.travel[previous][0])
         road += float(ins.travel[previous][0])
         distance += float(ins.distance[previous][0])
@@ -40,6 +46,7 @@ def verify(routes, ins):
             errors.append(f"route {ridx}: nonfinite metrics")
         details.append(dict(duration=clock, travel=road, distance=distance, waiting=idle,
                             load=quantity, schedule=schedule))
+    # Cette égalité vérifie simultanément la couverture et l’absence de doublons.
     if sorted(seen) != list(range(1, ins.n + 1)):
         errors.append("missing or duplicated clients")
     return dict(valid=not errors, errors=errors, vehicles=len(used),

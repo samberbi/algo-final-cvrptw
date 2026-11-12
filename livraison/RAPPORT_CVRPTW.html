@@ -719,36 +719,34 @@ impossibilité.</p>
 construction. La recherche ne lit aucune BKS. Le même départ est donné
 aux méthodes comparées et son temps est publié séparément.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> construct(ins, seed<span class="op">=</span><span class="dv">0</span>, attempts<span class="op">=</span><span class="dv">12</span>):</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">&quot;&quot;&quot;Try regret-2 starts and return the cheapest feasible complete solution.</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co">    Inputs are the immutable instance, a random seed and the number of attempts.</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co">    The returned pair contains route lists (or None) and construction metrics.</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co">    No BKS or stored benchmark solution is read by the constructor.</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co">    &quot;&quot;&quot;</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    start <span class="op">=</span> time.perf_counter()</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    rng <span class="op">=</span> random.Random(seed)</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    best <span class="op">=</span> math.inf</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    routes <span class="op">=</span> <span class="va">None</span></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> attempt <span class="kw">in</span> <span class="bu">range</span>(attempts):</span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>        a, l <span class="op">=</span> encode([], ins)</span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> k.repair_fast(</span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>            a,</span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>            l,</span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>            <span class="bu">len</span>(l) <span class="op">-</span> <span class="dv">1</span>,</span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>            <span class="op">*</span>arrays(ins),</span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>            <span class="dv">2</span>,</span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>            <span class="fl">0.0</span> <span class="cf">if</span> attempt <span class="op">==</span> <span class="dv">0</span> <span class="cf">else</span> <span class="fl">0.2</span>,</span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>            rng.randrange(<span class="dv">2</span><span class="op">**</span><span class="dv">31</span>)</span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>        ):</span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>            count, cost <span class="op">=</span> k.total(a, l, <span class="op">*</span>arrays(ins))</span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> count <span class="op">&gt;=</span> <span class="dv">0</span> <span class="kw">and</span> cost <span class="op">&lt;</span> best:</span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>                best <span class="op">=</span> cost</span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>                routes <span class="op">=</span> decode(a, l)</span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> routes, <span class="bu">dict</span>(</span>
-<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>        seconds<span class="op">=</span>time.perf_counter() <span class="op">-</span> start,</span>
-<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>        attempts<span class="op">=</span>attempts,</span>
-<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>        cost<span class="op">=</span>best <span class="op">/</span> <span class="dv">10</span> <span class="cf">if</span> routes <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span> <span class="cf">else</span> <span class="va">None</span>,</span>
-<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>    )</span></code></pre></div>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">&quot;&quot;&quot;Construit plusieurs solutions initiales par insertion regret-2.</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co">    Le premier essai est déterministe, les suivants diversifient les insertions.</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co">    Renvoie les meilleures tournées réalisables et les mesures de construction ;</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co">    renvoie None comme solution si tous les essais échouent. Aucune BKS n’est lue.&quot;&quot;&quot;</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    start <span class="op">=</span> time.perf_counter()</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    rng <span class="op">=</span> random.Random(seed)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    best <span class="op">=</span> math.inf</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    routes <span class="op">=</span> <span class="va">None</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> attempt <span class="kw">in</span> <span class="bu">range</span>(attempts):</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>        a, l <span class="op">=</span> encode([], ins)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> k.repair_fast(</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>            a,</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>            l,</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>            <span class="bu">len</span>(l) <span class="op">-</span> <span class="dv">1</span>,</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>            <span class="op">*</span>arrays(ins),</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>            <span class="dv">2</span>,</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>            <span class="fl">0.0</span> <span class="cf">if</span> attempt <span class="op">==</span> <span class="dv">0</span> <span class="cf">else</span> <span class="fl">0.2</span>,</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>            rng.randrange(<span class="dv">2</span><span class="op">**</span><span class="dv">31</span>)</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>        ):</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>            count, cost <span class="op">=</span> k.total(a, l, <span class="op">*</span>arrays(ins))</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> count <span class="op">&gt;=</span> <span class="dv">0</span> <span class="kw">and</span> cost <span class="op">&lt;</span> best:</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>                best <span class="op">=</span> cost</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>                routes <span class="op">=</span> decode(a, l)</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> routes, <span class="bu">dict</span>(</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>        seconds<span class="op">=</span>time.perf_counter() <span class="op">-</span> start,</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>        attempts<span class="op">=</span>attempts,</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>        cost<span class="op">=</span>best <span class="op">/</span> <span class="dv">10</span> <span class="cf">if</span> routes <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span> <span class="cf">else</span> <span class="va">None</span>,</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>    )</span></code></pre></div>
 <p><strong>Lecture du code.</strong> Chaque essai commence avec des
 tableaux vides. <code>repair_fast</code> est utilisé uniquement pour
 construire cette première solution ; le meilleur coût réalisable est
@@ -794,11 +792,12 @@ des compteurs. Le passage ci-dessous est extrait du vrai corps de
 fonction.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>        delta <span class="op">=</span> ca <span class="op">-</span> costs[a] <span class="op">+</span> (cb <span class="op">-</span> costs[b] <span class="cf">if</span> b <span class="op">!=</span> a <span class="cf">else</span> <span class="fl">0.0</span>)</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>        valid <span class="op">+=</span> <span class="dv">1</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>        take <span class="op">=</span> mode <span class="op">==</span> <span class="dv">0</span> <span class="kw">or</span> delta <span class="op">&lt;=</span> <span class="fl">1e-9</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="kw">not</span> take <span class="kw">and</span> mode <span class="op">==</span> <span class="dv">1</span>:</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>            take <span class="op">=</span> np.random.random() <span class="op">&lt;</span> math.exp(</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>                <span class="op">-</span><span class="bu">min</span>(<span class="fl">745.0</span>, delta <span class="op">/</span> <span class="bu">max</span>(temperature, <span class="fl">1e-12</span>))</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>            )</span></code></pre></div>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Une dégradation peut aider à sortir d’un optimum local, mais jamais au prix de la faisabilité.</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>        take <span class="op">=</span> mode <span class="op">==</span> <span class="dv">0</span> <span class="kw">or</span> delta <span class="op">&lt;=</span> <span class="fl">1e-9</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="kw">not</span> take <span class="kw">and</span> mode <span class="op">==</span> <span class="dv">1</span>:</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>            take <span class="op">=</span> np.random.random() <span class="op">&lt;</span> math.exp(</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>                <span class="op">-</span><span class="bu">min</span>(<span class="fl">745.0</span>, delta <span class="op">/</span> <span class="bu">max</span>(temperature, <span class="fl">1e-12</span>))</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>            )</span></code></pre></div>
 <p><strong>Lecture.</strong> Le coût marginal est calculé après les
 contrôles. Un gain est accepté ; une hausse est tirée selon Metropolis.
 Les compteurs distinguent les refus par capacité, horaires, structure et
@@ -845,13 +844,15 @@ L’extrait montre la réintégration et l’acceptation réelle.</p>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>        proposal.extend(</span>
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>            [[mapping[client] <span class="cf">for</span> client <span class="kw">in</span> route] <span class="cf">for</span> route <span class="kw">in</span> result[<span class="st">&quot;routes&quot;</span>]]</span>
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>        )</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>        candidate <span class="op">=</span> verify(proposal, ins)</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="kw">not</span> candidate[<span class="st">&quot;valid&quot;</span>]:</span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>            <span class="cf">raise</span> <span class="pp">AssertionError</span>(candidate[<span class="st">&quot;errors&quot;</span>])</span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>        distance <span class="op">=</span> candidate[<span class="st">&quot;distance&quot;</span>] <span class="op">/</span> <span class="dv">10</span></span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> distance <span class="op">&lt;</span> best <span class="op">-</span> <span class="fl">1e-8</span>:</span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>            routes, best <span class="op">=</span> proposal, distance</span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>            improvements <span class="op">+=</span> <span class="dv">1</span></span></code></pre></div>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Un sous-problème valide ne suffit pas : la solution complète est contrôlée après réintégration.</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>        candidate <span class="op">=</span> verify(proposal, ins)</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="kw">not</span> candidate[<span class="st">&quot;valid&quot;</span>]:</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>            <span class="cf">raise</span> <span class="pp">AssertionError</span>(candidate[<span class="st">&quot;errors&quot;</span>])</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>        distance <span class="op">=</span> candidate[<span class="st">&quot;distance&quot;</span>] <span class="op">/</span> <span class="dv">10</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>        <span class="co"># L’archive globale ne remplace son résultat que par une amélioration de distance.</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> distance <span class="op">&lt;</span> best <span class="op">-</span> <span class="fl">1e-8</span>:</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>            routes, best <span class="op">=</span> proposal, distance</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>            improvements <span class="op">+=</span> <span class="dv">1</span></span></code></pre></div>
 <h3 id="un-mouvement-complet-sur-un-petit-exemple">4.4. Un mouvement
 complet sur un petit exemple</h3>
 <pre class="text"><code>[[1, 2], [3, 4]] -&gt; [[1, 3], [4, 2]]
@@ -990,17 +991,19 @@ projet.</p>
 <span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>        ),</span>
 <span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>        initial,</span>
 <span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    second <span class="op">=</span> external(</span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>        ins,</span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>        cfg.search_seconds <span class="op">*</span> (<span class="dv">1</span> <span class="op">-</span> cfg.ils_fraction),</span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>        cfg.seed <span class="op">+</span> <span class="dv">10000</span>,</span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>        first[<span class="st">&quot;routes&quot;</span>],</span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> second[<span class="st">&quot;status&quot;</span>] <span class="op">!=</span> <span class="st">&quot;feasible&quot;</span>:</span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>        <span class="cf">raise</span> <span class="pp">RuntimeError</span>(<span class="st">&quot;External phase failed; its failure must not be hidden&quot;</span>)</span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>    checked <span class="op">=</span> verify(second[<span class="st">&quot;routes&quot;</span>], ins)</span>
-<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="kw">not</span> checked[<span class="st">&quot;valid&quot;</span>] <span class="kw">or</span> second[<span class="st">&quot;cost&quot;</span>] <span class="op">&gt;</span> first[<span class="st">&quot;cost&quot;</span>] <span class="op">+</span> <span class="fl">1e-7</span>:</span>
-<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>        <span class="cf">raise</span> <span class="pp">AssertionError</span>(<span class="st">&quot;External phase must preserve its feasible incumbent&quot;</span>)</span></code></pre></div>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Phase externe : même instance et même objectif, avec une graine distincte.</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    second <span class="op">=</span> external(</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>        ins,</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>        cfg.search_seconds <span class="op">*</span> (<span class="dv">1</span> <span class="op">-</span> cfg.ils_fraction),</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>        cfg.seed <span class="op">+</span> <span class="dv">10000</span>,</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>        first[<span class="st">&quot;routes&quot;</span>],</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> second[<span class="st">&quot;status&quot;</span>] <span class="op">!=</span> <span class="st">&quot;feasible&quot;</span>:</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>        <span class="cf">raise</span> <span class="pp">RuntimeError</span>(<span class="st">&quot;External phase failed; its failure must not be hidden&quot;</span>)</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>    <span class="co"># La solution finale doit rester réalisable et au moins aussi bonne que celle transmise.</span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>    checked <span class="op">=</span> verify(second[<span class="st">&quot;routes&quot;</span>], ins)</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="kw">not</span> checked[<span class="st">&quot;valid&quot;</span>] <span class="kw">or</span> second[<span class="st">&quot;cost&quot;</span>] <span class="op">&gt;</span> first[<span class="st">&quot;cost&quot;</span>] <span class="op">+</span> <span class="fl">1e-7</span>:</span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>        <span class="cf">raise</span> <span class="pp">AssertionError</span>(<span class="st">&quot;External phase must preserve its feasible incumbent&quot;</span>)</span></code></pre></div>
 <p><strong>Lecture.</strong> La première phase est notre ILS. La seconde
 appelle explicitement la bibliothèque externe avec les tournées
 obtenues. Le contrôle final protège les contraintes et l’incumbent. Les

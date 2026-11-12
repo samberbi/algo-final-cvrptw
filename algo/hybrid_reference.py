@@ -26,6 +26,9 @@ class Settings:
 
 
 def solve(ins, settings=None, initial=None):
+    """Enchaîne notre ILS et le HGS externe avec un partage fixe du temps de recherche.
+    La construction et la préparation externe s’ajoutent au temps mesuré.
+    Le résultat regroupe les deux phases, leur trace et un contrôle final indépendant."""
     cfg = settings or Settings()
     started = time.perf_counter()
     construction_s = 0.0
@@ -42,6 +45,7 @@ def solve(ins, settings=None, initial=None):
     check = verify(initial, ins)
     if not check["valid"]:
         raise ValueError("Invalid initial solution")
+    # Phase propre : améliorer la construction avant de la transmettre au moteur externe.
     first = ils(
         ins,
         production_settings(
@@ -49,6 +53,7 @@ def solve(ins, settings=None, initial=None):
         ),
         initial,
     )
+    # Phase externe : même instance et même objectif, avec une graine distincte.
     second = external(
         ins,
         cfg.search_seconds * (1 - cfg.ils_fraction),
@@ -57,6 +62,7 @@ def solve(ins, settings=None, initial=None):
     )
     if second["status"] != "feasible":
         raise RuntimeError("External phase failed; its failure must not be hidden")
+    # La solution finale doit rester réalisable et au moins aussi bonne que celle transmise.
     checked = verify(second["routes"], ins)
     if not checked["valid"] or second["cost"] > first["cost"] + 1e-7:
         raise AssertionError("External phase must preserve its feasible incumbent")

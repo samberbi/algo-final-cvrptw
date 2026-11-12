@@ -7,6 +7,8 @@ TOL=1e-8
 
 @njit(cache=True)
 def route_eval(seq,length,travel,distance,demand,service,early,late,capacity,horizon):
+    """Évalue une tournée avec dépôt implicite au départ et au retour.
+    Renvoie faisabilité, distance et charge ; contrôle capacité et horaires stricts."""
     t=0.;cost=0.;load=0.;prev=0
     for p in range(length):
         i=seq[p];load+=demand[i]
@@ -20,6 +22,8 @@ def route_eval(seq,length,travel,distance,demand,service,early,late,capacity,hor
 
 @njit(cache=True)
 def refresh(routes,lens,r,travel,distance,demand,service,early,late,capacity,horizon,depart,latest):
+    """Recalcule les départs au plus tôt et les débuts de service au plus tard.
+    Ces deux caches permettent de tester une insertion sans rejouer toute la tournée."""
     L=lens[r];t=0.;prev=0;load=0.;cost=0.
     depart[r,0]=0.
     for p in range(L):
@@ -29,6 +33,7 @@ def refresh(routes,lens,r,travel,distance,demand,service,early,late,capacity,hor
         t+=service[i];depart[r,p+1]=t;cost+=distance[prev,i];prev=i
     if L:
         t+=travel[prev,0];cost+=distance[prev,0]
+    # Propagation arrière : dernier début de service compatible avec tous les clients suivants.
     latest[r,L]=horizon;next_node=0;next_start=horizon
     for p in range(L-1,-1,-1):
         i=routes[r,p]
@@ -38,6 +43,9 @@ def refresh(routes,lens,r,travel,distance,demand,service,early,late,capacity,hor
 
 @njit(cache=True)
 def best_insert(routes,lens,r,c,travel,distance,demand,service,early,late,capacity,horizon,depart,latest,load,noise):
+    """Cherche une position réalisable pour un client dans une tournée.
+    Renvoie le vrai surcoût de distance et la position, ou -1 sans position possible.
+    Le bruit éventuel affecte le classement, pas le coût réellement comptabilisé."""
     if load+demand[c]>capacity+TOL:return 1e100,-1
     L=lens[r];best=1e100;position=-1;true_delta=1e100
     for p in range(L+1):
@@ -45,6 +53,7 @@ def best_insert(routes,lens,r,c,travel,distance,demand,service,early,late,capaci
         nxt=routes[r,p] if p<L else 0
         begin=max(depart[r,p]+travel[prev,c],early[c])
         if begin>late[c]+TOL:continue
+        # Le détour doit aussi laisser assez de temps pour le suffixe déjà présent.
         if begin+service[c]+travel[c,nxt]>latest[r,p]+TOL:continue
         delta=distance[prev,c]+distance[c,nxt]-distance[prev,nxt]
         ranking=delta*(1+noise*(2*np.random.random()-1)) if noise>0 else delta
@@ -54,12 +63,14 @@ def best_insert(routes,lens,r,c,travel,distance,demand,service,early,late,capaci
 
 @njit(cache=True)
 def insert_at(routes,lens,r,client,p):
+    """Insère un client en place et met à jour la longueur utile de la tournée."""
     L=lens[r]
     for j in range(L,p,-1):routes[r,j]=routes[r,j-1]
     routes[r,p]=client;lens[r]+=1
 
 @njit(cache=True)
 def compact(routes,lens):
+    """Regroupe les tournées non vides au début de la matrice, en place."""
     at=0
     for r in range(len(lens)):
         if lens[r]:
@@ -72,6 +83,8 @@ def compact(routes,lens):
 
 @njit(cache=True)
 def total(routes,lens,travel,distance,demand,service,early,late,capacity,horizon):
+    """Somme les distances après contrôle des tournées non vides.
+    Le couple (-1, coût sentinelle) signale une tournée irréalisable."""
     count=0;cost=0.
     for r in range(len(lens)):
         if lens[r]:
@@ -82,6 +95,9 @@ def total(routes,lens,travel,distance,demand,service,early,late,capacity,horizon
 
 @njit(cache=True)
 def repair_fast(routes,lens,limit,travel,distance,demand,service,early,late,capacity,horizon,regret,noise,seed):
+    """Insère les clients manquants par priorité regret-1, regret-2 ou regret-3.
+    Dans le parcours de référence, cette routine sert à construire le départ.
+    Les caches ne sont recalculés que pour la tournée modifiée après insertion."""
     np.random.seed(seed)
     n=len(demand)-1;rows=len(lens)
     pending=np.ones(n+1,np.bool_);pending[0]=False
@@ -127,6 +143,7 @@ def repair_fast(routes,lens,limit,travel,distance,demand,service,early,late,capa
                 if value<best_greedy:
                     best_greedy=value;chosen=c;chosen_r=route_best;chosen_p=pos_best
             else:
+                # Priorité aux clients ayant peu de choix, puis au coût de perdre leur meilleure insertion.
                 scarcity=max(0,regret-alternatives)
                 gap=0.
                 for j in range(1,min(regret,alternatives)):gap+=values[j]-values[0]
@@ -138,6 +155,7 @@ def repair_fast(routes,lens,limit,travel,distance,demand,service,early,late,capa
         valid,_,loads[chosen_r]=refresh(routes,lens,chosen_r,travel,distance,demand,service,early,late,capacity,horizon,depart,latest)
         if not valid:return False
         pending[chosen]=False;left-=1
+        # Seule la tournée modifiée invalide ses positions et coûts d’insertion mémorisés.
         for c in range(1,n+1):
             if pending[c]:
                 costs[c,chosen_r],positions[c,chosen_r]=best_insert(routes,lens,chosen_r,c,travel,distance,demand,service,early,late,capacity,horizon,depart,latest,loads[chosen_r],noise)
@@ -146,6 +164,9 @@ def repair_fast(routes,lens,limit,travel,distance,demand,service,early,late,capa
 
 @njit(cache=True)
 def local_search(routes,lens,travel,distance,demand,service,early,late,capacity,horizon,neighbors,max_moves,chains,seed,enabled):
+    """Applique des mouvements améliorants sur des tournées complètes.
+    Les voisins limitent les candidats ; les tournées modifiées sont contrôlées
+    avant validation du mouvement. Les matrices de tournées évoluent en place."""
     np.random.seed(seed)
     n=len(demand)-1;changes=0;tested=0
     old=np.zeros(len(lens));load=np.zeros(len(lens))

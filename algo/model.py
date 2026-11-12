@@ -29,6 +29,9 @@ class Instance:
     metadata: dict = field(default_factory=dict)
 
     def __post_init__(self):
+        """Valide dimensions, unités admissibles, dépôt et cohérence des matrices.
+        Les tableaux sont copiés et rendus non modifiables pour protéger les données
+        originales pendant les transformations de tournées."""
         if not isinstance(self.vehicles, (int, np.integer)) or self.vehicles < 0:
             raise ValueError("vehicles must be a nonnegative integer")
         if not math.isfinite(self.capacity) or self.capacity <= 0:
@@ -72,10 +75,12 @@ class Instance:
 
     @property
     def n(self):
+        """Nombre de clients, en excluant le dépôt d’indice 0."""
         return len(self.demand) - 1
 
     def proven_impossible(self):
-        """Only necessary tests valid even for nonmetric matrices."""
+        """Détecte seulement des impossibilités certaines liées à la capacité/flotte.
+        Renvoyer None signifie que ces tests ne prouvent rien, pas qu’une solution existe."""
         if self.n and self.vehicles == 0:
             return "no vehicles"
         if np.any(self.demand > self.capacity + EPS):

@@ -26,14 +26,14 @@ def walk(
     mode,
     diagnostics=None,
 ):
-    """Modify complete routes by direct moves and return their best archive.
-
-    Mode 0 accepts one feasible perturbation; mode 1 uses Metropolis. Optional
-    counters record attempts, partner/structure skips, capacity/time rejections,
-    Metropolis rejections and accepted moves, in that order.
-    """
+    """Teste des déplacements directs sur des tournées complètes et réalisables.
+    Mode 0 : accepte une perturbation réalisable, même plus longue.
+    Mode 1 : applique l’acceptation de Metropolis du recuit.
+    Renvoie l’état courant, la meilleure archive et les compteurs de mouvements.
+    Les diagnostics distinguent rejets de structure, capacité, horaires et acceptation."""
     np.random.seed(seed)
     n = len(demand) - 1
+    # owner et where localisent chaque client sans parcourir toutes les tournées à chaque essai.
     owner = np.full(n + 1, -1, np.int64)
     where = np.zeros(n + 1, np.int64)
     costs = np.zeros(len(lens))
@@ -88,6 +88,7 @@ def walk(
         na, nb = la, lb
         tmp[:la] = routes[a, :la]
         tmp2[:lb] = routes[b, :lb]
+        # Quatre mouvements : relocate, swap, 2-opt intra-tournée et 2-opt* entre tournées.
         if op == 0:
             if np.random.random() < 0.03:
                 for r in range(limit):
@@ -140,6 +141,7 @@ def walk(
             tmp[p:na] = routes[b, q:lb]
             tmp2[:q] = routes[b, :q]
             tmp2[q:nb] = routes[a, p:la]
+        # Les copies de travail sont évaluées avant toute modification de la solution courante.
         va, ca, candidate_load = route_eval(
             tmp, na, travel, distance, demand, service, early, late, capacity, horizon
         )
@@ -167,6 +169,7 @@ def walk(
                 continue
         delta = ca - costs[a] + (cb - costs[b] if b != a else 0.0)
         valid += 1
+        # Une dégradation peut aider à sortir d’un optimum local, mais jamais au prix de la faisabilité.
         take = mode == 0 or delta <= 1e-9
         if not take and mode == 1:
             take = np.random.random() < math.exp(
@@ -194,6 +197,7 @@ def walk(
             for z in range(lens[b]):
                 owner[routes[b, z]] = b
                 where[routes[b, z]] = z
+        # L’archive et l’état courant sont distincts : une perturbation ne fait pas perdre le meilleur résultat.
         if current < best - 1e-8:
             best = current
             ba = routes.copy()
