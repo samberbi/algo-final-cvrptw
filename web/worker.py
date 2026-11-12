@@ -4,6 +4,7 @@ for _key in ['OMP_NUM_THREADS', 'OPENBLAS_NUM_THREADS', 'MKL_NUM_THREADS', 'NUMB
     os.environ[_key] = '1'
 
 from pathlib import Path
+from dataclasses import asdict
 import hashlib
 import sys
 import time
@@ -32,6 +33,16 @@ def run(folder):
             raise ValueError('Référentiel modifié depuis la création du protocole')
         refs = {r['instance']: r for r in read_json(ROOT / 'data/manifest.json')['reference_instances']}
         startup = warmup()
+        if any(PROFILES[job['profile']]['method'] in ('ils_v6','ils_cached') for job in protocol['jobs']):
+            from algo.cached_iterated import warmup as warmup_cache
+            warm_start=time.perf_counter()
+            warmup_cache()
+            startup+=time.perf_counter()-warm_start
+        if any(PROFILES[job['profile']]['method'] == 'ils_rvnd' for job in protocol['jobs']):
+            from algo.ils_rvnd import warmup as warmup_rvnd
+            warm_start = time.perf_counter()
+            warmup_rvnd()
+            startup += time.perf_counter() - warm_start
         update(status='running', warmup_s=startup)
         for job in protocol['jobs']:
             if (folder / 'STOP').exists():
@@ -44,7 +55,25 @@ def run(folder):
             try:
                 path = ROOT / 'data/instances' / (job['instance'] + '.vrp')
                 ins = load(path)
-                result = solve(ins, production_settings(seconds=protocol['seconds'], seed=job['seed'], **PROFILES[job['profile']]))
+                if PROFILES[job['profile']]['method'] == 'ils_hgs_refined':
+                    from algo.refined_hybrid import Settings as RefinedSettings, solve as refined_solve
+                    result=refined_solve(ins,RefinedSettings(search_seconds=protocol['seconds'],seed=job['seed']))
+                elif PROFILES[job['profile']]['method'] == 'ils_hgs':
+                    from algo.hybrid_reference import Settings as HybridSettings, solve as hybrid_solve
+                    result=hybrid_solve(ins,HybridSettings(search_seconds=protocol['seconds'],seed=job['seed']))
+                elif PROFILES[job['profile']]['method'] in ('ils_v6','ils_cached'):
+                    from algo.experimental_v6 import Settings as V6Settings, solve as v6_solve
+                    params=asdict(production_settings('ils',seconds=protocol['seconds'],seed=job['seed']))
+                    params.update(cached_evaluation=True,temporal_groups=PROFILES[job['profile']]['method']=='ils_v6')
+                    result=v6_solve(ins,V6Settings(**params))
+                elif PROFILES[job['profile']]['method'] == 'ils_sp':
+                    from algo.ils_sp import Settings as SPSettings, solve as sp_solve
+                    result = sp_solve(ins, SPSettings(seconds=protocol['seconds'], seed=job['seed']))
+                elif PROFILES[job['profile']]['method'] == 'ils_rvnd':
+                    from algo.ils_rvnd import Settings as RVNDSettings, solve as rvnd_solve
+                    result = rvnd_solve(ins, RVNDSettings(seconds=protocol['seconds'], seed=job['seed']))
+                else:
+                    result = solve(ins, production_settings(seconds=protocol['seconds'], seed=job['seed'], **PROFILES[job['profile']]))
                 if result['status'] == 'feasible' and protocol['polish_seconds'] > 0:
                     from ameliorations.decomposition import polish
                     offset = result['runtime_s']

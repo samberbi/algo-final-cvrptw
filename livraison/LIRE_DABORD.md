@@ -1,22 +1,11 @@
-# Livraison active — optimisation CVRPTW du 11 novembre 2026
+# Livraison actuelle — réduction des pires gaps v9
 
-- `RAPPORT_CVRPTW.pdf` et `.docx` : rapport de l'édition optimisée.
-- `../notebooks/Livrable_Final_CVRPTW.ipynb` : notebook exécuté correspondant.
-- `RESULTATS_OPTIMISES.html` et `.csv` : les 360 trajectoires de validation,
-  sur 36 instances et trois tailles équilibrées.
-- `VALIDATION.json` : pointe vers le justificatif actuel
-  `validation_livraison_ils.json`, avec les empreintes et contrôles.
+Ouvrir `RAPPORT_CVRPTW.pdf` ou `../notebooks/Livrable_Final_CVRPTW.ipynb`. La section 9 explique le nouveau réglage et les reprises, avec tous les coûts. Le reçu courant est `validation_worst_v9.json`, indiqué par `VALIDATION.json`.
 
-Le lot avant/après de 80 essais est dans
-`../results/optimization_v2/regression/`. Le développement séparé comporte
-324 essais, dans `development/` et `adaptive/`.
+**Référence v8 :** campagne figée de 472 pipelines, maximum 11,021 %. Ses données et tableaux restent conservés.
 
-Les fichiers `MILLE_EXECUTIONS.html`, `ETUDE_80_EXECUTIONS.html` et l'ancienne
-annexe de 356 instances décrivent les campagnes **ALNS historiques**. Leurs
-chiffres ne sont pas ceux du moteur ILS optimisé. Les documents ILS v1 et
-leurs 1 120 essais sont conservés dans `historique_ils_e104927/` et
-`../results/revision_ils/`.
+**Archive après reprises v9 :** les mêmes 472 solutions, dont dix reprises pendant 180 s supplémentaires ; maximum 6.889 %, moyenne par instance 1.988 %. Ce sont des budgets variables. Voir `ARCHIVE_APRES_REPRISES_V9.html` et `.csv`.
 
-Les moyennes et pires cas sont tous conservés. La moyenne équilibrée sous 5 %
-ne signifie pas que toutes les grandes instances atteignent ce seuil : leur
-bilan spécifique et les limites sont publiés dans le rapport.
+**Nouveau réglage à 120 s :** 20 s d’ILS puis 100 s de HGS, contrôlé sur sept cas et deux nouvelles graines ; pire gap 6.638 %, 14/14 sous 7 %. Le profil est `ILS court + HGS (v9)` ou `--method ils_hgs_refined`. Ce lot n’est pas un nouveau catalogue complet.
+
+Les essais de 360 s, départs multiples et recombinaison sont dans `../docs/REDUCTION_PIRES_GAPS_V9.md` et `../notebooks/Reduction_Pires_Gaps_V9.ipynb`. Le HGS externe reste attribué à PyVRP. Les anciens reçus correspondent à leurs études historiques.

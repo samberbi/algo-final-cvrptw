@@ -61,8 +61,8 @@ def test_all_published_runs_supply_complete_constraint_evidence():
     from algo.data import load
     from web.constraint_views import audit_frames
     root = Path(__file__).resolve().parents[1]
-    files = sorted((root / 'results/focused/runs').glob('*.json'))
-    assert len(files) == 80
+    files = sorted((root / 'results/optimization_v2/validation/runs').glob('*.json'))
+    assert len(files) == 360
     instances = {}
     for path in files:
         item = json.loads(path.read_text())
@@ -98,8 +98,10 @@ def test_javascript_playback_controls_and_schedule_boundaries():
 
 
 @pytest.mark.parametrize('source,instance',[
-    ('ILS / recuit · nouvelle étude','R1_10_1'),
+    ('Optimisation v5','R1_10_3'),
     ('Optimisation v2','R1_10_3'),
+    ('Optimisation v6','R1_10_6'),
+    ('Archive consolidée v6','R2_10_4'),
 ])
 def test_simulation_page_accepts_a_large_saved_solution(source,instance):
     from streamlit.testing.v1 import AppTest

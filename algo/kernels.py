@@ -145,49 +145,6 @@ def repair_fast(routes,lens,limit,travel,distance,demand,service,early,late,capa
     return True
 
 @njit(cache=True)
-def destroy_fast(routes,lens,travel,distance,demand,service,early,late,horizon,capacity,fraction,method,seed):
-    np.random.seed(seed)
-    n=len(demand)-1;clients=np.empty(n,np.int64);owner=np.empty(n,np.int64);index=np.empty(n,np.int64)
-    at=0
-    for r in range(len(lens)):
-        for p in range(lens[r]):
-            clients[at]=routes[r,p];owner[at]=r;index[at]=p;at+=1
-    if at==0:return
-    count=min(at,max(1,int(at*fraction)))
-    scores=np.empty(at);anchor=clients[np.random.randint(at)]
-    maximum=max(travel.max(),1e-100)
-    for a in range(at):
-        i=clients[a];r=owner[a];p=index[a]
-        if method==0:scores[a]=np.random.random()
-        elif method in (1,2,3):
-            val=travel[anchor,i]/maximum
-            if method>=2:
-                val=.4*val+.2*abs(early[i]-early[anchor])/horizon+.2*abs(late[i]-late[anchor])/horizon+.2*abs(demand[i]-demand[anchor])/capacity
-            if method==3:
-                slack=max(late[i]-early[anchor]-service[anchor]-travel[anchor,i],late[anchor]-early[i]-service[i]-travel[i,anchor])
-                val+=max(0.,-slack)/horizon
-            scores[a]=val*(.8+.4*np.random.random())
-        elif method==4:
-            prev=routes[r,p-1] if p else 0;nxt=routes[r,p+1] if p+1<lens[r] else 0
-            gain=distance[prev,i]+distance[i,nxt]-distance[prev,nxt]
-            scores[a]=-gain*(.8+.4*np.random.random())
-        elif method==5:
-            scores[a]=(late[i]-early[i])/horizon*(.5+np.random.random())
-        else:
-            # Related by route and position: remove contiguous route fragments.
-            base=owner[0]
-            scores[a]=float(abs(r-base))+np.random.random()
-    ranking=np.argsort(scores)
-    removed=np.zeros(n+1,np.bool_)
-    for j in range(count):removed[clients[ranking[j]]]=True
-    for r in range(len(lens)):
-        q=0
-        for p in range(lens[r]):
-            i=routes[r,p]
-            if not removed[i]:routes[r,q]=i;q+=1
-        lens[r]=q
-
-@njit(cache=True)
 def local_search(routes,lens,travel,distance,demand,service,early,late,capacity,horizon,neighbors,max_moves,chains,seed,enabled):
     np.random.seed(seed)
     n=len(demand)-1;changes=0;tested=0

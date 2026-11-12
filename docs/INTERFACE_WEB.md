@@ -1,15 +1,13 @@
-# Interface web et simulation
+# Interface web
 
-Lancer `.\.venv\Scripts\python.exe -m streamlit run web/app.py`, puis ouvrir http://127.0.0.1:8501.
+Lancer `python -m streamlit run web/app.py`, puis ouvrir http://127.0.0.1:8501.
 
-La page **Simulation** propose les solutions de la nouvelle étude ILS/recuit, les anciennes solutions ALNS clairement étiquetées et les campagnes locales. Choisir une instance et un run, puis **Lecture**. Les commandes permettent de mettre en pause, changer la vitesse, revenir au début et déplacer l'horloge. Les camions roulent, attendent l'ouverture, servent puis reviennent au dépôt.
+**Nouvelle expérience** permet de choisir librement les instances de 100 à 1 000 clients, les graines, répétitions et budgets. ILS et recuit constituent les références ; ILS-RVND et ILS-SP sont des variantes expérimentales. Le budget de chaque appel inclut sa construction ; chargement et compilation sont mesurés à part. La finition facultative ajoute un budget distinct.
 
-L'onglet **Vérifier toutes les contraintes** contrôle la couverture unique des clients, chaque fenêtre, la charge de chaque camion, la flotte et les retours. Une arrivée avant ouverture est autorisée avec attente ; le début du service doit être dans la fenêtre, pas nécessairement sa fin. La charge de livraison décroît après le service. Les contrôles portent à la fois sur le plan complet et sur la progression animée.
+**Mes campagnes** affiche progression, résultats, tableaux, courbes et exports. Les calculs sont séquentiels et continuent si le navigateur est fermé. L’arrêt conserve les essais déjà terminés. Les résultats locaux se trouvent dans `results/local/`.
 
-**Graphiques du run** montre fenêtres et débuts de service, charge restante, retours, décomposition trajet/attente/service et convergence. Chaque graphique est expliqué. **Schémas et méthode** décrit ILS, recuit et voisins. La **Vue d'ensemble** donne les courbes agrégées de convergence et la sensibilité. **Résultats historiques** permet de sélectionner la nouvelle comparaison ou une ancienne campagne ALNS ; leurs statistiques restent séparées.
+**Résultats historiques** sépare les campagnes v2 et v5. Les moyennes changent avec les filtres : il faut toujours lire la taille, le nombre d’essais et le budget avec le gap.
 
-**Nouvelle expérience** propose ILS et recuit sur une ou plusieurs instances, avec répétitions, graines et budget. Le budget local commence à l'entrée du solveur et inclut la construction ; le préchauffage et le chargement sont hors budget. La décomposition facultative ajoute une phase ILS et un budget distinct : elle n'est pas utilisée dans le benchmark principal. Les campagnes locales sont séquentielles. Les résultats restent sur cet ordinateur et la fermeture du navigateur ne les arrête pas.
+**Simulation** rejoue les solutions des campagnes publiées et locales. Les véhicules se déplacent, attendent, servent et reviennent au dépôt. Les onglets vérifient la couverture, la capacité, les fenêtres et les retours. La fenêtre concerne le début du service ; une attente avant ouverture est autorisée.
 
-La comparaison publiée utilise un protocole plus contrôlé : départ commun calculé une seule fois par paire, puis même budget d'amélioration pour les deux méthodes. Elle est reproduite par `scripts/run_ils_benchmark.py`, et non en mélangeant les campagnes locales.
-
-La simulation rejoue des horaires fixes et vérifiés sur les coordonnées du benchmark. Elle ne simule pas le trafic réel, les pannes ou des demandes dynamiques. L'animation n'est pas une visualisation des itérations du solveur.
+L’animation représente un planning vérifié sur les coordonnées du benchmark ; elle ne représente pas les itérations de recherche ni du trafic réel.

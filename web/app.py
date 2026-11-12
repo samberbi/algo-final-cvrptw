@@ -35,6 +35,18 @@ st.sidebar.caption('Les calculs tournent sur cet ordinateur. Les campagnes conti
 
 
 def historical(source):
+    if source.startswith('Catalogue complet'):
+        data=pd.read_csv(ROOT/'results/catalog_v8/flat.csv')
+        data=data.rename(columns={'total_s':'runtime_s','bks':'reference_distance'})
+        data['profile']='ILS + HGS (PyVRP)'
+        data['status']=data.valid.map({True:'feasible',False:'error'})
+        return data
+    if source.startswith('Optimisation v6'):
+        data=pd.read_csv(ROOT/'results/optimization_v6/validation/flat.csv')
+        data['profile']=data['profile'].replace({'baseline':'ILS de référence','combined':'Cache et groupes temporels'})
+        return data
+    if source.startswith('Optimisation v5'):
+        return pd.read_csv(ROOT/'results/optimization_v5/validation/flat.csv')
     if source.startswith('Optimisation v2'):
         path=ROOT/'results/optimization_v2/validation/flat.csv'
         data=pd.read_csv(path)
@@ -43,15 +55,7 @@ def historical(source):
     if source.startswith('ILS / recuit'):
         path = ROOT / 'results/revision_ils/flat.json'
         return pd.read_json(path) if path.exists() else pd.DataFrame()
-    path = ROOT / 'results/report' / ('mille_executions.csv' if source == 'Extension · 1 000 runs' else 'etude_principale_80.csv')
-    df = pd.read_csv(path)
-    if 'id' in df:
-        df = df.rename(columns={'id': 'run'})
-    df['profile'] = 'Historique ALNS'
-    df['valid'] = df['status'].eq('feasible') if 'status' in df else True
-    if 'status' not in df:
-        df['status'] = 'feasible'
-    return df
+    return pd.DataFrame()
 
 
 def display_metrics(df, expected=None):
@@ -121,9 +125,15 @@ def new_experiment():
         first_seed = c.number_input('Première graine', min_value=0, max_value=2147482647, value=11)
         custom = st.text_input('Graines manuelles (facultatif)', placeholder='11, 22, 33')
         profiles = st.multiselect('Configurations à comparer', list(PROFILES), default=['ILS'])
+        st.caption('ILS court + HGS (v9) : à 120 s, partage 20 s / 100 s ; '
+                   'contrôlé sur les cas difficiles, avec convergence enregistrée. Les temps de préparation s’ajoutent au budget de recherche.')
+        st.caption('ILS + HGS (PyVRP) : notre ILS puis un moteur externe attribué à PyVRP. '
+                   'Le budget est partagé entre les deux recherches ; construction et préparation sont comptées dans le temps réel en supplément.')
         polish = st.number_input('Secondes supplémentaires de décomposition par run (0 = désactivée)',
                                  min_value=0., max_value=3600., value=0., step=1.)
         st.caption('ILS : perturbation et recherche locale. Recuit : mouvements directs et refroidissement. '
+                   'ILS-RVND : mouvements complets, échanges de blocs et perturbations variables. '
+                   'ILS-SP : archive de tournées réalisables et partitionnement ; variante expérimentale. '
                    'La décomposition facultative ajoute une phase ILS et un budget distinct ; '
                    'elle est désactivée dans le benchmark principal publié.')
         submitted = st.form_submit_button('Lancer la campagne', type='primary')
@@ -235,9 +245,13 @@ def campaigns():
 
 def history():
     st.title('Résultats historiques')
-    sources=['ILS / recuit · 1 120 runs', 'Étude principale · 80 runs', 'Extension · 1 000 runs']
+    sources=[]
     if (ROOT/'results/optimization_v2/validation/flat.csv').exists():sources.append('Optimisation v2 · 360 trajectoires équilibrées')
-    source = st.selectbox('Campagne publiée', sources,index=len(sources)-1 if len(sources)>3 else 0)
+    if (ROOT/'results/optimization_v5/validation/flat.csv').exists():sources.append('Optimisation v5 · comparaison appariée à 1 000 clients')
+    if (ROOT/'results/optimization_v6/validation/flat.csv').exists():sources.append('Optimisation v6 · confirmation à 1 000 clients')
+    if (ROOT/'results/catalog_v8/analysis.json').exists() and read_json(ROOT/'results/catalog_v8/analysis.json').get('complete'):
+        sources.append('Catalogue complet v8 · 356 instances, 472 pipelines')
+    source = st.selectbox('Campagne publiée', sources,index=len(sources)-1)
     data = historical(source)
     if data.empty:
         st.info('La synthèse de la nouvelle campagne sera disponible à la fin du calcul. Les runs terminés sont déjà simulables.')
@@ -250,6 +264,11 @@ def history():
         filtered = filtered[filtered.instance.isin(names)]
     methods=st.multiselect('Méthodes à afficher',sorted(filtered.profile.unique()),default=sorted(filtered.profile.unique()))
     filtered=filtered[filtered.profile.isin(methods)]
+    if source.startswith('Catalogue complet') and len(filtered):
+        macro=filtered[filtered.valid].groupby('instance').gap_pct.mean()
+        st.info(f'Moyenne donnant le même poids à chaque instance : {macro.mean():.3f} % '
+                f'sur {len(macro)} instances représentées. Les métriques suivantes donnent le même poids à chaque essai. '
+                'Les tailles 100/1 000 ont deux graines ; les tailles intermédiaires une seule.')
     st.caption('Les filtres changent le périmètre des statistiques affichées. Les deux campagnes restent séparées.')
     display_metrics(filtered)
     analysis(filtered, 'historical')
@@ -262,8 +281,13 @@ def simulation_page():
 
     st.title('Simulation des livraisons')
     st.write('Suis les camions sur leurs tournées : déplacements, attente avant ouverture, service et retour au dépôt.')
-    sources=['ILS / recuit · nouvelle étude', 'Historique ALNS · 80 runs', 'Mes campagnes']
+    sources=['Mes campagnes']
     if (ROOT/'results/optimization_v2/validation/analysis.json').exists():sources.insert(0,'Optimisation v2')
+    if (ROOT/'results/optimization_v5/validation/flat.csv').exists():sources.insert(0,'Optimisation v5')
+    if (ROOT/'results/optimization_v6/validation/flat.csv').exists():sources.insert(0,'Optimisation v6')
+    if (ROOT/'results/optimization_v6/updated_archive/analysis.json').exists():sources.insert(0,'Archive consolidée v6')
+    if (ROOT/'results/catalog_v8/analysis.json').exists() and read_json(ROOT/'results/catalog_v8/analysis.json').get('complete'):
+        sources.insert(0,'Catalogue complet v8')
     source = st.radio('Solution à simuler', sources, horizontal=True)
     if source == 'Mes campagnes':
         ids = list_campaigns()
@@ -276,6 +300,11 @@ def simulation_page():
                            profile=x['job']['profile'], routes=x['result']['routes'],
                            id=x['job']['id'], result=x['result'], reference=x['reference_distance'])
                       for x in records(identifier) if x.get('valid')]
+    elif source=='Catalogue complet v8':
+        flat=pd.read_csv(ROOT/'results/catalog_v8/flat.csv')
+        candidates=[dict(name=row.instance,seed=int(row.seed),profile='ILS + HGS (PyVRP)',
+                         id=index,catalog_path=row.source)
+                    for index,row in flat[flat.valid].iterrows()]
     elif source=='Optimisation v2':
         candidates=[]
         for path in sorted((ROOT/'results/optimization_v2/validation/runs').glob('*.json')):
@@ -284,17 +313,27 @@ def simulation_page():
                 candidates.append(dict(name=item['job']['instance'],seed=item['job']['seed'],
                     profile=item['job']['variant'],routes=item['result']['routes'],id=item['job']['id'],
                     result=item['result'],reference=item['reference_distance']))
-    elif source.startswith('ILS / recuit') and (ROOT/'results/revision_ils/simulation_index.json').exists():
-        candidates = read_json(ROOT/'results/revision_ils/simulation_index.json')
+    elif source in ('Optimisation v6','Archive consolidée v6'):
+        candidates=[]
+        refs={r['instance']:r['reference_distance'] for r in read_json(ROOT/'data/manifest.json')['reference_instances']}
+        folder=ROOT/('results/optimization_v6/validation/runs' if source=='Optimisation v6' else 'results/optimization_v6/updated_archive')
+        for index,path in enumerate(sorted(folder.glob('*_*.json'))):
+            stored=read_json(path)
+            result=stored.get('result')
+            if result and result.get('status')=='feasible':
+                candidates.append(dict(name=stored['instance'],seed='multiples' if source=='Archive consolidée v6' else stored['seed'],
+                    profile=stored.get('variant','Archive consolidée'),routes=result['routes'],id=index,
+                    result=result,reference=refs[stored['instance']],effort_s=stored.get('total_effort_s')))
+    elif source == 'Optimisation v5':
+        candidates = []
+        for index, path in enumerate(sorted((ROOT/'results/optimization_v5/validation/runs').glob('*.json'))):
+            item = read_json(path)
+            if item.get('valid'):
+                candidates.append(dict(name=item['instance'],seed=item['seed'],
+                    profile=item['variant'],routes=item['result']['routes'],id=index,
+                    result=item['result'],reference=item['result']['cost']/(1+item['gap_pct']/100)))
     else:
         candidates = []
-        folder = 'results/revision_ils/runs' if source.startswith('ILS / recuit') else 'results/focused/runs'
-        for path in sorted((ROOT / folder).glob('*.json')):
-            item = read_json(path)
-            if item['result']['status'] == 'feasible':
-                candidates.append(dict(name=item['job']['instance'], seed=item['job']['seed'],
-                                       profile=item['job'].get('profile', 'Historique ALNS'), routes=item['result']['routes'], id=item['job']['id'],
-                                       result=item['result'], reference=item['job']['reference_distance']))
     if not candidates:
         st.info('Aucune solution réalisable terminée à simuler dans cette campagne.')
         return
@@ -304,6 +343,12 @@ def simulation_page():
     selected = right.selectbox('Run à simuler', range(len(choices)),
                                format_func=lambda i: f"Graine {choices[i]['seed']} · {choices[i]['profile']} · #{choices[i]['id']}")
     item = choices[selected]
+    if 'catalog_path' in item:
+        stored=read_json(ROOT/item['catalog_path'])
+        item=dict(item,routes=stored['result']['routes'],result=stored['result'],
+                  reference=stored['reference_distance'])
+    if item.get('effort_s') is not None:
+        st.caption(f"Archive de plusieurs recherches : effort cumulé {item['effort_s']:.1f} secondes pour cette instance. Ce n’est pas une résolution indépendante à budget court.")
     if 'file' in item:
         stored = read_json(ROOT/'results/revision_ils/runs'/item['file'])
         item = dict(item, routes=stored['result']['routes'], result=stored['result'],

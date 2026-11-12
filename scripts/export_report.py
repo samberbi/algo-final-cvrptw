@@ -122,7 +122,8 @@ def main():
     text=re.sub(r'## Sommaire\n.*?(?=## Introduction)', '',text,flags=re.S)
     # A report has its own automatic contents; the title is provided as metadata.
     text=re.sub(r'^# Livrable final[^\n]*\n','',text)
-    text='---\ntitle: "Optimisation de tournées de livraison CVRPTW"\nsubtitle: "ILS et recuit simulé — Modèle et étude expérimentale"\ntoc-title: "Sommaire"\nlang: fr-FR\n---\n\n'+text
+    subtitle=nb.metadata.get('report_subtitle','ILS et recuit simulé — Modèle et étude expérimentale')
+    text='---\ntitle: "Optimisation de tournées de livraison CVRPTW"\nsubtitle: "'+subtitle+'"\ntoc-title: "Sommaire"\nlang: fr-FR\n---\n\n'+text
     assert '<!-- EXEC:' not in text,'Unresolved executable section'
     md=OUT/'RAPPORT_CVRPTW.md';md.write_text(text,encoding='utf-8')
     exe=pandoc();ref=reference_document();target=OUT/'RAPPORT_CVRPTW.docx'
@@ -135,8 +136,10 @@ def main():
     for paragraph in doc.paragraphs:
         if paragraph.text.startswith('1. Contexte, objectif'):
             paragraph.paragraph_format.page_break_before=True
-        if paragraph._p.xpath('.//w:drawing') or paragraph.text.startswith('Figure '):
+        if paragraph._p.xpath('.//w:drawing'):
             paragraph.paragraph_format.keep_with_next=True
+        elif paragraph.text.startswith('Figure '):
+            paragraph.paragraph_format.keep_with_next=False
         if paragraph.text.startswith(('Lecture ','Interprétation à')):
             paragraph.paragraph_format.keep_together=True
         if paragraph.text.startswith('Le run illustré'):paragraph.paragraph_format.keep_with_next=True

@@ -1,1 +1,1 @@
-"""CVRPTW distance-only ALNS and independent validation."""
+"""CVRPTW: feasible ILS, direct annealing and independent verification."""

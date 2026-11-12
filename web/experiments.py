@@ -20,7 +20,13 @@ ROOT = Path(__file__).resolve().parents[1]
 STORE = ROOT / 'results' / 'local' / 'web'
 PROFILES = {
     'ILS': {'method': 'ils'},
+    'ILS + HGS (PyVRP)': {'method': 'ils_hgs'},
+    'ILS court + HGS (v9)': {'method': 'ils_hgs_refined'},
     'Recuit simulé': {'method': 'sa'},
+    'ILS-RVND': {'method': 'ils_rvnd'},
+    'ILS-SP (expérimental)': {'method': 'ils_sp'},
+    'ILS v6 (expérimental)': {'method': 'ils_v6'},
+    'ILS cache (expérimental)': {'method': 'ils_cached'},
 }
 
 

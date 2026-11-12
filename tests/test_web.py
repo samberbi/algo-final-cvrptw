@@ -81,6 +81,22 @@ def test_stop_keeps_completed_results(tmp_path):
     assert records(identifier, tmp_path) == []
 
 
+def test_hybrid_web_campaign_keeps_external_attribution_and_real_metrics(tmp_path):
+    pytest.importorskip('pyvrp')
+    from web.worker import run
+    protocol = make_protocol(['C101'], [2101], .2, ['ILS + HGS (PyVRP)'], .05)
+    identifier = create_campaign(protocol, tmp_path)
+    run(campaign_path(identifier, tmp_path))
+    items = records(identifier, tmp_path)
+    assert len(items) == 1 and items[0]['valid']
+    result = items[0]['result']
+    assert 'external' in result['engine']
+    assert 'not by us' in result['attribution']
+    assert result['metrics']['valid']
+    assert len(result['components']) == 2 and result['trace']
+    assert items[0]['gap_pct'] == pytest.approx(100*(result['cost']/items[0]['reference_distance']-1))
+
+
 def test_failures_not_counted_as_low_gaps():
     df = pd.DataFrame([
         dict(instance='C101', profile='test', status='feasible', valid=True, reference_distance=100., gap_pct=2., runtime_s=1.),
@@ -90,6 +106,32 @@ def test_failures_not_counted_as_low_gaps():
     row = statistics(df).iloc[0]
     assert row.runs == 3 and row.feasible == 2 and row.under5 == 1
     assert row.under6 == 2 and row.under7 == 2 and row.mean_gap == 3.75
+
+
+def test_web_rvnd_profile_runs_and_recomputes_distance(tmp_path):
+    from web import worker
+    protocol = make_protocol(['C101'], [31], .1, ['ILS-RVND'])
+    identifier = create_campaign(protocol, tmp_path)
+    worker.run(campaign_path(identifier, tmp_path))
+    item = records(identifier, tmp_path)[0]
+    assert item['valid'], item
+    assert item['result']['engine'] == 'ils-rvnd-v5'
+    assert item['result']['metrics']['valid']
+    assert item['result']['cost'] <= item['result']['initial_cost'] + 1e-8
+    assert item['gap_pct'] == pytest.approx(100 * (item['result']['cost'] / item['reference_distance'] - 1))
+
+
+@pytest.mark.parametrize('profile,temporal',[('ILS v6 (expérimental)',True),('ILS cache (expérimental)',False)])
+def test_web_v6_uses_the_requested_candidate(tmp_path,profile,temporal):
+    from web import worker
+    protocol=make_protocol(['C101'],[77],.15,[profile])
+    identifier=create_campaign(protocol,tmp_path)
+    worker.run(campaign_path(identifier,tmp_path))
+    item=records(identifier,tmp_path)[0]
+    assert item['valid'],item
+    assert item['result']['engine'].startswith('experimental-v6-')
+    assert item['result']['settings']['cached_evaluation']
+    assert item['result']['settings']['temporal_groups'] is temporal
 
 
 def test_worker_records_error_and_continues(tmp_path, monkeypatch):
@@ -114,6 +156,7 @@ def test_streamlit_pages():
     for label in at.sidebar.radio[0].options[1:]:
         at.sidebar.radio[0].set_value(label).run()
         assert not at.exception, [e.message for e in at.exception]
-    at.selectbox[0].select_index(1).run()
+    option = next(x for x in at.selectbox[0].options if x.startswith('Optimisation v2'))
+    at.selectbox[0].set_value(option).run()
     assert not at.exception
-    assert any('80' in m.value for m in at.metric)
+    assert any('360' in m.value for m in at.metric)

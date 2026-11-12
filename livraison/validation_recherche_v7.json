@@ -1,0 +1,38 @@
+{
+  "edition": "research_v7_external_reference",
+  "complete": true,
+  "executed": 129,
+  "technical_failures": 3,
+  "valid_60s_runs": 48,
+  "valid_120s_pipelines": 48,
+  "reused_distinct_prefixes": 24,
+  "tests_passed": 139,
+  "own_default_changed": false,
+  "assessed_v6_receipt_unchanged": true,
+  "external_version": "0.12.2",
+  "external_mean_gap": 4.253342867969461,
+  "external_worst_gap": 8.10997451070663,
+  "paired_analysis": [
+    {
+      "variant": "hybrid_hgs",
+      "pairs": 24,
+      "instances": 12,
+      "improvement_pp": 4.782456647393306,
+      "wins": 23,
+      "losses": 1,
+      "instance_bootstrap95": [
+        2.424298041259561,
+        7.222013598437986
+      ]
+    }
+  ],
+  "files": {
+    "docs/RECHERCHE_GRANDES_INSTANCES_V7.md": "19c13bd04542970badc03d7ef0b5c2de52ffe9a2bc21b850b0aa7358694ceefe",
+    "notebooks/Recherche_1000_clients_V7.ipynb": "8283ceabff5c66a4e75534aee4c63242a5dcd31c3528b6c721012a48bf400d9b",
+    "notebooks/Recherche_1000_clients_V7.html": "c23d6ff2364cde8f8cf1b7a565569bdd788a157feb84714b576a073d5983f646",
+    "livraison/RESULTATS_ILS_V7.csv": "bd5659cdfa68348050fc3bb91ad6655cd8bb38fea0bf78fd3c95ce72c397ecfa",
+    "livraison/RESULTATS_ILS_V7.html": "7586e76bc57c0f15438206cdeb26c918e538a091b06550476bcb68783d2585c8",
+    "results/optimization_v7/tests.xml": "b4dc9dea91f6d616372bf727cc5126d21ea921d3c65928e8440cf43bd185b271"
+  },
+  "caveat": "External reference, not our implementation; two seeds and twelve previously studied instances"
+}

@@ -4,7 +4,7 @@ import argparse,subprocess,json,hashlib
 ROOT=Path(__file__).resolve().parents[1]
 
 
-def main(stem):
+def main(stem,html_only=False):
     out=ROOT/'livraison'
     pandoc=ROOT.parent/'.tools/pandoc-3.6.4/pandoc.exe'
     if not pandoc.exists():pandoc=ROOT/'.tools/pandoc-3.6.4/pandoc.exe'
@@ -12,6 +12,9 @@ def main(stem):
     subprocess.run([str(pandoc),str(out/(stem+'.md')),'--standalone','--toc','--toc-depth=2',
         '--mathml','--embed-resources','--resource-path='+str(out),
         '--css='+str(ROOT/'scripts/submission_print.css'),'-o',str(html)],check=True,cwd=ROOT)
+    if html_only:
+        print('HTML exported:',html)
+        return
     browser=Path('C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe')
     if not browser.exists():browser=Path('C:/Program Files/Google/Chrome/Application/chrome.exe')
     profile=ROOT/'.tools/pdf-profile'
@@ -27,4 +30,6 @@ def main(stem):
 
 
 if __name__=='__main__':
-    p=argparse.ArgumentParser();p.add_argument('--stem',default='RAPPORT_CVRPTW');main(p.parse_args().stem)
+    p=argparse.ArgumentParser();p.add_argument('--stem',default='RAPPORT_CVRPTW')
+    p.add_argument('--html-only',action='store_true')
+    args=p.parse_args();main(args.stem,args.html_only)
