@@ -1,0 +1,28 @@
+{
+  "recommended": "baseline_ils",
+  "default": "baseline_ils",
+  "rule": "Mean paired gain >0.2 percentage point and exploratory instance-bootstrap lower limit >0; otherwise retain baseline",
+  "comparisons": [
+    {
+      "method": "wide",
+      "mean_improvement_pp": -1.39703983880458,
+      "wins": 8,
+      "losses": 16,
+      "cluster_bootstrap95": [
+        -3.640834099489834,
+        0.0048862949895332256
+      ]
+    },
+    {
+      "method": "ils_sp",
+      "mean_improvement_pp": -0.22862054967519654,
+      "wins": 9,
+      "losses": 15,
+      "cluster_bootstrap95": [
+        -0.6970542162116332,
+        0.15907951190246028
+      ]
+    }
+  ],
+  "caution": "Two seeds per instance; exploratory evidence, not a universal superiority claim"
+}

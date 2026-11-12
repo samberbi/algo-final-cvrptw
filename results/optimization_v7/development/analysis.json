@@ -1,0 +1,58 @@
+{
+  "label": "development",
+  "planned": 18,
+  "executed": 18,
+  "failures": 3,
+  "comparisons": [
+    {
+      "variant": "gls",
+      "pairs": 3,
+      "instances": 3,
+      "improvement_pp": -0.31918560672724244,
+      "wins": 1,
+      "losses": 2,
+      "instance_bootstrap95": [
+        -1.6020862057133378,
+        1.7076828490493412
+      ]
+    },
+    {
+      "variant": "penalty",
+      "pairs": 3,
+      "instances": 3,
+      "improvement_pp": -0.7661291235444203,
+      "wins": 1,
+      "losses": 2,
+      "instance_bootstrap95": [
+        -2.6511603854352934,
+        1.8157372486018009
+      ]
+    },
+    {
+      "variant": "penalty_hot",
+      "pairs": 3,
+      "instances": 3,
+      "improvement_pp": -2.2535679235766644,
+      "wins": 0,
+      "losses": 3,
+      "instance_bootstrap95": [
+        -4.594144399872713,
+        -0.9145267571027293
+      ]
+    },
+    {
+      "variant": "external_warm",
+      "pairs": 3,
+      "instances": 3,
+      "improvement_pp": 5.946442401731233,
+      "wins": 3,
+      "losses": 0,
+      "instance_bootstrap95": [
+        2.362578061151299,
+        11.695788826513898
+      ]
+    }
+  ],
+  "mean_scope": "All valid runs on the declared lot; failures counted separately; no gap filtering",
+  "uncertainty": "Bootstrap across instances; two seeds are limited and old validation instances have previously been studied"
+}
