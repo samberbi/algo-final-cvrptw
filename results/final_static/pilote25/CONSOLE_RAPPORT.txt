@@ -1,0 +1,38 @@
+{
+  "resolutions": 24,
+  "instances": 3,
+  "feasible": 24,
+  "failed": 0,
+  "independent_reference_instances": 3,
+  "signed_comparisons": 21,
+  "above_6": 2,
+  "negative": 0,
+  "max_cpu_s": 6.015625,
+  "max_wall_s": 6.077848499990068,
+  "limitation": "Small development pilot; OR-Tools is a feasible comparator, not a proven optimum. Search budgets and total runtimes differ explicitly. No global under-6 claim."
+}
+instance  n               method  seed  duration  independent_reference  delta_independent_pct  valid   wall_s
+    C101 25         construction  4101    2846.3                 2623.5               8.492472   True 0.003256
+    C101 25               hybrid  4101    2623.5                 2623.5               0.000000   True 2.010973
+    C101 25                  ils  4101    2623.5                 2623.5               0.000000   True 2.004132
+    C101 25              ortools  4101    2623.5                 2623.5                    NaN   True 6.077848
+    C101 25                pyvrp  4101    2623.5                 2623.5               0.000000   True 2.060673
+    C101 25              refined  4101    2623.5                 2623.5               0.000000   True 0.374018
+    C101 25 refined_no_partition  4101    2623.5                 2623.5               0.000000   True 0.020271
+    C101 25                   sa  4101    2623.5                 2623.5               0.000000   True 2.003721
+    R101 25         construction  4101    1331.4                 1294.7               2.834634   True 0.003827
+    R101 25               hybrid  4101    1294.7                 1294.7               0.000000   True 2.012143
+    R101 25                  ils  4101    1294.7                 1294.7               0.000000   True 2.004644
+    R101 25              ortools  4101    1294.7                 1294.7                    NaN   True 6.002111
+    R101 25                pyvrp  4101    1294.7                 1294.7               0.000000   True 2.003644
+    R101 25              refined  4101    1306.5                 1294.7               0.911408   True 0.021811
+    R101 25 refined_no_partition  4101    1306.5                 1294.7               0.911408   True 0.017651
+    R101 25                   sa  4101    1294.7                 1294.7               0.000000   True 2.004579
+   RC201 25         construction  4101    2209.2                 1295.3              70.555084   True 0.003866
+   RC201 25               hybrid  4101    1295.3                 1295.3               0.000000   True 2.013140
+   RC201 25                  ils  4101    1295.3                 1295.3               0.000000   True 2.003838
+   RC201 25              ortools  4101    1295.3                 1295.3                    NaN   True 6.002333
+   RC201 25                pyvrp  4101    1295.3                 1295.3               0.000000   True 2.004039
+   RC201 25              refined  4101    1295.3                 1295.3               0.000000   True 0.022260
+   RC201 25 refined_no_partition  4101    1295.3                 1295.3               0.000000   True 0.018431
+   RC201 25                   sa  4101    1295.3                 1295.3               0.000000   True 2.004519

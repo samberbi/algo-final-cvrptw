@@ -134,3 +134,44 @@ prioritaires. Prochaine action : compatibilité Phonin 2025, puis pilote statiqu
   `docs/CAHIER_DES_CHARGES_TRANSMIS.md` et `docs/BILAN_CONFORMITE_FINAL.md`.
 - Commande de reprise / confirmation (même interpréteur que ci-dessus) :
   `python scripts/benchmark_final_static.py --cases R101:25 R202:100 RC2_6_1:600 R2_10_8:1000 --seeds 4101 4102 --methods ils refined refined_ils ortools --seconds 3 --reference-seconds 10 --label confirmation_ils_v2`
+
+## Finalisation G–H — sauvegarde du livrable exécutable
+
+- Campagnes terminées : 24 + 63 + 32 = **119 résolutions pilotes**, **117 faisables**
+  et deux recherches sans solution (conservées). Cinq autres résolutions à 25
+  clients vérifient les références Phonin ; une réévaluation C101/100 n'est pas
+  un nouveau run. Les 646 anciennes résolutions restent distinctes.
+- Confirmation v2 : huit paires renforcé / renforcé+ILS sur quatre instances,
+  deux graines. Coûts améliorés sur R101/R202, inchangés à 600/1000 dans ces
+  essais. R202/4101 : 2913,1 -> 2779,9 ; écart au comparateur OR-Tools du lot
+  +6,633 % -> +1,757 %. Pas de généralisation à un optimum inconnu.
+- Premier candidat v1 : régressions explicites à grande taille ; conservé comme
+  résultat de développement. Le moteur de production n'a pas été remplacé.
+- Suite complète actuelle : **182 réussis, 2 modules optionnels ignorés**,
+  `livraison/TESTS_SOUTENANCE.xml`. Avertissements PyVRP sur les jouets TSP et
+  dépréciations SWIG ; l'erreur de décodage Windows a disparu.
+- `pip check` : aucune dépendance cassée dans l'interpréteur utilisé.
+- Notebook exécuté intégralement : **16 cellules, zéro erreur, 45,22 s** lors
+  du premier passage de finalisation ; reçu `results/final_static/NOTEBOOK_EXECUTION.json`.
+- Validation statique réussie : 712 fichiers historiques + 16 sous-instances
+  vérifiés, 119 nouveaux enregistrements, dix preuves exactes indépendantes,
+  références et CSV recalculés, contrôles du notebook et de ses figures.
+- MILP C101/25, budget 10 s : **time_limit**, 10,55 s mesurées, incumbent 8297,9,
+  borne 1020,6, gap HiGHS 87,70 %. Ni optimum annoncé ni référence de qualité ;
+  les fichiers et ce résultat défavorable sont conservés.
+- Trois figures nouvelles PNG/SVG haute résolution dans
+  `livraison/figures_final_static/`, avec explications sous les schémas.
+- Réexécution finale prévue après deux corrections de présentation : mention
+  explicite de l'échec dans les cellules manquantes et explication du MILP limité.
+
+### Commande exacte pour reprendre la finalisation sans relancer les campagnes
+
+Dans `C:\Users\user\Downloads\CVRPTW_REMISE_PROF_20261112T203928` :
+
+```powershell
+& "C:\Users\user\OneDrive - Association Cesi Viacesi mail\Bureau\PROJET ALGO\.venv\Scripts\python.exe" -X utf8 scripts/finalize_static.py --execute --validate
+```
+
+Cette commande recalcule les statistiques/figures des fichiers déjà sauvés,
+met à jour le notebook, exécute ses cellules et valide. Aucun nouveau benchmark,
+push, PDF, Word ou ZIP. Pour les tests, la commande pytest du début reste valable.

@@ -36,6 +36,8 @@ def main():
             'et correspond au périmètre professoral confirmé pour cette finalisation')
         cell.source=cell.source.replace('## 2. Modélisation mathématique','## 3. Modélisation mathématique')
         cell.source=cell.source.replace('## 3. Complexité et vérification','## 2. Complexité et vérification')
+        if cell.source.startswith('## 3. Modélisation'):
+            cell.source=cell.source.replace('### 2.','### 3.')
     # La difficulté du problème précède sa formulation détaillée.
     complexity=next(c for c in nb.cells if c.source.startswith('## 2. Complexité'))
     idx=nb.cells.index(complexity)
@@ -68,6 +70,8 @@ supérieurs à 6 % et les échecs restent visibles ; aucun pourcentage n'est pla
     nbformat.validate(nb)
     nbformat.write(nb,target)
     write_markdown(nb)
+    model=next(c.source for c in nb.cells if c.source.startswith('## 3. Modélisation'))
+    (ROOT/'docs/MODELE_DUREE.md').write_text(model+'\n',encoding='utf-8')
     readme=ROOT/'README.md';text=readme.read_text(encoding='utf-8')
     marker='## Extension temporelle Dabia2013'
     if marker in text:

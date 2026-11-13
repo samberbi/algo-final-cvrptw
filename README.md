@@ -65,7 +65,7 @@ Le reçu courant est [VALIDATION_SOUTENANCE.json](livraison/VALIDATION_SOUTENANC
 
 Les tests comprennent aussi des contrôles explicites des routines historiques de distance ; cela ne les transforme pas en benchmarks temporels. Les solutions anciennes utilisées uniquement comme fixtures vérifient couverture, capacité et horaires. Les anciennes campagnes et leurs documents ne font pas partie de cette remise en durée.
 
-Le trafic dépendant de l’heure et les tailles supérieures à 1 000 clients ne sont pas démontrés. La couverture globale possède une ou deux graines selon la taille ; vingt répétitions sont réservées aux trois cas de stabilité. Une corrélation n’établit pas une causalité, et les histogrammes ne prouvent pas automatiquement une loi normale. Node.js est utilisé par un test de lecture de la simulation ; son absence est signalée comme test ignoré.
+Le modèle principal suit les trajets fixes et symétriques confirmés par le professeur ; les tailles supérieures à 1 000 clients ne sont pas démontrées. La couverture globale possède une ou deux graines selon la taille ; vingt répétitions sont réservées aux trois cas de stabilité. Une corrélation n’établit pas une causalité, et les histogrammes ne prouvent pas automatiquement une loi normale. Node.js est utilisé par un test de lecture de la simulation ; son absence est signalée comme test ignoré.
 
 ## Version de soutenance : tests sur le portable
 
@@ -74,3 +74,24 @@ Les commandes courtes sont dans [TESTER_SUR_PORTABLE.md](docs/TESTER_SUR_PORTABL
 ## Exploration hors périmètre
 
 Les expériences TD sont archivées dans [EXPLORATION_TD_HORS_PERIMETRE.md](docs/EXPLORATION_TD_HORS_PERIMETRE.md). Elles ne valident pas le modèle principal à trajets fixes, symétriques et départs nuls.
+
+## Finalisation statique du 13 novembre
+
+Le livrable actuel est `notebooks/Livrable_Final_CVRPTW.ipynb`. Les nouvelles
+comparaisons et leurs limites sont dans [RAPPORT_PILOTES_STATIQUES.md](docs/RAPPORT_PILOTES_STATIQUES.md).
+Le bilan de conformité est [BILAN_CONFORMITE_FINAL.md](docs/BILAN_CONFORMITE_FINAL.md),
+la progression et les commandes de reprise dans [PROGRESSION.md](PROGRESSION.md).
+Pour le comparateur indépendant : `python -m pip install -r requirements-reference-final.txt`.
+
+```powershell
+python scripts/benchmark_final_static.py --cases C101:25 R101:25 RC201:25 --methods ils refined ortools --seconds 3 --reference-seconds 6 --label demonstration_statique
+python scripts/report_final_static.py --label demonstration_statique
+python -m pytest tests -q --junitxml=livraison/TESTS_SOUTENANCE.xml
+python scripts/validate_final_static.py
+```
+
+L'installation et le préchauffage initial précèdent les temps affichés. Une
+commande interrompue reprend les JSON existants avec le même protocole et les
+mêmes sources ; si le code change, choisir un nouveau label. Aucun lancement
+automatique des 356 instances. Les anciens exports PDF/Word ne constituent
+pas la remise de cette révision. Le reçu dédié est `livraison/VALIDATION_FINALE_STATIQUE.json`.

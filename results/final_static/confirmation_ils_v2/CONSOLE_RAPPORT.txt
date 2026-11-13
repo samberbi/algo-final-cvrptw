@@ -1,0 +1,46 @@
+{
+  "resolutions": 32,
+  "instances": 4,
+  "feasible": 32,
+  "failed": 0,
+  "independent_reference_instances": 4,
+  "signed_comparisons": 24,
+  "above_6": 3,
+  "negative": 11,
+  "max_cpu_s": 10.03125,
+  "max_wall_s": 10.074375599971972,
+  "limitation": "Small development pilot; OR-Tools is a feasible comparator, not a proven optimum. Search budgets and total runtimes differ explicitly. No global under-6 claim."
+}
+instance    n      method  seed  duration  independent_reference  delta_independent_pct  valid    wall_s
+    R101   25         ils  4101    1294.7                 1294.7               0.000000   True  3.004150
+    R101   25         ils  4102    1294.7                 1294.7               0.000000   True  3.004437
+    R101   25     ortools  4101    1294.7                 1294.7                    NaN   True 10.074376
+    R101   25     ortools  4102    1294.7                 1294.7                    NaN   True 10.005938
+    R101   25     refined  4101    1306.5                 1294.7               0.911408   True  0.396425
+    R101   25     refined  4102    1306.5                 1294.7               0.911408   True  0.031217
+    R101   25 refined_ils  4101    1294.7                 1294.7               0.000000   True  3.003257
+    R101   25 refined_ils  4102    1294.7                 1294.7               0.000000   True  3.000670
+    R202  100         ils  4101    2796.9                 2731.9               2.379296   True  3.028788
+    R202  100         ils  4102    2888.4                 2731.9               5.728614   True  3.029973
+    R202  100     ortools  4101    2731.9                 2731.9                    NaN   True 10.005807
+    R202  100     ortools  4102    2731.9                 2731.9                    NaN   True 10.002968
+    R202  100     refined  4101    2913.1                 2731.9               6.632746   True  0.175252
+    R202  100     refined  4102    2803.6                 2731.9               2.624547   True  0.208593
+    R202  100 refined_ils  4101    2779.9                 2731.9               1.757019   True  3.001037
+    R202  100 refined_ils  4102    2649.2                 2731.9              -3.027197   True  3.001075
+ R2_10_8 1000         ils  4101   96952.0               107585.2              -9.883516   True  7.341507
+ R2_10_8 1000         ils  4102   97647.8               107585.2              -9.236772   True  7.581482
+ R2_10_8 1000     ortools  4101  107906.4               107585.2                    NaN   True 10.037073
+ R2_10_8 1000     ortools  4102  107585.2               107585.2                    NaN   True 10.045555
+ R2_10_8 1000     refined  4101   86097.4               107585.2             -19.972822   True  2.277624
+ R2_10_8 1000     refined  4102   80770.5               107585.2             -24.924153   True  2.540764
+ R2_10_8 1000 refined_ils  4101   86097.4               107585.2             -19.972822   True  3.009646
+ R2_10_8 1000 refined_ils  4102   80770.5               107585.2             -24.924153   True  3.011570
+ RC2_6_1  600         ils  4101   55655.1                48169.3              15.540604   True  4.043148
+ RC2_6_1  600         ils  4102   54887.8                48169.3              13.947680   True  4.086442
+ RC2_6_1  600     ortools  4101   48169.3                48169.3                    NaN   True 10.019244
+ RC2_6_1  600     ortools  4102   48169.3                48169.3                    NaN   True 10.017750
+ RC2_6_1  600     refined  4101   38827.0                48169.3             -19.394718   True  1.862620
+ RC2_6_1  600     refined  4102   39122.2                48169.3             -18.781880   True  1.671749
+ RC2_6_1  600 refined_ils  4101   38827.0                48169.3             -19.394718   True  3.006137
+ RC2_6_1  600 refined_ils  4102   39122.2                48169.3             -18.781880   True  3.005744

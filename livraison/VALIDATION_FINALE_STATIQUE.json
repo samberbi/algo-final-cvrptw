@@ -1,0 +1,36 @@
+{
+  "validated": true,
+  "scope": "Static final notebook, all saved new pilot records, data hashes, ten exact controls and current test suite",
+  "instances_original": 356,
+  "original_files_checked": 712,
+  "small_instances_checked": 16,
+  "pilot_records": 119,
+  "pilot_feasible": 117,
+  "pilot_unsuccessful_searches": 2,
+  "campaigns": {
+    "pilote25": {
+      "records": 24,
+      "failures": 0
+    },
+    "couverture_progressive": {
+      "records": 63,
+      "failures": 2
+    },
+    "confirmation_ils_v2": {
+      "records": 32,
+      "failures": 0
+    }
+  },
+  "exact_controls": 10,
+  "passed_tests": 182,
+  "skipped_tests": 2,
+  "notebook_code_cells": 16,
+  "notebook_sha256": "1bb903ef74a7334ee2f73d45402a7acdfec120dc513bedef3db830b117cc4bc6",
+  "mathematical_objective": "Sum complete route durations, fixed symmetric travel, all departures zero",
+  "limitations": [
+    "No certified duration optimum on all Solomon/Homberger instances",
+    "No new uniform 356-instance benchmark; short development pilots do not replace it",
+    "Experimental ILS extension not selected automatically as default",
+    "Historical best archive uses mixed budgets; exploratory TD outside main model"
+  ]
+}

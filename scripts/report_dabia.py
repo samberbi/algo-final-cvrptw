@@ -219,20 +219,10 @@ def augment(nb):
 
 
 def main():
-    import nbformat
-    from scripts.revision_duree import write_markdown
-    target = ROOT/'notebooks/Livrable_Final_CVRPTW.ipynb'
-    nb = nbformat.read(target, as_version=4)
-    codes = [c.source for c in nb.cells if c.cell_type == 'code']
-    augment(nb)
-    assert codes == [c.source for c in nb.cells if c.cell_type == 'code']
-    nbformat.validate(nb)
-    nbformat.write(nb, target)
-    write_markdown(nb)
-    report = ROOT/'LIVRABLE_FINAL.md'
-    report.write_text(report.read_text(encoding='utf-8').rstrip()+'\n', encoding='utf-8')
-    (ROOT/'docs/EXTENSION_DABIA2013.md').write_text(content(), encoding='utf-8')
-    print('Section Dabia ajoutée depuis les 18 essais mesurés ; aucun benchmark relancé.')
+    # La mission finale impose des trajets fixes : ne plus modifier le notebook.
+    text='# Exploration TD — hors périmètre du modèle statique confirmé\n\n'+content()
+    (ROOT/'docs/EXTENSION_DABIA2013.md').write_text(text,encoding='utf-8')
+    print('Archive exploratoire TD actualisée ; notebook statique inchangé.')
 
 
 if __name__ == '__main__':

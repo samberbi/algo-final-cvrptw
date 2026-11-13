@@ -1,4 +1,4 @@
-## 2. Modélisation mathématique du CVRPTW en durée
+## 3. Modélisation mathématique du CVRPTW en durée
 
 Nous formalisons le **CVRPTW statique étudié ici** : un dépôt unique, des véhicules homogènes, des livraisons indivisibles, une tournée au plus par véhicule et des trajets fixes et symétriques. L'attente avant ouverture est autorisée. Le début du service doit appartenir à la fenêtre du client et le retour doit respecter la fermeture du dépôt. Les bornes sont inclusives. Le trafic variable, les ramassages, les dépôts multiples et les flottes hétérogènes ne font pas partie des expériences réalisées.
 
@@ -15,7 +15,7 @@ Les véhicules peuvent aller du départ à un client, entre deux clients distinc
 
 **Paramètres.** Pour chaque client $i\in C$, soient $q_i,s_i,e_i,l_i\in\mathbb R_{\ge0}$ : sa demande est $q_i$, sa durée de service $s_i$ et sa fenêtre de début de service $[e_i,l_i]$. Soient $Q,H\in\mathbb R_{>0}$ la capacité commune et la fermeture du dépôt. Comme dans les données acceptées par `Instance`, nous supposons $0\le e_i\le l_i\le H$ pour tout $i\in C$. Pour chaque arc $(i,j)\in A$, soient $d_{ij},c_{ij}\in\mathbb R_{\ge0}$ sa distance et son temps de trajet. Les départs sont fixés au temps zéro. Dans les benchmarks du projet, temps de trajet et distances ont les mêmes valeurs numériques ; le modèle distingue néanmoins leurs rôles et leurs unités.
 
-**Pourquoi fixer le départ à zéro ?** Nous supposons que le temps mobilisé de chaque véhicule utilisé est compté depuis une même origine, l'ouverture du dépôt. Cette convention simplifie les horaires et aligne le PLNE, notre contrôleur et PyVRP ; ce n'est pas une obligation générale du CVRPTW ni une consigne explicite de l'énoncé. Si les départs $D_k$ devenaient des décisions libres, il faudrait minimiser $\sum_k(R_k-D_k)$ et adapter les contraintes de départ ainsi que l'évaluation de tous les témoins. Retarder le départ peut éviter une attente sur tournée : les pourcentages des deux conventions ne seraient donc pas interchangeables. Cette extension n'est pas implémentée dans les expériences présentées.
+**Pourquoi fixer le départ à zéro ?** Nous supposons que le temps mobilisé de chaque véhicule utilisé est compté depuis une même origine, l'ouverture du dépôt. Cette convention simplifie les horaires et aligne le PLNE, notre contrôleur et PyVRP ; ce n'est pas une obligation générale du CVRPTW et correspond au périmètre professoral confirmé pour cette finalisation. Si les départs $D_k$ devenaient des décisions libres, il faudrait minimiser $\sum_k(R_k-D_k)$ et adapter les contraintes de départ ainsi que l'évaluation de tous les témoins. Retarder le départ peut éviter une attente sur tournée : les pourcentages des deux conventions ne seraient donc pas interchangeables. Cette extension n'est pas implémentée dans les expériences présentées.
 
 **Variables de décision et domaines.**
 
@@ -35,7 +35,7 @@ La variable t est l'heure de **début du service**, pas l'heure d'arrivée. La v
 
 Enfin, $f_{ij}^k\in\mathbb R_{\ge0}$, pour chaque $(i,j)\in A$ et chaque $k\in\mathcal K$, est un flot artificiel assurant la connexion au dépôt. Il représente un outil mathématique, pas la marchandise dans le camion.
 
-### 2.1. Fonction objectif : minimiser la durée totale
+### 3.1. Fonction objectif : minimiser la durée totale
 
 $$\boxed{\min T=\sum_{k\in\mathcal K}R_k}.$$
 
@@ -47,7 +47,7 @@ $$T=\sum_{k\in\mathcal K}\sum_{(i,j)\in A}c_{ij}x_{ij}^k+\sum_{i\in C}s_i+\sum_{
 
 où $w_i$ est l’attente avant le début du service, calculée à partir des horaires. La somme des services est constante pour une instance : elle est comptée mais ne constitue pas un gain que l’algorithme peut supprimer. Trajets et attentes peuvent varier. Les véhicules restent limités par la flotte disponible, sans priorité lexicographique ni coût fixe ajouté.
 
-### 2.2. Contraintes et lecture opérationnelle
+### 3.2. Contraintes et lecture opérationnelle
 
 **C1 — Affecter chaque client exactement une fois.**
 
@@ -132,23 +132,3 @@ Chaque client affecté consomme une unité reçue du dépôt. Le dépôt en éme
 
 
 **Pourquoi le grand M est valide.** Les bornes $0\le t_i,t_j\le H$ impliquent $t_i+s_i+c_{ij}-t_j\le H+s_{\max}+c_{\max}$. Cette valeur désactive donc la propagation d'un arc non utilisé. Des bornes par arc peuvent renforcer le solveur exact sans modifier les solutions autorisées. Le modèle contient de l'ordre de $Kn^2$ variables d'arcs/flots et contraintes : l'exact sert ici aux petits cas.
-
-## Extension TDVRPTW : départs optimisés
-
-
-La formulation précédente reste celle des expériences statiques à 100–1 000
-clients et du PLNE exact pour petits cas. Le nouveau module `algo/dabia.py`
-traite séparément les six instances Dabia2013 à 25 clients décrites dans
-[EXTENSION_DABIA2013.md](EXTENSION_DABIA2013.md).
-
-Le départ $D_p$ n'est plus nul et le trajet dépend de l'heure :
-$\alpha_{ij}(t)=t+\tau_{ij}(t)$. La récurrence temporelle applique chaque
-fonction d'arrivée, puis $B_i=\max(A_i,e_i)$, puis le service $F_i=B_i+s_i$.
-L'objectif compatible est $\min\sum_p(R_p-D_p)$, pas $\min\sum_pR_p$.
-Le contrôleur externe MAMUT 0.12.0 optimise le départ de chaque ordre proposé.
-Capacité, visite unique, flotte et fenêtres restent obligatoires.
-
-Notre PLNE statique n'est pas présenté comme un PLNE exact de ce problème à
-fonctions temporelles. Les données et leurs unités natives ne sont pas
-converties à la convention DIMACS. Les coûts de BKS en durée sont contrôlés
-après recherche et les notes de recertification originales restent visibles.
