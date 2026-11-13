@@ -112,3 +112,25 @@ prioritaires. Prochaine action : compatibilité Phonin 2025, puis pilote statiqu
   erreur de décodage Windows qui n'était pas un échec du solveur.
 - Reprise du pilote : même commande avec le même label, JSON existants conservés.
   Un changement de code/protocole impose un nouveau label ; snapshots sauvegardés.
+
+## Couverture progressive — résultats et décision
+
+- Lot `couverture_progressive` terminé : **63 résolutions**, sept instances de
+  50, 100, 200, 400, 600, 800 et 1000 clients, neuf méthodes, une graine.
+  **61 faisables / 2 sans solution trouvée** (PyVRP seul à 600 et 1000 en 3 s).
+- Références OR-Tools indépendantes : sept solutions faisables à 10 s. Leur
+  qualité reste limitée : certains écarts sont négatifs ; aucune preuve d'optimum.
+- Durée CPU maximale observée 10,016 s ; temps écoulé maximal 10,076 s.
+  Les préparations et constructions sont mesurées, sans les confondre avec
+  les trois secondes de recherche. Pas de garantie universelle sous 120 s.
+- Première variante ILS : améliore R202 de 2913,1 à 2831,0 mais dégrade le
+  résultat à 600/800/1000, car la moitié réservée coupe des constructions et
+  voisinages utiles. **Elle n'est pas retenue par défaut.** Sources et résultats
+  de ce premier essai conservés dans le lot, sans réécriture.
+- Correction candidate v2 : conserver le planning complet du profil renforcé,
+  n'utiliser en ILS que le temps réellement restant. Nouvelle confirmation
+  séparée, deux graines, quatre cas ; pas de modification des anciennes mesures.
+- L'analyse du cahier des charges transmis est conservée dans
+  `docs/CAHIER_DES_CHARGES_TRANSMIS.md` et `docs/BILAN_CONFORMITE_FINAL.md`.
+- Commande de reprise / confirmation (même interpréteur que ci-dessus) :
+  `python scripts/benchmark_final_static.py --cases R101:25 R202:100 RC2_6_1:600 R2_10_8:1000 --seeds 4101 4102 --methods ils refined refined_ils ortools --seconds 3 --reference-seconds 10 --label confirmation_ils_v2`

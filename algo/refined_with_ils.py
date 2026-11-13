@@ -14,8 +14,9 @@ from .verify import verify
 def solve(ins,seed=4101,seconds=5.):
     if not math.isfinite(seconds) or seconds<=0:raise ValueError('Budget positif requis')
     started=time.perf_counter()
-    # Réserver la moitié du budget à l'ILS ; les appels natifs restent non préemptifs.
-    first=refine(ins,seed,max(.05,seconds*.5),partition=True)
+    # Conserver tout le planning initial ; n'utiliser que son temps réellement
+    # inutilisé. Réserver arbitrairement la moitié pénalisait les grands cas.
+    first=refine(ins,seed,seconds,partition=True)
     if first.get('routes') is None:return first
     components=[first]
     remaining=seconds-(time.perf_counter()-started)
@@ -25,6 +26,7 @@ def solve(ins,seed=4101,seconds=5.):
     metrics=verify(final['routes'],ins)
     assert metrics['valid'] and metrics['duration']/10<=first['cost']+1e-7
     return dict(status='feasible',objective='duration',routes=final['routes'],cost=metrics['duration']/10,
+        variant='v2_full_refine_then_own_ils',
         metrics=metrics,before_ils=first['cost'],own_ils_gain=first['cost']-metrics['duration']/10,
         components=components,runtime_s=time.perf_counter()-started,
         attribution='Own constructions, pool model and ILS; external PyVRP Local Search and SciPy HiGHS',
