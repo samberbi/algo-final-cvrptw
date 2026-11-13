@@ -18,8 +18,8 @@ coûts ont été vérifiés. Elles ne constituent pas une preuve de conformité 
 | Audit | Terminé dans le périmètre statique confirmé | Cahier transmis, bilan de conformité, sauvegardes Git |
 | Compatibilité | Vérifiée avec réserves explicites | Phonin non certifié directement ; cinq contrôles numériques, OR-Tools indépendant |
 | Corrections | Effectuées | Modèle statique, provenance, comparateurs, variante ILS testée séparément |
-| Tests | Réussis | 194 réussites, deux modules optionnels ignorés |
-| Notebook | Corrigé et réexécuté | 16 cellules, zéro erreur, dernier passage 44,35 s |
+| Tests | Réussis | 206 réussites, deux modules optionnels ignorés |
+| Notebook | Corrigé et réexécuté | 16 cellules, zéro erreur, dernier passage 36,04 s |
 | Benchmarks progressifs | Terminés pour les trois lots pilotes | 119 résolutions, 117 faisables, deux échecs conservés ; tailles 25 à 1000 |
 | Statistiques et figures | Produites | CSV complets, statistiques par lot, PNG/SVG et explications |
 | Validation finale | Réussie dans le périmètre documenté | VALIDATION_FINALE_STATIQUE.json, données et sources figées contrôlées |
@@ -319,6 +319,26 @@ et résultats de cette passe sauvegardés ; aucun push demandé.
   `python scripts/present_gap_status.py`, `python scripts/execute_final_notebook.py`
   et `python scripts/validate_gap_presentation.py`. Le finaliseur général appelle
   désormais la couche de présentation après génération des tableaux.
+
+### Présentation : validation finale
+
+- `livraison/VALIDATION_PRESENTATION_GAPS.json` : vérification réussie des
+  statuts, statistiques positives et dénominateurs, absence de pourcentages
+  de benchmark non positifs dans la présentation, et empreintes des moteurs
+  inchangées. Les paramètres et variations de sensibilité restent distincts.
+- Notebook complet exécuté : **16 cellules, zéro erreur, 36,04 secondes**.
+  Validation statique du projet réussie avec **206 tests réussis et deux ignorés**.
+- HTML de lecture synchronisé : `notebooks/Livrable_Final_CVRPTW.html`.
+  Copie notebook à envoyer actualisée dans Téléchargements, figures intégrées.
+- Essai terminal à une seconde : `not_found` pendant la préparation, conservé
+  dans `verification_statuts_console`. Il n'est pas caché ni transformé en succès.
+- Vérification recommandée à cinq secondes : C101/25 et RC201/100 tous deux
+  réalisables, affichant respectivement « Référence égalée — optimalité non
+  démontrée » et « Référence dépassée — solution améliorante validée ».
+  Les coûts et écarts bruts restent sauvegardés dans les JSON/CSV d'origine.
+- Aucune nouvelle référence plus forte n'a été produite. Cette passe ne démontre
+  pas un gap certifié sous six pour cent sur tout le catalogue et ne transforme
+  pas une moyenne conditionnelle en moyenne de toutes les instances.
 
 ## Tableau complet des écarts conservés
 

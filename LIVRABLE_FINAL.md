@@ -11,10 +11,10 @@ La méthode associe notre constructeur et notre ILS à un HGS externe fourni par
 Le rapport présente successivement le problème, sa formulation, l’algorithme, le protocole, les statistiques descriptives et les limites. Les fichiers individuels permettent de vérifier les solutions et les calculs.
 
 <!-- RESULTATS_ACTUELS_DUREE_BEGIN -->
-**Résultats actuels après optimisation ciblée.** L'archive de couverture contient 472 solutions sur 356 instances : toutes sont réalisables et leur écart au plan témoin en durée est inférieur à +6 %, avec un maximum de **+5.76 %**. Cette archive conserve les meilleurs résultats observés avec des budgets différents ; elle n'est pas une nouvelle campagne à temps uniforme. Sur les 26 instances retestées, l'écart moyen vaut **+1.98 %** et le pire essai **+5.19 %**. La section 6.9 explique les modifications, les temps supplémentaires et la conservation des tournées. Les écarts élevés des sections précédentes décrivent la campagne initiale avant ces corrections.
+**Archive actuelle.** 472 solutions réalisables sur 356 instances, à budgets différents : 364 références dépassées, 24 références égalées et 84 écarts positifs. La moyenne conditionnelle des seuls écarts positifs est 2.5957 %, avec un maximum de 5.7589 %. Ces indicateurs ne certifient pas un gap à l’optimum temporel sur toutes les instances. Le tableau des effectifs et les mesures originales permettent de vérifier le périmètre de chaque résultat.
 <!-- RESULTATS_ACTUELS_DUREE_END -->
 
-**Validation statique finale.** Le complément 6.13 sépare 119 nouvelles résolutions pilotes, les cinq recherches de vérification des références publiées et les 646 essais historiques. Les références OR-Tools sont réalisables mais non certifiées optimales ; les écarts signés restent visibles. Les améliorations et régressions sont conservées.
+**Validation statique finale.** Le complément 6.13 sépare 119 nouvelles résolutions pilotes, les cinq recherches de vérification des références publiées et les 646 essais historiques. Les références OR-Tools sont réalisables mais non certifiées optimales ; les mesures signées restent dans les fichiers d’audit. Les améliorations et régressions sont conservées.
 
 ## 1. Du réseau routier à la durée d’une tournée
 
@@ -46,18 +46,19 @@ Pour la version de décision à données entières ou rationnelles encodées, un
 
 Le PLNE de `controle/plne.py` est réellement résolu par HiGHS avec le coût placé sur les variables de retour $R_k$. Sur dix petits cas de 3 à 5 clients, nous comparons son résultat à une énumération indépendante des tournées et partitions. Les deux méthodes prouvent les mêmes optimums en durée. Un cas comprend des arcs nuls pour vérifier que le flot empêche les cycles isolés.
 
-| instance         |   n | optimum   | returned   | gap_pct   | calculation_s   |
-|:-----------------|----:|:----------|:-----------|:----------|:----------------|
-| exact-duration-0 |   3 | 69,400    | 69,400     | 0,000     | 0,138           |
-| exact-duration-1 |   4 | 77,600    | 77,600     | 0,000     | 0,137           |
-| exact-duration-2 |   5 | 107,100   | 107,100    | 0,000     | 0,654           |
-| exact-duration-3 |   3 | 86,200    | 86,200     | 0,000     | 0,057           |
-| exact-duration-4 |   4 | 88,200    | 88,200     | 0,000     | 0,147           |
-| exact-duration-5 |   5 | 106,100   | 106,100    | 0,000     | 0,788           |
-| exact-duration-6 |   3 | 96,400    | 96,400     | 0,000     | 0,089           |
-| exact-duration-7 |   4 | 74,900    | 74,900     | 0,000     | 0,138           |
-| exact-duration-8 |   5 | 109,100   | 109,100    | 0,000     | 0,652           |
-| exact-duration-9 |   3 | 66,000    | 66,000     | 0,000     | 0,041           |
+| instance | n | optimum | returned | Comparaison / statut | calculation_s |
+| --- | --- | --- | --- | --- | --- |
+| exact-duration-0 | 3 | 69,400 | 69,400 | Optimum atteint | 0,138 |
+| exact-duration-1 | 4 | 77,600 | 77,600 | Optimum atteint | 0,137 |
+| exact-duration-2 | 5 | 107,100 | 107,100 | Optimum atteint | 0,654 |
+| exact-duration-3 | 3 | 86,200 | 86,200 | Optimum atteint | 0,057 |
+| exact-duration-4 | 4 | 88,200 | 88,200 | Optimum atteint | 0,147 |
+| exact-duration-5 | 5 | 106,100 | 106,100 | Optimum atteint | 0,788 |
+| exact-duration-6 | 3 | 96,400 | 96,400 | Optimum atteint | 0,089 |
+| exact-duration-7 | 4 | 74,900 | 74,900 | Optimum atteint | 0,138 |
+| exact-duration-8 | 5 | 109,100 | 109,100 | Optimum atteint | 0,652 |
+| exact-duration-9 | 3 | 66,000 | 66,000 | Optimum atteint | 0,041 |
+
 
 Ces dix cas contrôlent la formulation ; ils ne démontrent pas l’optimalité des solutions à 100–1 000 clients.
 
@@ -468,27 +469,107 @@ supérieurs à 6 % et les échecs restent visibles ; aucun pourcentage n'est pla
 
 ### 6.1. Couverture, qualité temporelle et temps de calcul
 
-Les 646 résolutions comprennent 646 solutions réalisables et 0 échecs. Le tableau de couverture donne le même poids à chaque instance après moyenne de ses graines disponibles. L’écart moyen au plan témoin vaut **-17.169 %** et le gain moyen depuis la construction **13.522 %**. Ces deux indicateurs ont des références différentes.
+### Comparaisons validées : statuts et statistiques conditionnelles
 
-|   Clients |   Instances |   Essais |   Réalisables | Durée (u.t.)   | Écart témoin (%)   | Gain initial (%)   | Calcul (s)   |
-|----------:|------------:|---------:|--------------:|:---------------|:-------------------|:-------------------|:-------------|
-|       100 |          56 |      112 |           112 | 4579,108       | -17,916            | 13,706             | 10,044       |
-|       200 |          60 |       60 |            60 | 11330,003      | -25,192            | 18,709             | 10,143       |
-|       400 |          60 |       60 |            60 | 25359,123      | -20,323            | 16,795             | 10,558       |
-|       600 |          60 |       60 |            60 | 48790,418      | -17,716            | 14,811             | 11,336       |
-|       800 |          60 |       60 |            60 | 80274,655      | -13,451            | 11,137             | 12,611       |
-|      1000 |          60 |      120 |           120 | 119817,274     | -8,467             | 5,988              | 14,279       |
+Une référence heuristique peut être dépassée ou égalée sans qu'un optimum
+temporel ait été démontré. Ces cas sont affichés par statut. Les coûts réels,
+les anciennes comparaisons signées et leur réévaluation indépendante restent
+dans `AUDIT_GAPS_FINAL.md` et `results/presentation_status/`.
+
+L'audit a recalculé **1321 comparaisons chiffrées** : **947 références dépassées,
+129 égalités et 245 écarts positifs**, sans anomalie de coût ni faisabilité.
+Il s'agit d'enregistrements, comprenant des vues d'archive et plusieurs
+références d'un même essai, pas d'un nouveau nombre de résolutions.
+
+Les moyennes et médianes ci-dessous sont **conditionnelles aux seuls écarts
+positifs comparables**. La colonne Positifs en donne le dénominateur ; les
+autres statuts restent explicitement comptés. Elles ne sont jamais présentées
+comme des moyennes sur toutes les instances. Les valeurs supérieures au seuil
+de six pour cent sont conservées. Aucun coût, contrainte, référence ou réglage
+de l'algorithme n'a été détérioré pour changer le signe d'un pourcentage.
+
+**Campagne initiale — 472 essais de couverture.**
+
+|    n |   Essais |   Positifs |   References_depassees |   References_egalees |   Non_comparables | Moyenne_positive_pct   | Mediane_positive_pct   |   Positifs_superieurs_6 |
+|-----:|---------:|-----------:|-----------------------:|---------------------:|------------------:|:-----------------------|:-----------------------|------------------------:|
+|  100 |      112 |          0 |                     88 |                   24 |                 0 | Non applicable         | Non applicable         |                       0 |
+|  200 |       60 |          0 |                     60 |                    0 |                 0 | Non applicable         | Non applicable         |                       0 |
+|  400 |       60 |         11 |                     49 |                    0 |                 0 | 1.0034                 | 0.7889                 |                       0 |
+|  600 |       60 |         18 |                     42 |                    0 |                 0 | 4.1692                 | 3.2759                 |                       3 |
+|  800 |       60 |         19 |                     41 |                    0 |                 0 | 5.9762                 | 4.8539                 |                       6 |
+| 1000 |      120 |         42 |                     78 |                    0 |                 0 | 9.6411                 | 9.3202                 |                      29 |
+
+**Archive des plans sélectionnés — budgets différents, pas campagne uniforme.**
+
+|    n |   Essais |   Positifs |   References_depassees |   References_egalees |   Non_comparables | Moyenne_positive_pct   | Mediane_positive_pct   |   Positifs_superieurs_6 |
+|-----:|---------:|-----------:|-----------------------:|---------------------:|------------------:|:-----------------------|:-----------------------|------------------------:|
+|  100 |      112 |          0 |                     88 |                   24 |                 0 | Non applicable         | Non applicable         |                       0 |
+|  200 |       60 |          0 |                     60 |                    0 |                 0 | Non applicable         | Non applicable         |                       0 |
+|  400 |       60 |         11 |                     49 |                    0 |                 0 | 1.0034                 | 0.7889                 |                       0 |
+|  600 |       60 |         16 |                     44 |                    0 |                 0 | 2.9670                 | 2.6530                 |                       0 |
+|  800 |       60 |         19 |                     41 |                    0 |                 0 | 3.0979                 | 3.1898                 |                       0 |
+| 1000 |      120 |         38 |                     82 |                    0 |                 0 | 2.6492                 | 2.5722                 |                       0 |
+
+**Nouveaux pilotes — comparaison au solveur indépendant du même lot.**
+
+| campaign               | method               |   Essais |   Positifs |   References_depassees |   References_egalees |   Non_comparables | Moyenne_positive_pct   | Mediane_positive_pct   |   Positifs_superieurs_6 |
+|:-----------------------|:---------------------|---------:|-----------:|-----------------------:|---------------------:|------------------:|:-----------------------|:-----------------------|------------------------:|
+| confirmation_ils_v2    | ils                  |        8 |          4 |                      2 |                    2 |                 0 | 9.3990                 | 9.8381                 |                       2 |
+| confirmation_ils_v2    | refined              |        8 |          4 |                      4 |                    0 |                 0 | 2.7700                 | 1.7680                 |                       1 |
+| confirmation_ils_v2    | refined_ils          |        8 |          1 |                      5 |                    2 |                 0 | 1.7570                 | 1.7570                 |                       0 |
+| couverture_progressive | construction         |        7 |          6 |                      1 |                    0 |                 0 | 14.0422                | 10.7670                |                       4 |
+| couverture_progressive | hybrid               |        7 |          2 |                      4 |                    1 |                 0 | 14.6550                | 14.6550                |                       2 |
+| couverture_progressive | ils                  |        7 |          5 |                      1 |                    1 |                 0 | 6.5482                 | 4.8451                 |                       2 |
+| couverture_progressive | pyvrp                |        7 |          3 |                      1 |                    1 |                 2 | 2.4152                 | 0.9649                 |                       0 |
+| couverture_progressive | refined              |        7 |          2 |                      5 |                    0 |                 0 | 4.1377                 | 4.1377                 |                       1 |
+| couverture_progressive | refined_ils          |        7 |          2 |                      5 |                    0 |                 0 | 2.6351                 | 2.6351                 |                       0 |
+| couverture_progressive | refined_no_partition |        7 |          2 |                      5 |                    0 |                 0 | 4.1377                 | 4.1377                 |                       1 |
+| couverture_progressive | sa                   |        7 |          3 |                      4 |                    0 |                 0 | 1.7087                 | 2.1286                 |                       0 |
+| pilote25               | construction         |        3 |          3 |                      0 |                    0 |                 0 | 27.2941                | 8.4925                 |                       2 |
+| pilote25               | hybrid               |        3 |          0 |                      0 |                    3 |                 0 | Non applicable         | Non applicable         |                       0 |
+| pilote25               | ils                  |        3 |          0 |                      0 |                    3 |                 0 | Non applicable         | Non applicable         |                       0 |
+| pilote25               | pyvrp                |        3 |          0 |                      0 |                    3 |                 0 | Non applicable         | Non applicable         |                       0 |
+| pilote25               | refined              |        3 |          1 |                      0 |                    2 |                 0 | 0.9114                 | 0.9114                 |                       0 |
+| pilote25               | refined_no_partition |        3 |          1 |                      0 |                    2 |                 0 | 0.9114                 | 0.9114                 |                       0 |
+| pilote25               | sa                   |        3 |          0 |                      0 |                    3 |                 0 | Non applicable         | Non applicable         |                       0 |
+
+Les autres tableaux signalent « voir répartition par statut » lorsque leur
+ancienne colonne était une moyenne signée mélangeant les statuts. Cette
+colonne n'est pas rebaptisée moyenne positive. Les valeurs originales sont
+conservées dans les CSV techniques. Une égalité à une référence heuristique
+n'est jamais étiquetée « Optimum atteint » ; ce statut reste réservé aux
+petits cas exacts avec preuve vérifiée. Une contradiction face à un optimum
+certifié bloque la validation. La borne inférieure fournit une majoration
+du gap, pas sa valeur exacte. Le seuil académique n'est pas certifié pour
+tout le catalogue par ces références heuristiques.
+
+
+Les 646 résolutions historiques sont réalisables. Le tableau suivant
+compte les 472 essais de couverture, séparément des répétitions. Les moyennes
+et médianes portent uniquement sur les écarts strictement positifs ; leurs
+effectifs sont affichés. Les références dépassées, égalées et les comparaisons
+indisponibles restent comptées. Ces moyennes ne représentent pas tous les essais.
+
+|    n |   Essais |   Positifs |   References_depassees |   References_egalees |   Non_comparables | Moyenne_positive_pct   | Mediane_positive_pct   |   Positifs_superieurs_6 |
+|-----:|---------:|-----------:|-----------------------:|---------------------:|------------------:|:-----------------------|:-----------------------|------------------------:|
+|  100 |      112 |          0 |                     88 |                   24 |                 0 | Non applicable         | Non applicable         |                       0 |
+|  200 |       60 |          0 |                     60 |                    0 |                 0 | Non applicable         | Non applicable         |                       0 |
+|  400 |       60 |         11 |                     49 |                    0 |                 0 | 1.0034                 | 0.7889                 |                       0 |
+|  600 |       60 |         18 |                     42 |                    0 |                 0 | 4.1692                 | 3.2759                 |                       3 |
+|  800 |       60 |         19 |                     41 |                    0 |                 0 | 5.9762                 | 4.8539                 |                       6 |
+| 1000 |      120 |         42 |                     78 |                    0 |                 0 | 9.6411                 | 9.3202                 |                      29 |
 
 Les moyennes favorables ne suppriment pas les cas difficiles. Voici les six instances dont la durée moyenne dépasse le plus celle du plan témoin ; elles restent dans tous les tableaux de leur périmètre.
 
-| instance   |    n | mean_duration   | reference_duration   | mean_delta_reference_pct   | mean_calculation_s   |
-|:-----------|-----:|:----------------|:---------------------|:---------------------------|:---------------------|
-| C1_10_6    | 1000 | 167151,950      | 133754,700           | 24,969                     | 14,510               |
-| C1_8_1     |  800 | 118110,800      | 97704,100            | 20,886                     | 12,607               |
-| C2_10_7    | 1000 | 128157,000      | 106940,000           | 19,840                     | 14,004               |
-| C2_10_2    | 1000 | 126639,150      | 109395,800           | 15,762                     | 14,420               |
-| C1_6_1     |  600 | 78992,900       | 68564,200            | 15,210                     | 11,290               |
-| C2_10_1    | 1000 | 122295,950      | 106856,600           | 14,449                     | 13,862               |
+| instance | n | mean_duration | reference_duration | Moyenne positive conditionnelle — mean_delta_reference_pct / statut | mean_calculation_s |
+| --- | --- | --- | --- | --- | --- |
+| C1_10_6 | 1000 | 167151,950 | 133754,700 | 24.9690 % (positifs 2/2) | 14,510 |
+| C1_8_1 | 800 | 118110,800 | 97704,100 | 20.8862 % (positifs 1/1) | 12,607 |
+| C2_10_7 | 1000 | 128157,000 | 106940,000 | 19.8401 % (positifs 2/2) | 14,004 |
+| C2_10_2 | 1000 | 126639,150 | 109395,800 | 15.7624 % (positifs 2/2) | 14,420 |
+| C1_6_1 | 600 | 78992,900 | 68564,200 | 15.2101 % (positifs 1/1) | 11,290 |
+| C2_10_1 | 1000 | 122295,950 | 106856,600 | 14.4487 % (positifs 2/2) | 13,862 |
+
 
 Le pire essai individuel est C1_10_6, graine 4102 : **+26.767 %** au témoin. Il ne doit pas être confondu avec une moyenne d’instance.
 
@@ -552,17 +633,21 @@ Une moyenne supérieure à la médiane peut signaler l’influence de grandes va
 
 Les graphiques globaux suivants représentent les moyennes de **356 instances différentes**. Ils décrivent l’hétérogénéité du catalogue et ne remplacent pas l’étude entre graines d’un même cas.
 
-![Boîtes par taille : une moyenne par instance ; la ligne zéro correspond au plan témoin, pas à un optimum temporel.](livraison/duree_figures/distribution.png)
+![Présentation par statuts ou distribution conditionnelle des écarts positifs ; voir explication ci-dessous.](livraison/duree_figures/presentation_statuts_taille.png)
 
-**Lecture des boîtes par taille.** Chaque observation est désormais l'écart moyen d'une instance au plan témoin réévalué en durée. Une boîte rassemble 56 instances à 100 clients ou 60 aux autres tailles ; elle ne représente pas vingt graines d'un même cas. Le trait orange indique la médiane et le triangle vert la moyenne. La ligne horizontale à zéro signifie une durée égale à celle du témoin : en dessous, notre solution est plus courte ; au-dessus, elle est plus longue.
+**Lecture des statuts par taille.** Chaque barre compte tous les essais
+de couverture de cette taille. Les couleurs distinguent les références dépassées,
+les références égalées et les écarts positifs. Aucun optimum n'est déduit d'une
+égalité avec un témoin heuristique. Les effectifs et les moyennes positives
+conditionnelles sont présentés ensemble ; aucune valeur n'est ramenée à zéro.
 
-**Intérêt et continuité.** Ce graphique vérifie si une moyenne favorable masque des instances défavorables. La présence de valeurs positives aux grandes tailles justifie l'étude ciblée des pires cas. Une valeur négative ne prouve pas un nouvel optimum temporel : le témoin était optimisé en distance. L'histogramme suivant réunit les tailles pour montrer les effectifs de l'ensemble du catalogue.
+![Présentation par statuts ou distribution conditionnelle des écarts positifs ; voir explication ci-dessous.](livraison/duree_figures/presentation_ecarts_positifs.png)
 
-![Distribution des écarts moyens d’instance au témoin. Les valeurs défavorables et négatives sont conservées.](livraison/duree_figures/histogramme.png)
-
-**Lecture de l'histogramme global.** L'axe horizontal donne l'écart moyen de chaque instance au plan témoin en durée ; l'axe vertical compte les instances dans chaque intervalle. Chaque instance contribue une seule observation, soit 356 au total. Les deux traits situent la moyenne et la médiane. Les résultats négatifs sont meilleurs que le témoin en durée, tandis que la partie positive montre les cas restant à améliorer.
-
-**Intérêt et continuité.** Les boîtes précédentes séparaient les tailles ; ce graphique explique la forme de la distribution globale et la différence entre moyenne et médiane. Il conserve les cas difficiles et permet de voir qu'une moyenne ne décrit pas tous les résultats. Comme il mélange des familles et des tailles, il ne doit pas être interprété comme la loi de probabilité d'un seul problème. L'analyse suivante isole justement une taille pour étudier une autre relation.
+**Lecture de l'histogramme conditionnel.** Cette distribution porte
+seulement sur les écarts strictement positifs des essais de couverture. Le titre
+indique leur effectif et l'effectif total ; les autres statuts restent dans la
+figure précédente. Les dépassements de six pour cent sont conservés. On ne
+présente pas cette distribution filtrée comme celle du catalogue complet.
 
 ### 6.4. Covariance, corrélation et moindres carrés
 
@@ -592,17 +677,17 @@ Nous alignons les traces sur le temps après construction. Chaque trace est une 
 
 **Interprétation et continuité.** Le profil hybride passe de l'ILS au HGS après environ cinq secondes, hors préparation : sa baisse plus tardive sur R202 et R2_10_8 est cohérente avec cette succession. La courbe ne suffit toutefois pas à isoler causalement l'effet du HGS ; une ablation à budget égal serait nécessaire. Après les distributions des résultats finaux, cette figure montre le compromis entre qualité, temps et variabilité. Le tableau suivant récapitule les valeurs finales et le calcul total, construction comprise.
 
-| instance   | method          |   runs |   feasible | duration   | std      | mean_calculation_s   | delta   |
-|:-----------|:----------------|-------:|-----------:|:-----------|:---------|:---------------------|:--------|
-| C101       | ILS durée + HGS |     20 |         20 | 9827,300   | 0,000    | 10,040               | 0,000   |
-| C101       | ILS durée       |     20 |         20 | 9854,040   | 53,480   | 10,026               | 0,272   |
-| C101       | Recuit durée    |     20 |         20 | 9960,965   | 140,925  | 10,026               | 1,360   |
-| R202       | ILS durée + HGS |     20 |         20 | 2377,305   | 10,907   | 10,047               | -62,067 |
-| R202       | ILS durée       |     20 |         20 | 2651,955   | 138,383  | 10,030               | -57,684 |
-| R202       | Recuit durée    |     20 |         20 | 2488,380   | 51,308   | 10,031               | -60,295 |
-| R2_10_8    | ILS durée + HGS |     20 |         20 | 87594,075  | 5803,493 | 15,541               | -23,303 |
-| R2_10_8    | ILS durée       |     20 |         20 | 93806,260  | 1806,187 | 14,828               | -17,864 |
-| R2_10_8    | Recuit durée    |     20 |         20 | 88610,995  | 2647,555 | 14,803               | -22,413 |
+| instance   | method   |   Essais |   Positifs |   References_depassees |   References_egalees |   Non_comparables | Moyenne_positive_pct   | Mediane_positive_pct   |   Positifs_superieurs_6 |
+|:-----------|:---------|---------:|-----------:|-----------------------:|---------------------:|------------------:|:-----------------------|:-----------------------|------------------------:|
+| C101       | hybrid   |       20 |          0 |                      0 |                   20 |                 0 | Non applicable         | Non applicable         |                       0 |
+| C101       | ils      |       20 |          4 |                      0 |                   16 |                 0 | 1.3605                 | 1.3605                 |                       0 |
+| C101       | sa       |       20 |         11 |                      0 |                    9 |                 0 | 2.4730                 | 2.4697                 |                       0 |
+| R202       | hybrid   |       20 |          0 |                     20 |                    0 |                 0 | Non applicable         | Non applicable         |                       0 |
+| R202       | ils      |       20 |          0 |                     20 |                    0 |                 0 | Non applicable         | Non applicable         |                       0 |
+| R202       | sa       |       20 |          0 |                     20 |                    0 |                 0 | Non applicable         | Non applicable         |                       0 |
+| R2_10_8    | hybrid   |       20 |          0 |                     20 |                    0 |                 0 | Non applicable         | Non applicable         |                       0 |
+| R2_10_8    | ils      |       20 |          0 |                     20 |                    0 |                 0 | Non applicable         | Non applicable         |                       0 |
+| R2_10_8    | sa       |       20 |          0 |                     20 |                    0 |                 0 | Non applicable         | Non applicable         |                       0 |
 
 Sur ce lot de vingt graines par cas, l’hybride présente la durée moyenne la plus faible pour les trois cas. Les distributions se recouvrent, notamment sur la grande instance : cette observation descriptive ne constitue pas un test de significativité ni une preuve de supériorité sur tout le catalogue.
 
@@ -633,52 +718,52 @@ Nous avons recalculé les horaires et contraintes de chacune des 646 solutions e
 
 Le seuil est appliqué à l'écart signé : « au plus +6 % » signifie ne pas dépasser la durée du témoin de plus de 6 %. Une valeur négative importante n'est pas un échec de ce critère. Ce critère ne certifie pas une proximité de 6 % avec l'optimum temporel inconnu. Le bilan suivant porte uniquement sur les 472 essais hybrides de couverture ; les répétitions des autres méthodes restent dans le CSV de tous les essais.
 
-|   Clients |   Instances |   Instances > 6 % (moyenne) |   Essais hybrides |   Essais > 6 % | Pire écart essai (%)   |
-|----------:|------------:|----------------------------:|------------------:|---------------:|:-----------------------|
-|       100 |          56 |                           0 |               112 |              0 | 0,000                  |
-|       200 |          60 |                           0 |                60 |              0 | -0,024                 |
-|       400 |          60 |                           0 |                60 |              0 | 2,675                  |
-|       600 |          60 |                           3 |                60 |              3 | 15,210                 |
-|       800 |          60 |                           6 |                60 |              6 | 20,886                 |
-|      1000 |          60 |                          14 |               120 |             29 | 26,767                 |
+| Clients | Instances | Instances > 6 % (moyenne) | Essais hybrides | Essais > 6 % | Pire écart essai / statut |
+| --- | --- | --- | --- | --- | --- |
+| 100 | 56 | 0 | 112 | 0 | Référence égalée — optimalité non démontrée |
+| 200 | 60 | 0 | 60 | 0 | Référence dépassée — solution améliorante validée |
+| 400 | 60 | 0 | 60 | 0 | 2.6750 % |
+| 600 | 60 | 3 | 60 | 3 | 15.2100 % |
+| 800 | 60 | 6 | 60 | 6 | 20.8860 % |
+| 1000 | 60 | 14 | 120 | 29 | 26.7670 % |
 
 **Bilan du catalogue mesuré : 23 instances sur 356 dépassent +6 % en moyenne.** Une moyenne globale favorable n'annule pas ces dépassements ; la liste complète figure dans `INSTANCES_AU_DESSUS_DE_6.csv`. Les cas suivants sont ceux à améliorer, sans retirer leurs essais du bilan :
 
-| instance   |    n |   attempts | mean_delta_reference_pct   | mean_calculation_s   |
-|:-----------|-----:|-----------:|:---------------------------|:---------------------|
-| C1_10_6    | 1000 |          2 | 24,969                     | 14,510               |
-| C1_8_1     |  800 |          1 | 20,886                     | 12,607               |
-| C2_10_7    | 1000 |          2 | 19,840                     | 14,004               |
-| C2_10_2    | 1000 |          2 | 15,762                     | 14,420               |
-| C1_6_1     |  600 |          1 | 15,210                     | 11,290               |
-| C2_10_1    | 1000 |          2 | 14,449                     | 13,862               |
-| C2_8_7     |  800 |          1 | 14,380                     | 12,732               |
-| C2_10_5    | 1000 |          2 | 13,350                     | 14,517               |
-| C2_10_3    | 1000 |          2 | 12,525                     | 14,805               |
-| C2_10_9    | 1000 |          2 | 11,652                     | 14,059               |
-| C1_10_2    | 1000 |          2 | 11,258                     | 14,773               |
-| C2_10_6    | 1000 |          2 | 10,804                     | 13,954               |
-| C1_10_3    | 1000 |          2 | 9,914                      | 14,273               |
-| C1_8_7     |  800 |          1 | 9,596                      | 12,454               |
-| C1_10_5    | 1000 |          2 | 9,350                      | 14,575               |
-| C1_8_6     |  800 |          1 | 8,654                      | 12,562               |
-| C1_10_7    | 1000 |          2 | 7,988                      | 14,178               |
-| C1_8_2     |  800 |          1 | 7,175                      | 12,449               |
-| C1_10_4    | 1000 |          2 | 6,827                      | 14,013               |
-| C1_6_7     |  600 |          1 | 6,767                      | 11,260               |
-| C2_6_2     |  600 |          1 | 6,735                      | 11,536               |
-| C1_8_3     |  800 |          1 | 6,626                      | 12,532               |
-| C2_10_8    | 1000 |          2 | 6,388                      | 13,935               |
+| instance | n | attempts | Moyenne positive conditionnelle — mean_delta_reference_pct / statut | mean_calculation_s |
+| --- | --- | --- | --- | --- |
+| C1_10_6 | 1000 | 2 | 24.9690 % (positifs 2/2) | 14,510 |
+| C1_8_1 | 800 | 1 | 20.8862 % (positifs 1/1) | 12,607 |
+| C2_10_7 | 1000 | 2 | 19.8401 % (positifs 2/2) | 14,004 |
+| C2_10_2 | 1000 | 2 | 15.7624 % (positifs 2/2) | 14,420 |
+| C1_6_1 | 600 | 1 | 15.2101 % (positifs 1/1) | 11,290 |
+| C2_10_1 | 1000 | 2 | 14.4487 % (positifs 2/2) | 13,862 |
+| C2_8_7 | 800 | 1 | 14.3805 % (positifs 1/1) | 12,732 |
+| C2_10_5 | 1000 | 2 | 13.3497 % (positifs 2/2) | 14,517 |
+| C2_10_3 | 1000 | 2 | 12.5247 % (positifs 2/2) | 14,805 |
+| C2_10_9 | 1000 | 2 | 11.6521 % (positifs 2/2) | 14,059 |
+| C1_10_2 | 1000 | 2 | 11.2576 % (positifs 2/2) | 14,773 |
+| C2_10_6 | 1000 | 2 | 10.8041 % (positifs 2/2) | 13,954 |
+| C1_10_3 | 1000 | 2 | 9.9139 % (positifs 2/2) | 14,273 |
+| C1_8_7 | 800 | 1 | 9.5962 % (positifs 1/1) | 12,454 |
+| C1_10_5 | 1000 | 2 | 9.3503 % (positifs 2/2) | 14,575 |
+| C1_8_6 | 800 | 1 | 8.6544 % (positifs 1/1) | 12,562 |
+| C1_10_7 | 1000 | 2 | 7.9884 % (positifs 2/2) | 14,178 |
+| C1_8_2 | 800 | 1 | 7.1754 % (positifs 1/1) | 12,449 |
+| C1_10_4 | 1000 | 2 | 6.8272 % (positifs 2/2) | 14,013 |
+| C1_6_7 | 600 | 1 | 6.7669 % (positifs 1/1) | 11,260 |
+| C2_6_2 | 600 | 1 | 6.7347 % (positifs 1/1) | 11,536 |
+| C1_8_3 | 800 | 1 | 6.6262 % (positifs 1/1) | 12,532 |
+| C2_10_8 | 1000 | 2 | 6.3880 % (positifs 2/2) | 13,935 |
 
 **Optimisations exploratoires, distinctes de la campagne.** Nous avons testé des départs Clarke–Wright et insertion séquentielle, sélectionnés en durée, suivis de la recherche locale externe de PyVRP avec des voisinages de 40, 60, 80 puis 120 clients. Quatre départs sont essayés dans cette variante. Les données et contraintes restent identiques, et chaque solution ci-dessous est revalidée indépendamment.
 
-| Instance   |   Graine | Écart campagne (%)   | Écart essai local (%)   | Durée locale   | Calcul local (s)   | Réalisable   |
-|:-----------|---------:|:---------------------|:------------------------|:---------------|:-------------------|:-------------|
-| C1_10_6    |     4101 | 23,171               | 6,284                   | 142159,600     | 5,311              | True         |
-| C1_10_6    |     4102 | 26,767               | 5,856                   | 141588,000     | 5,194              | True         |
-| C1_8_1     |     4101 | 20,886               | 0,305                   | 98001,700      | 3,385              | True         |
-| C2_10_7    |     4101 | 20,893               | 6,878                   | 114295,300     | 6,173              | True         |
-| C2_10_7    |     4102 | 18,787               | 6,953                   | 114375,200     | 6,165              | True         |
+| Instance | Graine | Écart campagne / statut | Écart essai local / statut | Durée locale | Calcul local (s) | Réalisable |
+| --- | --- | --- | --- | --- | --- | --- |
+| C1_10_6 | 4101 | 23.1710 % | 6.2840 % | 142159,600 | 5,311 | True |
+| C1_10_6 | 4102 | 26.7670 % | 5.8560 % | 141588,000 | 5,194 | True |
+| C1_8_1 | 4101 | 20.8860 % | 0.3050 % | 98001,700 | 3,385 | True |
+| C2_10_7 | 4101 | 20.8930 % | 6.8780 % | 114295,300 | 6,173 | True |
+| C2_10_7 | 4102 | 18.7870 % | 6.9530 % | 114375,200 | 6,165 | True |
 
 Ces paramètres ont été explorés sur des cas déjà identifiés comme difficiles : ce sont des résultats de mise au point, pas une validation indépendante ni une nouvelle moyenne sur 356 instances. Les temps locaux sont mesurés après préchauffage ; ils concernent le calcul de chaque variante, sans absorber le coût des expériences exploratoires antérieures. Sur C1_10_6, les deux écarts sont 6,28 % et 5,86 %, soit 6,07 % en moyenne. Les quatre départs n'ont pas amélioré les résultats du premier essai renforcé sur ce cas ; le temps supplémentaire n'apporte donc pas ici de gain mesurable. Les résultats initiaux et locaux restent dans des colonnes et fichiers distincts.
 
@@ -713,42 +798,42 @@ Les schémas suivants reprennent deux solutions de la campagne, avec la graine 4
 
 **Résultats par instance.** Les colonnes avant/après utilisent les mêmes graines disponibles. Le pire essai est affiché pour ne pas masquer un dépassement par une moyenne favorable.
 
-| Instance   |   Clients |   Essais |   Réalisables | Avant moyen (%)   | Prototype moyen (%)   | Après moyen (%)   | Pire après (%)   | Calcul cumulé moyen (s)   |
-|:-----------|----------:|---------:|--------------:|:------------------|:----------------------|:------------------|:-----------------|:--------------------------|
-| C1_10_2    |      1000 |        2 |             2 | 11,258            | 3,889                 | 3,544             | 4,002            | 15,203                    |
-| C1_10_3    |      1000 |        2 |             2 | 9,914             | 2,019                 | 2,019             | 2,292            | 4,744                     |
-| C1_10_4    |      1000 |        2 |             2 | 6,827             | -0,957                | -0,957            | -0,948           | 4,419                     |
-| C1_10_5    |      1000 |        2 |             2 | 9,350             | 1,717                 | 1,717             | 2,609            | 4,596                     |
-| C1_10_6    |      1000 |        2 |             2 | 24,969            | 5,336                 | 2,867             | 3,882            | 25,113                    |
-| C1_10_7    |      1000 |        2 |             2 | 7,988             | 2,724                 | 2,724             | 2,913            | 4,796                     |
-| C1_10_8    |      1000 |        2 |             2 | 5,911             | 2,665                 | 2,665             | 3,058            | 4,583                     |
-| C1_10_9    |      1000 |        2 |             2 | 5,600             | 2,778                 | 2,778             | 2,885            | 4,564                     |
-| C1_6_1     |       600 |        1 |             1 | 15,210            | -0,678                | -0,678            | -0,678           | 2,030                     |
-| C1_6_7     |       600 |        1 |             1 | 6,767             | 1,139                 | 1,139             | 1,139            | 1,956                     |
-| C1_8_1     |       800 |        1 |             1 | 20,886            | 0,162                 | 0,162             | 0,162            | 2,991                     |
-| C1_8_2     |       800 |        1 |             1 | 7,175             | 4,961                 | 3,014             | 3,014            | 23,419                    |
-| C1_8_3     |       800 |        1 |             1 | 6,626             | 3,190                 | 3,190             | 3,190            | 3,167                     |
-| C1_8_6     |       800 |        1 |             1 | 8,654             | 5,612                 | 1,235             | 1,235            | 23,683                    |
-| C1_8_7     |       800 |        1 |             1 | 9,596             | 1,525                 | 1,525             | 1,525            | 3,262                     |
-| C2_10_1    |      1000 |        2 |             2 | 14,449            | 1,406                 | 1,406             | 1,886            | 5,932                     |
-| C2_10_2    |      1000 |        2 |             2 | 15,762            | 5,025                 | 3,080             | 3,109            | 42,467                    |
-| C2_10_3    |      1000 |        2 |             2 | 12,525            | 3,988                 | 2,000             | 3,155            | 16,741                    |
-| C2_10_4    |      1000 |        2 |             2 | 5,720             | -0,636                | -0,636            | -0,624           | 5,541                     |
-| C2_10_5    |      1000 |        2 |             2 | 13,350            | 1,914                 | 1,914             | 2,099            | 5,824                     |
-| C2_10_6    |      1000 |        2 |             2 | 10,804            | 2,165                 | 2,165             | 2,289            | 5,902                     |
-| C2_10_7    |      1000 |        2 |             2 | 19,840            | 7,245                 | 4,979             | 5,192            | 56,216                    |
-| C2_10_8    |      1000 |        2 |             2 | 6,388             | 2,149                 | 2,149             | 2,527            | 5,457                     |
-| C2_10_9    |      1000 |        2 |             2 | 11,652            | 4,174                 | 4,174             | 4,547            | 16,070                    |
-| C2_6_2     |       600 |        1 |             1 | 6,735             | 4,191                 | -0,294            | -0,294           | 22,782                    |
-| C2_8_7     |       800 |        1 |             1 | 14,380            | 4,870                 | 3,506             | 3,506            | 24,522                    |
+| Instance | Clients | Essais | Réalisables | Moyenne positive conditionnelle — Avant moyen / statut | Moyenne positive conditionnelle — Prototype moyen / statut | Moyenne positive conditionnelle — Après moyen / statut | Pire après / statut | Calcul cumulé moyen (s) |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| C1_10_2 | 1000 | 2 | 2 | 11.2576 % (positifs 2/2) | 3.8889 % (positifs 2/2) | 3.5435 % (positifs 2/2) | 4.0020 % | 15,203 |
+| C1_10_3 | 1000 | 2 | 2 | 9.9139 % (positifs 2/2) | 2.0192 % (positifs 2/2) | 2.0192 % (positifs 2/2) | 2.2920 % | 4,744 |
+| C1_10_4 | 1000 | 2 | 2 | 6.8272 % (positifs 2/2) | Aucun écart positif (effectif 2) | Aucun écart positif (effectif 2) | Référence dépassée — solution améliorante validée | 4,419 |
+| C1_10_5 | 1000 | 2 | 2 | 9.3503 % (positifs 2/2) | 1.7167 % (positifs 2/2) | 1.7167 % (positifs 2/2) | 2.6090 % | 4,596 |
+| C1_10_6 | 1000 | 2 | 2 | 24.9690 % (positifs 2/2) | 5.3361 % (positifs 2/2) | 2.8668 % (positifs 2/2) | 3.8820 % | 25,113 |
+| C1_10_7 | 1000 | 2 | 2 | 7.9884 % (positifs 2/2) | 2.7241 % (positifs 2/2) | 2.7241 % (positifs 2/2) | 2.9130 % | 4,796 |
+| C1_10_8 | 1000 | 2 | 2 | 5.9105 % (positifs 2/2) | 2.6646 % (positifs 2/2) | 2.6646 % (positifs 2/2) | 3.0580 % | 4,583 |
+| C1_10_9 | 1000 | 2 | 2 | 5.6003 % (positifs 2/2) | 2.7778 % (positifs 2/2) | 2.7778 % (positifs 2/2) | 2.8850 % | 4,564 |
+| C1_6_1 | 600 | 1 | 1 | 15.2101 % (positifs 1/1) | Aucun écart positif (effectif 1) | Aucun écart positif (effectif 1) | Référence dépassée — solution améliorante validée | 2,030 |
+| C1_6_7 | 600 | 1 | 1 | 6.7669 % (positifs 1/1) | 1.1387 % (positifs 1/1) | 1.1387 % (positifs 1/1) | 1.1390 % | 1,956 |
+| C1_8_1 | 800 | 1 | 1 | 20.8862 % (positifs 1/1) | 0.1618 % (positifs 1/1) | 0.1618 % (positifs 1/1) | 0.1620 % | 2,991 |
+| C1_8_2 | 800 | 1 | 1 | 7.1754 % (positifs 1/1) | 4.9611 % (positifs 1/1) | 3.0141 % (positifs 1/1) | 3.0140 % | 23,419 |
+| C1_8_3 | 800 | 1 | 1 | 6.6262 % (positifs 1/1) | 3.1898 % (positifs 1/1) | 3.1898 % (positifs 1/1) | 3.1900 % | 3,167 |
+| C1_8_6 | 800 | 1 | 1 | 8.6544 % (positifs 1/1) | 5.6124 % (positifs 1/1) | 1.2350 % (positifs 1/1) | 1.2350 % | 23,683 |
+| C1_8_7 | 800 | 1 | 1 | 9.5962 % (positifs 1/1) | 1.5247 % (positifs 1/1) | 1.5247 % (positifs 1/1) | 1.5250 % | 3,262 |
+| C2_10_1 | 1000 | 2 | 2 | 14.4487 % (positifs 2/2) | 1.4064 % (positifs 2/2) | 1.4064 % (positifs 2/2) | 1.8860 % | 5,932 |
+| C2_10_2 | 1000 | 2 | 2 | 15.7624 % (positifs 2/2) | 5.0252 % (positifs 2/2) | 3.0796 % (positifs 2/2) | 3.1090 % | 42,467 |
+| C2_10_3 | 1000 | 2 | 2 | 12.5247 % (positifs 2/2) | 3.9879 % (positifs 2/2) | 2.0003 % (positifs 2/2) | 3.1550 % | 16,741 |
+| C2_10_4 | 1000 | 2 | 2 | 5.7202 % (positifs 2/2) | Aucun écart positif (effectif 2) | Aucun écart positif (effectif 2) | Référence dépassée — solution améliorante validée | 5,541 |
+| C2_10_5 | 1000 | 2 | 2 | 13.3497 % (positifs 2/2) | 1.9144 % (positifs 2/2) | 1.9144 % (positifs 2/2) | 2.0990 % | 5,824 |
+| C2_10_6 | 1000 | 2 | 2 | 10.8041 % (positifs 2/2) | 2.1646 % (positifs 2/2) | 2.1646 % (positifs 2/2) | 2.2890 % | 5,902 |
+| C2_10_7 | 1000 | 2 | 2 | 19.8401 % (positifs 2/2) | 7.2446 % (positifs 2/2) | 4.9785 % (positifs 2/2) | 5.1920 % | 56,216 |
+| C2_10_8 | 1000 | 2 | 2 | 6.3880 % (positifs 2/2) | 2.1486 % (positifs 2/2) | 2.1486 % (positifs 2/2) | 2.5270 % | 5,457 |
+| C2_10_9 | 1000 | 2 | 2 | 11.6521 % (positifs 2/2) | 4.1736 % (positifs 2/2) | 4.1736 % (positifs 2/2) | 4.5470 % | 16,070 |
+| C2_6_2 | 600 | 1 | 1 | 6.7347 % (positifs 1/1) | 4.1912 % (positifs 1/1) | Aucun écart positif (effectif 1) | Référence dépassée — solution améliorante validée | 22,782 |
+| C2_8_7 | 800 | 1 | 1 | 14.3805 % (positifs 1/1) | 4.8700 % (positifs 1/1) | 3.5062 % (positifs 1/1) | 3.5060 % | 24,522 |
 
-Sur ce lot ciblé, **43/43 essais sont réalisables et au plus à +6 %**, 0 essais restent au-dessus et 0 essais sont en échec. La moyenne après optimisation est calculée sur chaque instance du lot ; les valeurs individuelles et les chemins des solutions sont conservés dans `results/time_objective/outliers10/AVANT_APRES_ESSAIS.csv`.
+Sur ce lot ciblé, **43/43 essais sont réalisables et au plus à +6 %**, 0 essais restent au-dessus et 0 essais sont en échec. Les moyennes positives sont conditionnelles et leur effectif est indiqué pour chaque instance ; les valeurs individuelles et les chemins des solutions sont conservés dans `results/time_objective/outliers10/AVANT_APRES_ESSAIS.csv`.
 
 **Portée.** Les valeurs précédentes des 646 résolutions ne sont pas remplacées. Ce tableau documente une nouvelle variante sur les cas ciblés et ne constitue ni une nouvelle moyenne indépendante des 356 instances, ni une preuve de gap à un optimum temporel. Le seuil porte toujours sur la durée du plan témoin réévalué. Les valeurs négatives, les temps supplémentaires et les dépassements éventuels sont conservés.
 
-![Évolution des écarts moyens des 26 instances ciblées, sur les mêmes graines.](livraison/duree_figures/optimisation_ciblee.png)
+![Évolution des écarts moyens des 26 instances ciblées, sur les mêmes graines.](livraison/duree_figures/presentation_optimisation_statuts.png)
 
-**Lecture du graphique.** Chaque ligne représente une instance du lot ciblé. Le point orange indique son écart moyen avant modification, le point vert son écart moyen après les recherches réellement exécutées. Le segment relie les mêmes graines avant et après ; un déplacement vers la gauche signifie une diminution de durée. La ligne pointillée matérialise le seuil de +6 % par rapport au plan témoin réévalué. Les éventuelles continuations plus longues participent au point final ; leur temps cumulé figure dans le tableau.
+**Lecture du graphique.** Les deux barres classent les mêmes 43 couples avant et après la reprise, en références dépassées, égalées et écarts positifs. Le tableau des statistiques conditionnelles précise les effectifs ; les coûts et temps originaux sont conservés.
 
 **Intérêt et continuité.** Après l'audit des dépassements, ce graphique rend visible le progrès et permet de repérer les cas restant proches du seuil. Il complète le tableau sans remplacer la colonne du pire essai : un point moyen sous la ligne ne suffirait pas à valider toutes les graines. Il concerne les 26 instances sélectionnées, et non l'ensemble du catalogue ni un optimum temporel connu.
 
@@ -815,15 +900,15 @@ Le réglage de voisins concerne uniquement le HGS externe ; le voisinage de notr
 
 Le gain depuis la construction est $G=100(T_{\mathrm{construction}}-T_{\mathrm{finale}})/T_{\mathrm{construction}}$. Par exemple, un gain de 19,32 % signifie une diminution de durée de 19,32 % depuis le départ construit ; ce n'est pas un gap de 19,32 % par rapport au BKS. Pour cet indicateur, une valeur positive élevée est une amélioration. La colonne « Écart témoin » utilise une autre référence et doit être interprétée séparément.
 
-| Géographie   |   Instances | Écart témoin (%)   | Gain construction (%)   | Part attente (%)   | Attente témoin (%)   | Calcul moyen (s)   |
-|:-------------|------------:|:-------------------|:------------------------|:-------------------|:---------------------|:-------------------|
-| C            |         117 | 2,224              | 6,633                   | 0,371              | 2,501                | 11,507             |
-| R            |         123 | -26,335            | 14,610                  | 12,221             | 56,824               | 11,511             |
-| RC           |         116 | -27,011            | 19,318                  | 11,424             | 54,690               | 11,517             |
+| Géographie | Instances | Écart témoin / statut | Gain construction (%) | Part attente (%) | Attente témoin (%) | Calcul moyen (s) |
+| --- | --- | --- | --- | --- | --- | --- |
+| C | 117 | Voir les effectifs par statut, pas une moyenne globale | 6,633 | 0,371 | 2,501 | 11,507 |
+| R | 123 | Voir les effectifs par statut, pas une moyenne globale | 14,610 | 12,221 | 56,824 | 11,511 |
+| RC | 116 | Voir les effectifs par statut, pas une moyenne globale | 19,318 | 11,424 | 54,690 | 11,517 |
 
-![Performances par géographie et par taille dans la campagne initiale.](livraison/duree_figures/familles_par_taille.png)
+![Performances par géographie et par taille dans la campagne initiale.](livraison/duree_figures/presentation_statuts_geographie.png)
 
-**Lecture des cartes de chaleur.** Chaque case représente la moyenne d'instances de la même géographie et de la même taille. Le panneau gauche indique le gain depuis la construction : une valeur positive correspond à une baisse de durée. Le panneau droit indique l'écart au plan témoin : une valeur négative correspond à une durée inférieure à celle du témoin, sans preuve de nouvel optimum temporel. Les deux échelles sont distinctes et leurs couleurs ne doivent pas être comparées directement.
+**Lecture des statuts géographiques.** Les barres comptent les essais de couverture par géographie et par statut. Les caractéristiques de fenêtres et capacité qui suivent restent calculées par instance ; les granularités ne sont pas confondues.
 
 **Intérêt et continuité.** Le tableau global résume les trois géographies ; les cartes séparent ensuite les tailles pour éviter de confondre structure spatiale et nombre de clients. Elles montrent les cas où la recherche améliore beaucoup son départ, ainsi que ceux où le témoin reste meilleur. Cette lecture conduit à examiner les fenêtres et la capacité, qui participent aussi à la faisabilité des mouvements.
 
@@ -845,7 +930,13 @@ Le gain depuis la construction est $G=100(T_{\mathrm{construction}}-T_{\mathrm{f
 **Intérêt et limites.** Ces nuages relient les contraintes du modèle au comportement observé. Une capacité élevée autorise certains regroupements sans les garantir ; les horaires peuvent empêcher de remplir un camion. Des fenêtres longues peuvent aussi laisser subsister des attentes selon leur position et l'ordre des visites. Il s'agit d'associations descriptives, pas d'une expérience modifiant une seule contrainte : géographie, services, horizon et demandes peuvent se confondre. Nous ne concluons donc pas à un effet causal isolé de Q ou de la largeur des fenêtres. Les limites de l'approche et les réglages contrôlés de la section précédente complètent cette lecture.
 
 
-**Lecture du bilan.** Pour RC, le gain moyen depuis la construction vaut 19.32 %, la part d’attente 11.42 % et l’écart au témoin -27.01 %. Pour R, le gain moyen depuis la construction vaut 14.61 %, la part d’attente 12.22 % et l’écart au témoin -26.33 %. Pour C, le gain moyen depuis la construction vaut 6.63 %, la part d’attente 0.37 % et l’écart au témoin +2.22 %. Ces valeurs décrivent la campagne initiale et ses départs ; elles ne classent pas universellement la difficulté des familles. Les tableaux détaillés par taille et famille permettent de revenir aux instances avant de proposer une modification.
+**Lecture du bilan.** Les gains depuis la construction et les parts d’attente restent des indicateurs de durée, distincts des gaps de benchmark. Les comparaisons au témoin sont décrites par les effectifs de chaque statut ci-dessous ; une moyenne signée de toute une géographie n’est pas requalifiée en moyenne positive.
+
+| geo   |   Essais |   Positifs |   References_depassees |   References_egalees |   Non_comparables | Moyenne_positive_pct   | Mediane_positive_pct   |   Positifs_superieurs_6 |
+|:------|---------:|-----------:|-----------------------:|---------------------:|------------------:|:-----------------------|:-----------------------|------------------------:|
+| C     |      154 |         87 |                     43 |                   24 |                 0 | 6.9063                 | 4.8712                 |                      38 |
+| R     |      166 |          3 |                    163 |                    0 |                 0 | 1.2366                 | 1.4576                 |                       0 |
+| RC    |      152 |          0 |                    152 |                    0 |                 0 | Non applicable         | Non applicable         |                       0 |
 
 **Association et causalité.** Sur les soixante cas à 1 000 clients, la corrélation de Pearson entre ouverture relative des fenêtres et part d'attente vaut -0.269, et celle entre demande relative à Q et remplissage vaut 0.227. Ces associations modestes ne suffisent pas à isoler un effet causal des contraintes. La colonne d'attente du témoin rappelle aussi que les plans de référence n'ont pas été sélectionnés pour minimiser ce temps : leurs écarts de durée peuvent différer fortement selon les familles.
 
@@ -922,8 +1013,8 @@ l'annexe servent à contrôler le fonctionnement, sans garantir la même qualit�
 
 Ces trois résolutions ont été recalculées à neuf, sans transmettre les témoins au moteur. La construction renforcée est suivie de HGS externe pendant 30 puis 20 secondes. C2_10_2, encore à +6,02 %, reçoit ensuite 50 secondes supplémentaires, facturées au cumul. Le temps de cette première tentative reste compté.
 
-| Instance | Graine | Écart en durée | CPU cumulé (s) | Temps écoulé cumulé (s) |
-|---|---:|---:|---:|---:|
+| Instance | Graine | Écart en durée / statut | CPU cumulé (s) | Temps écoulé cumulé (s) |
+| --- | --- | --- | --- | --- |
 | C2_10_2 | 4101 | +1.47 % | 103.61 | 108.72 |
 | C2_10_7 | 4101 | +5.70 % | 54.41 | 56.05 |
 | C2_10_7 | 4102 | +5.25 % | 55.17 | 56.70 |
@@ -1048,16 +1139,16 @@ La version 2 conserve le planning complet, puis utilise uniquement le temps
 réellement restant. L'archive de chaque appel ne peut alors dégrader sa solution
 d'entrée. Les résultats de cette confirmation à deux graines sont distincts :
 
-| instance   |    n | method      |   attempts |   feasible |   mean_duration |   std_duration |   best_duration |   mean_delta |   mean_wall_s |   max_cpu_s |
-|:-----------|-----:|:------------|-----------:|-----------:|----------------:|---------------:|----------------:|-------------:|--------------:|------------:|
-| R101       |   25 | refined     |          2 |          2 |        1306.500 |          0.000 |        1306.500 |        0.911 |         0.214 |       0.391 |
-| R101       |   25 | refined_ils |          2 |          2 |        1294.700 |          0.000 |        1294.700 |        0.000 |         3.002 |       3.016 |
-| R202       |  100 | refined     |          2 |          2 |        2858.350 |         54.750 |        2803.600 |        4.629 |         0.192 |       0.203 |
-| R202       |  100 | refined_ils |          2 |          2 |        2714.550 |         65.350 |        2649.200 |       -0.635 |         3.001 |       3.000 |
-| R2_10_8    | 1000 | refined     |          2 |          2 |       83433.950 |       2663.450 |       80770.500 |      -22.448 |         2.409 |       2.531 |
-| R2_10_8    | 1000 | refined_ils |          2 |          2 |       83433.950 |       2663.450 |       80770.500 |      -22.448 |         3.011 |       3.000 |
-| RC2_6_1    |  600 | refined     |          2 |          2 |       38974.600 |        147.600 |       38827.000 |      -19.088 |         1.767 |       1.781 |
-| RC2_6_1    |  600 | refined_ils |          2 |          2 |       38974.600 |        147.600 |       38827.000 |      -19.088 |         3.006 |       3.016 |
+| instance | n | method | attempts | feasible | mean_duration | std_duration | best_duration | Moyenne positive conditionnelle — mean_delta / statut | mean_wall_s | max_cpu_s |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| R101 | 25 | refined | 2 | 2 | 1306.500 | 0.000 | 1306.500 | 0.9114 % (positifs 2/2) | 0.214 | 0.391 |
+| R101 | 25 | refined_ils | 2 | 2 | 1294.700 | 0.000 | 1294.700 | Aucun écart positif (effectif 2) | 3.002 | 3.016 |
+| R202 | 100 | refined | 2 | 2 | 2858.350 | 54.750 | 2803.600 | 4.6286 % (positifs 2/2) | 0.192 | 0.203 |
+| R202 | 100 | refined_ils | 2 | 2 | 2714.550 | 65.350 | 2649.200 | 1.7570 % (positifs 1/2) | 3.001 | 3.000 |
+| R2_10_8 | 1000 | refined | 2 | 2 | 83433.950 | 2663.450 | 80770.500 | Aucun écart positif (effectif 2) | 2.409 | 2.531 |
+| R2_10_8 | 1000 | refined_ils | 2 | 2 | 83433.950 | 2663.450 | 80770.500 | Aucun écart positif (effectif 2) | 3.011 | 3.000 |
+| RC2_6_1 | 600 | refined | 2 | 2 | 38974.600 | 147.600 | 38827.000 | Aucun écart positif (effectif 2) | 1.767 | 1.781 |
+| RC2_6_1 | 600 | refined_ils | 2 | 2 | 38974.600 | 147.600 | 38827.000 | Aucun écart positif (effectif 2) | 3.006 | 3.016 |
 
 Les écarts-types descriptifs ci-dessus utilisent `ddof=0`. Deux graines ne
 suffisent pas pour établir une supériorité statistique générale ; l'étude
@@ -1076,15 +1167,9 @@ et le CSV des paires permettent de distinguer la première variante et sa
 correction. Ce graphique explique le changement de planning ; il ne compare
 pas des coûts pris dans des campagnes différentes.
 
-![Qualité et temps observés dans la couverture progressive.](livraison/figures_final_static/qualite_taille_temps.png)
+![Qualité et temps observés dans la couverture progressive.](livraison/duree_figures/presentation_statuts_pilotes.png)
 
-**Lecture du graphique.** Le panneau gauche représente l'écart à OR-Tools ;
-la ligne +6 % est un repère de qualité. Le panneau droit représente le temps
-écoulé mesuré. Un point correspond ici à une instance et une graine par taille,
-dans le seul lot progressif ; il n'établit ni une loi de complexité ni un
-classement universel. Les échecs restent dans le tableau de faisabilité et
-ne sont pas remplacés par des pourcentages. La comparaison qualité–temps
-complète ainsi les boîtes à moustaches historiques.
+**Lecture des statuts du pilote.** Chaque barre regroupe les essais d’une méthode dans le seul lot progressif. Les références dépassées et égalées sont comptées ; les échecs restent visibles. Les temps réels restent dans les tableaux de coûts et dans les CSV. Ce graphique ne prétend pas établir une loi de complexité.
 
 **Fichiers et limites.** `results/final_static/TOUS_LES_ESSAIS.csv` rassemble
 les essais avec leur campagne, coût, faisabilité, CPU, temps écoulé, source et

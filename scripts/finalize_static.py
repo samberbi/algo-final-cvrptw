@@ -23,7 +23,10 @@ def main():
         # Reclasser les comparaisons après génération, avant exécution du notebook.
         scripts.append('present_gap_status.py')
     if args.execute:scripts.append('execute_final_notebook.py')
-    if args.validate:scripts.append('validate_final_static.py')
+    if args.validate:
+        scripts.append('validate_final_static.py')
+        if (ROOT/'results/presentation_status/AUDIT.json').exists():
+            scripts.append('validate_gap_presentation.py')
     for name in scripts:
         print('Étape : '+name,flush=True)
         subprocess.run([sys.executable,'-X','utf8',str(ROOT/'scripts'/name)],cwd=ROOT,check=True)

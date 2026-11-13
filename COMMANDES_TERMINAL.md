@@ -257,16 +257,16 @@ Les temps ci-dessous sont ceux de résolution, sans préchauffage. Les référen
 sont nommées dans les CSV : OR-Tools à 25/50, plans publics réévalués ensuite.
 Cette vérification d'interface ne remplace pas une étude comparative exhaustive.
 
-| instance   |    n |    duration |   delta_reference_pct |   wall_s |   cpu_s |
-|:-----------|-----:|------------:|----------------------:|---------:|--------:|
-| C101       |   25 |   2623.5000 |                0.0000 |   0.4448 |  0.3438 |
-| C101       |   50 |   5036.5000 |                1.6428 |   0.4571 |  0.3594 |
-| C101       |  100 |   9827.3000 |                0.0000 |   0.5160 |  0.4531 |
-| C1_2_1     |  200 |  20760.7000 |               -0.1063 |   0.7871 |  0.7031 |
-| C1_4_1     |  400 |  43162.9000 |               -1.1481 |   1.1611 |  1.0469 |
-| C1_6_1     |  600 |  68099.6000 |               -0.6776 |   1.5808 |  1.5000 |
-| C1_8_1     |  800 |  97862.2000 |                0.1618 |   2.3296 |  2.3438 |
-| C1_10_1    | 1000 | 133890.9000 |                0.0656 |   3.2543 |  3.0469 |
+| instance   |    n |    duration | comparaison                                       |   wall_s |   cpu_s |
+|:-----------|-----:|------------:|:--------------------------------------------------|---------:|--------:|
+| C101       |   25 |   2623.5000 | Référence égalée — optimalité non démontrée       |   0.4448 |  0.3438 |
+| C101       |   50 |   5036.5000 | 1.6428 %                                          |   0.4571 |  0.3594 |
+| C101       |  100 |   9827.3000 | Référence égalée — optimalité non démontrée       |   0.5160 |  0.4531 |
+| C1_2_1     |  200 |  20760.7000 | Référence dépassée — solution améliorante validée |   0.7871 |  0.7031 |
+| C1_4_1     |  400 |  43162.9000 | Référence dépassée — solution améliorante validée |   1.1611 |  1.0469 |
+| C1_6_1     |  600 |  68099.6000 | Référence dépassée — solution améliorante validée |   1.5808 |  1.5000 |
+| C1_8_1     |  800 |  97862.2000 | 0.1618 %                                          |   2.3296 |  2.3438 |
+| C1_10_1    | 1000 | 133890.9000 | 0.0656 %                                          |   3.2543 |  3.0469 |
 
 Sur C1_10_6 à 1000 clients, budget demandé 30 s : durée **140502.9**,
 écart au témoin réévalué **+5.0452 %**, temps réel
@@ -276,14 +276,14 @@ artificiellement. Cet écart ne constitue pas un gap à un optimum temporel prou
 
 ## Résultats réels — comparaison C101/25
 
-| method   |   duration | valid   |   vehicles |   wall_s |   delta_reference_pct |
-|:---------|-----------:|:--------|-----------:|---------:|----------------------:|
-| hybrid   |  2623.5000 | True    |          3 |   5.1052 |                0.0000 |
-| ils      |  2623.5000 | True    |          3 |   5.0092 |                0.0000 |
-| ortools  |  2623.5000 | True    |          3 |   5.7465 |                0.0000 |
-| pyvrp    |  2623.5000 | True    |          3 |   5.4987 |                0.0000 |
-| refined  |  2623.5000 | True    |          3 |   0.4192 |                0.0000 |
-| sa       |  2623.5000 | True    |          3 |   5.0064 |                0.0000 |
+| method   |   duration | valid   |   vehicles |   wall_s | comparaison                                 |
+|:---------|-----------:|:--------|-----------:|---------:|:--------------------------------------------|
+| hybrid   |  2623.5000 | True    |          3 |   5.1052 | Référence égalée — optimalité non démontrée |
+| ils      |  2623.5000 | True    |          3 |   5.0092 | Référence égalée — optimalité non démontrée |
+| ortools  |  2623.5000 | True    |          3 |   5.7465 | Référence égalée — optimalité non démontrée |
+| pyvrp    |  2623.5000 | True    |          3 |   5.4987 | Référence égalée — optimalité non démontrée |
+| refined  |  2623.5000 | True    |          3 |   0.4192 | Référence égalée — optimalité non démontrée |
+| sa       |  2623.5000 | True    |          3 |   5.0064 | Référence égalée — optimalité non démontrée |
 
 Les six profils obtiennent ici la même durée réalisable. Les coûts égaux à la
 référence expliquent les écarts nuls ; aucun certificat d'optimalité n'en est

@@ -75,6 +75,17 @@ Les commandes courtes sont dans [TESTER_SUR_PORTABLE.md](docs/TESTER_SUR_PORTABL
 
 Les expériences TD sont archivées dans [EXPLORATION_TD_HORS_PERIMETRE.md](docs/EXPLORATION_TD_HORS_PERIMETRE.md). Elles ne valident pas le modèle principal à trajets fixes, symétriques et départs nuls.
 
+## Présentation des comparaisons
+
+Le notebook et son HTML de lecture utilisent des statuts pour les références
+dépassées ou égalées, et des moyennes/médianes strictement positives conditionnelles
+avec leurs effectifs. Les petites preuves exactes sont marquées « Optimum atteint ».
+Les données signées sont conservées dans [AUDIT_GAPS_FINAL.md](AUDIT_GAPS_FINAL.md)
+et `results/presentation_status/`. La vue publiée est
+`results/presentation_status/TABLEAU_PRESENTATION.csv` ; aucun coût ni algorithme
+n'a été dégradé pour changer un pourcentage. La validation dédiée se lance avec
+`python scripts/validate_gap_presentation.py`.
+
 ## Commandes terminal vérifiées
 
 La fiche [COMMANDES_TERMINAL.md](COMMANDES_TERMINAL.md) donne les commandes
