@@ -1,0 +1,25 @@
+{
+  "name": "garde_fou",
+  "command": [
+    "C:\\Users\\user\\OneDrive - Association Cesi Viacesi mail\\Bureau\\PROJET ALGO\\.venv\\Scripts\\python.exe",
+    "-X",
+    "utf8",
+    "scripts/test_instances.py",
+    "--instances",
+    "C101",
+    "--method",
+    "ils",
+    "--seconds",
+    ".01",
+    "--max-seconds",
+    ".05",
+    "--label",
+    "commandes_terminal_runs_limite"
+  ],
+  "expected_exit": 1,
+  "exit": 1,
+  "wall_s": 0.9675161000341177,
+  "validated": true,
+  "log": "results/terminal_validation/commandes_terminal_runs/garde_fou.txt",
+  "campaign": "commandes_terminal_runs_limite"
+}

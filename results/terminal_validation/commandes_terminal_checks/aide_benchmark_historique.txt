@@ -1,0 +1,20 @@
+usage: benchmark_final_static.py [-h] [--cases CASES [CASES ...]]
+                                 [--seeds SEEDS [SEEDS ...]]
+                                 [--methods {construction,ils,sa,pyvrp,hybrid,refined,refined_no_partition,refined_ils,ortools} [{construction,ils,sa,pyvrp,hybrid,refined,refined_no_partition,refined_ils,ortools} ...]]
+                                 [--seconds SECONDS]
+                                 [--reference-seconds REFERENCE_SECONDS]
+                                 --label LABEL
+
+Petites campagnes statiques reprenables ; sauvegarde après chaque résolution.
+
+options:
+  -h, --help            show this help message and exit
+  --cases CASES [CASES ...]
+  --seeds SEEDS [SEEDS ...]
+  --methods {construction,ils,sa,pyvrp,hybrid,refined,refined_no_partition,refined_ils,ortools} [{construction,ils,sa,pyvrp,hybrid,refined,refined_no_partition,refined_ils,ortools} ...]
+  --seconds SECONDS
+  --reference-seconds REFERENCE_SECONDS
+  --label LABEL
+
+
+STDERR

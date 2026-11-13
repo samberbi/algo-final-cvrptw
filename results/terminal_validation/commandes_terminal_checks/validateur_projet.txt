@@ -1,0 +1,126 @@
+{
+  "complete": true,
+  "runs": 646,
+  "core_runs": 472,
+  "instances": 356,
+  "feasible": 646,
+  "failed": 0,
+  "repetition_runs": 180,
+  "mean_instance_delta_reference_pct": -17.169320113459612,
+  "mean_instance_gain_initial_pct": 13.522330926039109,
+  "reference_kind": "Duration of distance-BKS plans; no known time optimum",
+  "mean_calculation_s": 11.689262811439576,
+  "regression": {
+    "n": 60,
+    "x": "initial_duration",
+    "y": "duration",
+    "covariance": 284197949.8013,
+    "pearson": 0.9131048308422165,
+    "slope": 1.0512282348000792,
+    "intercept": -13752.399983180032,
+    "r2": 0.8337604321073924,
+    "SCT": 21499478574.316,
+    "SCR": 17925414546.205322,
+    "SCE": 3574064028.110669,
+    "scope": "60 distinct 1000-client instances; seed 4101; 10s search; descriptive, not causal"
+  },
+  "duration_population": {
+    "n": 356,
+    "mean": 48850.33286516854,
+    "median": 37739.65,
+    "mode": "9827.3",
+    "variance": 1837317596.998428,
+    "std": 42863.942854086905,
+    "minimum": 1744.85,
+    "maximum": 167151.95,
+    "range": 165407.1,
+    "iqr": 70090.575,
+    "q0.025": 2062.3187500000004,
+    "q0.1": 2952.05,
+    "q0.25": 9827.3,
+    "q0.3": 15144.6,
+    "q0.5": 37739.65,
+    "q0.7": 70703.34999999999,
+    "q0.75": 79917.875,
+    "q0.9": 115214.0,
+    "q0.975": 139972.89375
+  },
+  "delta_population": {
+    "n": 356,
+    "mean": -17.169320113459612,
+    "median": -12.474221172114625,
+    "mode": "0.0",
+    "variance": 397.68121118830294,
+    "std": 19.941946023101732,
+    "minimum": -62.50744490768314,
+    "maximum": 24.96902912570548,
+    "range": 87.47647403338861,
+    "iqr": 32.8113876583719,
+    "q0.025": -55.75646685192373,
+    "q0.1": -47.99378598559632,
+    "q0.25": -33.12039203106992,
+    "q0.3": -25.472160329908775,
+    "q0.5": -12.474221172114625,
+    "q0.7": -1.5911456574937095,
+    "q0.75": -0.3090043726980185,
+    "q0.9": 4.203640554906412,
+    "q0.975": 11.761153084763214
+  }
+}
+{'validated': True, 'objective': 'sum_route_duration', 'departures': 0, 'reference_kind': 'Duration of feasible distance-BKS plan, not a proven duration optimum', 'scope': 'Targeted development on 26 previously selected instances; not full-catalogue independent validation', 'paired_trials': 43, 'instances': 26, 'all_feasible': True, 'above_6': 0, 'worst_pct': 5.192444361324111, 'tests_passed': 168, 'tests_skipped': 0, 'archive_coverage_trials': 472, 'archive_coverage_instances': 356, 'archive_all_feasible': True, 'archive_above_6': 0, 'archive_worst_pct': 5.758878670491163, 'final_trials_using_continuation': 12, 'max_cumulative_runtime_s': 58.16577399999369, 'python': '3.12.8', 'pyvrp': '0.12.2', 'result_csv_sha256': 'eba5c42e0dac03c0014eade9a37c6b9e07b16e91c949953e8d97f56be0c42431'}
+{
+  "validated": true,
+  "scope": "Controlled study and reporting additions; no new full-catalogue benchmark",
+  "sensitivity_profiles": 90,
+  "sensitivity_feasible": 90,
+  "instances": 6,
+  "seeds": 3,
+  "configurations": 5,
+  "actual_constructions": 18,
+  "actual_ils_prefixes": 54,
+  "actual_hgs_calls": 90,
+  "time_convention": "Sum of actually measured construction, ILS, HGS and verification phases; shared phases charged in each profile",
+  "scenario_instances": 356,
+  "scenario_families": 6,
+  "figures": 24,
+  "missing_figures": 0,
+  "notebook_code_cells": 16,
+  "notebook_errors": 0,
+  "prior_best_results_unchanged": true
+}
+### Contrôle conjoint qualité–CPU sur trois reprises difficiles
+
+Ces trois résolutions ont été recalculées à neuf, sans transmettre les témoins au moteur. La construction renforcée est suivie de HGS externe pendant 30 puis 20 secondes. C2_10_2, encore à +6,02 %, reçoit ensuite 50 secondes supplémentaires, facturées au cumul. Le temps de cette première tentative reste compté.
+
+| Instance | Graine | Écart en durée | CPU cumulé (s) | Temps écoulé cumulé (s) |
+|---|---:|---:|---:|---:|
+| C2_10_2 | 4101 | +1.47 % | 103.61 | 108.72 |
+| C2_10_7 | 4101 | +5.70 % | 54.41 | 56.05 |
+| C2_10_7 | 4102 | +5.25 % | 55.17 | 56.70 |
+
+Le CPU inclut le préchauffage mesuré dans chaque worker et toutes les phases de résolution, y compris la vérification finale ; le démarrage de l’interpréteur est exclu. Les trois instances sont lancées sur des processus distincts. La limite de deux minutes est contrôlée **par résolution**, pas sur la somme CPU des trois workers. Cette vérification est a posteriori ; elle ne constitue pas un arrêt matériel garanti à 120 secondes.
+
+Ces cas ont été sélectionnés pour leur lenteur historique : ce contrôle ne garantit pas les deux critères sur toutes les instances, graines et machines. Les écarts portent sur les durées des plans témoins, pas sur des optimums temporels. Les meilleurs résultats historiques restent conservés séparément.
+
+Pour reproduire ce lot optionnel (trois résolutions seulement) :
+
+```powershell
+.\.venv\Scripts\python.exe scripts/check_quality_time.py --label qualite_portable
+.\.venv\Scripts\python.exe scripts/continue_quality_time.py --label qualite_portable
+```
+
+La continuation est destinée uniquement à C2_10_2 et vérifie la marge CPU mesurée avant de démarrer. Les tests rapides de l’annexe restent disponibles pour un simple contrôle de fonctionnement.
+{
+  "validated": true,
+  "instances": 356,
+  "tests": 196,
+  "skipped": 2,
+  "notebook_code_cells": 16,
+  "scope": "Current notebook, recorded solutions, immutable instance hashes and local test suite",
+  "limitation": "No new uniform 356-instance optimization campaign; best archive uses mixed budgets",
+  "canonical_notebook": "notebooks/Livrable_Final_CVRPTW.ipynb",
+  "exploratory_td": "Archived separately, outside the static main model"
+}
+
+
+STDERR

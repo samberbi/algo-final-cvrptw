@@ -1,0 +1,17 @@
+
+COMPARAISON — classement en durée réalisable, par instance et graine
+Budgets de recherche et temps totaux sont distincts ; échecs non classés.
+Instance / n / graine | Méthode | Durée | Faisable | Véhicules | Réel(s) | Budget(s) | Écart(%) | Rang
+C101 / 25 / 4101 | refined_ils | 2623.500 | OUI | 3 | 1.427 | 1.000 | +0.0000 | 1
+C101 / 25 / 4101 | refined_no_partition | 2623.500 | OUI | 3 | 0.454 | 1.000 | +0.0000 | 1
+C101 / 25 / 4101 | construction | 2846.300 | OUI | 3 | 0.006 | 1.000 | +8.4925 | 2
+Meilleure(s) méthode(s) sur ce cas/essai : refined_ils, refined_no_partition
+
+{
+  "completed": 3,
+  "valid": 3,
+  "failed": 0,
+  "batch_wall_s": 7.681901399977505,
+  "resolution_cpu_sum_s": 1.671875,
+  "note": "Signed gap against feasible reference, not a certified duration optimum. Warmup excluded from solve time but included in process guard."
+}

@@ -1,0 +1,78 @@
+1 instances ; 1 résolutions ; 1 processus maximum
+Départs zéro ; trajets fixes/symétriques ; objectif trajets + attentes + services, retour compris.
+Dossier : C:\Users\user\Downloads\CVRPTW_REMISE_PROF_20261112T203928\results\local\terminal_20261113_225728
+Budget : recherche + construction pour ILS/SA/hybride/PyVRP ; total souple pour renforcé.
+CPU/réel résolution excluent le préchauffage ; le garde-fou inclut tout le processus.
+Un arrêt par surveillance peut dépasser légèrement la limite lors de l’arrêt du processus.
+
+========================================================================
+TEST CVRPTW
+========================================================================
+Instance                     : C101
+Famille                      : C1
+Nombre de clients            : 25
+Méthode                      : refined — Hybride renforcé : constructions propres, LS PyVRP, partitionnement HiGHS
+Graine                       : 4101
+FAISABILITÉ                  : OUI
+Statut                       : feasible
+Véhicules utilisés           : 3
+Durée des trajets            : 294.500 u.t.
+Durée des attentes           : 79.000 u.t.
+Durée des services           : 2250.000 u.t.
+DURÉE TOTALE                 : 2623.500 u.t.
+Durée de référence           : 2623.500 u.t.
+Type de référence            : OR-Tools indépendant enregistré, solution réalisable non prouvée optimale
+Source de référence          : results/final_static/pilote25/runs/C101_25_ortools_4101.json
+Écart à la référence         : +0.0000 %
+Gap certifié                 : NON DISPONIBLE
+Temps CPU résolution         : 0.391 s
+Temps réel résolution        : 0.679 s
+Temps total processus        : 3.783 s
+Budget demandé               : 5.000 s
+Garde-fou processus          : 120.000 s
+Dépassement budget demandé   : 0.000 s
+Contraintes                  : VALIDÉES
+Tournée 1 : 0 -> 13 -> 17 -> 18 -> 19 -> 11 -> 9 -> 6 -> 23 -> 22 -> 21 -> 0
+  client 13: arrivée 30.80, début 30.80, fin 120.80
+  client 17: arrivée 124.80, début 124.80, fin 214.80
+  client 18: arrivée 217.80, début 217.80, fin 307.80
+  client 19: arrivée 312.80, début 312.80, fin 402.80
+  client 11: arrivée 425.60, début 448.00, fin 538.00
+  client 9: arrivée 541.10, début 541.10, fin 631.10
+  client 6: arrivée 633.30, début 633.30, fin 723.30
+  client 23: arrivée 741.70, début 741.70, fin 831.70
+  client 22: arrivée 834.70, début 834.70, fin 924.70
+  client 21: arrivée 926.70, début 926.70, fin 1016.70
+  retour au dépôt : 1026.80
+Tournée 2 : 0 -> 20 -> 24 -> 25 -> 10 -> 16 -> 14 -> 12 -> 4 -> 2 -> 1 -> 0
+  client 20: arrivée 10.00, début 10.00, fin 100.00
+  client 24: arrivée 105.00, début 105.00, fin 195.00
+  client 25: arrivée 197.00, début 197.00, fin 287.00
+  client 10: arrivée 304.20, début 357.00, fin 447.00
+  client 16: arrivée 471.20, début 475.00, fin 565.00
+  client 14: arrivée 567.00, début 567.00, fin 657.00
+  client 12: arrivée 660.00, début 660.00, fin 750.00
+  client 4: arrivée 774.00, début 774.00, fin 864.00
+  client 2: arrivée 867.60, début 867.60, fin 957.60
+  client 1: arrivée 959.60, début 959.60, fin 1049.60
+  retour au dépôt : 1068.20
+Tournée 3 : 0 -> 5 -> 3 -> 7 -> 8 -> 15 -> 0
+  client 5: arrivée 15.10, début 15.10, fin 105.10
+  client 3: arrivée 106.10, début 106.10, fin 196.10
+  client 7: arrivée 198.10, début 198.10, fin 288.10
+  client 8: arrivée 290.90, début 290.90, fin 380.90
+  client 15: arrivée 402.50, début 402.50, fin 492.50
+  retour au dépôt : 528.50
+
+COMPARAISON — classement en durée réalisable, par instance et graine
+Budgets de recherche et temps totaux sont distincts ; échecs non classés.
+Instance / n / graine | Méthode | Durée | Faisable | Véhicules | Réel(s) | Budget(s) | Écart(%) | Rang
+C101 / 25 / 4101 | refined | 2623.500 | OUI | 3 | 0.679 | 5.000 | +0.0000 | 1
+Meilleure(s) méthode(s) sur ce cas/essai : refined
+
+BILAN : 1/1 réalisables.
+CSV : C:\Users\user\Downloads\CVRPTW_REMISE_PROF_20261112T203928\results\local\terminal_20261113_225728\RESULTATS.csv
+Label : terminal_20261113_225728
+
+
+STDERR

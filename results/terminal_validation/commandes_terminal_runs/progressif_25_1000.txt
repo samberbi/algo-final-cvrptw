@@ -1,0 +1,260 @@
+8 instances ; 8 résolutions ; 1 processus maximum
+Départs zéro ; trajets fixes/symétriques ; objectif trajets + attentes + services, retour compris.
+Dossier : C:\Users\user\Downloads\CVRPTW_REMISE_PROF_20261112T203928\results\local\commandes_terminal_runs_progressif
+Budget : recherche + construction pour ILS/SA/hybride/PyVRP ; total souple pour renforcé.
+CPU/réel résolution excluent le préchauffage ; le garde-fou inclut tout le processus.
+Un arrêt par surveillance peut dépasser légèrement la limite lors de l’arrêt du processus.
+
+========================================================================
+TEST CVRPTW
+========================================================================
+Instance                     : C101
+Famille                      : C1
+Nombre de clients            : 25
+Méthode                      : refined — Hybride renforcé : constructions propres, LS PyVRP, partitionnement HiGHS
+Graine                       : 4101
+FAISABILITÉ                  : OUI
+Statut                       : feasible
+Véhicules utilisés           : 3
+Durée des trajets            : 294.500 u.t.
+Durée des attentes           : 79.000 u.t.
+Durée des services           : 2250.000 u.t.
+DURÉE TOTALE                 : 2623.500 u.t.
+Durée de référence           : 2623.500 u.t.
+Type de référence            : OR-Tools indépendant enregistré, solution réalisable non prouvée optimale
+Source de référence          : results/final_static/pilote25/runs/C101_25_ortools_4101.json
+Écart à la référence         : +0.0000 %
+Gap certifié                 : NON DISPONIBLE
+Temps CPU résolution         : 0.344 s
+Temps réel résolution        : 0.445 s
+Temps total processus        : 3.069 s
+Budget demandé               : 5.000 s
+Garde-fou processus          : 120.000 s
+Dépassement budget demandé   : 0.000 s
+Contraintes                  : VALIDÉES
+
+========================================================================
+TEST CVRPTW
+========================================================================
+Instance                     : C101
+Famille                      : C1
+Nombre de clients            : 50
+Méthode                      : refined — Hybride renforcé : constructions propres, LS PyVRP, partitionnement HiGHS
+Graine                       : 4101
+FAISABILITÉ                  : OUI
+Statut                       : feasible
+Véhicules utilisés           : 6
+Durée des trajets            : 435.900 u.t.
+Durée des attentes           : 100.600 u.t.
+Durée des services           : 4500.000 u.t.
+DURÉE TOTALE                 : 5036.500 u.t.
+Durée de référence           : 4955.100 u.t.
+Type de référence            : OR-Tools indépendant enregistré, solution réalisable non prouvée optimale
+Source de référence          : results/final_static/couverture_progressive/runs/C101_50_ortools_4101.json
+Écart à la référence         : +1.6428 %
+Gap certifié                 : NON DISPONIBLE
+Temps CPU résolution         : 0.359 s
+Temps réel résolution        : 0.457 s
+Temps total processus        : 1.931 s
+Budget demandé               : 5.000 s
+Garde-fou processus          : 120.000 s
+Dépassement budget demandé   : 0.000 s
+Contraintes                  : VALIDÉES
+
+========================================================================
+TEST CVRPTW
+========================================================================
+Instance                     : C101
+Famille                      : C1
+Nombre de clients            : 100
+Méthode                      : refined — Hybride renforcé : constructions propres, LS PyVRP, partitionnement HiGHS
+Graine                       : 4101
+FAISABILITÉ                  : OUI
+Statut                       : feasible
+Véhicules utilisés           : 10
+Durée des trajets            : 827.300 u.t.
+Durée des attentes           : 0.000 u.t.
+Durée des services           : 9000.000 u.t.
+DURÉE TOTALE                 : 9827.300 u.t.
+Durée de référence           : 9827.300 u.t.
+Type de référence            : Plan public DISTANCE réévalué en DURÉE, non optimalité temporelle
+Source de référence          : data/instances/C101.sol
+Écart à la référence         : +0.0000 %
+Gap certifié                 : NON DISPONIBLE
+Temps CPU résolution         : 0.453 s
+Temps réel résolution        : 0.516 s
+Temps total processus        : 1.995 s
+Budget demandé               : 5.000 s
+Garde-fou processus          : 120.000 s
+Dépassement budget demandé   : 0.000 s
+Contraintes                  : VALIDÉES
+
+========================================================================
+TEST CVRPTW
+========================================================================
+Instance                     : C1_2_1
+Famille                      : C1
+Nombre de clients            : 200
+Méthode                      : refined — Hybride renforcé : constructions propres, LS PyVRP, partitionnement HiGHS
+Graine                       : 4101
+FAISABILITÉ                  : OUI
+Statut                       : feasible
+Véhicules utilisés           : 20
+Durée des trajets            : 2712.300 u.t.
+Durée des attentes           : 48.400 u.t.
+Durée des services           : 18000.000 u.t.
+DURÉE TOTALE                 : 20760.700 u.t.
+Durée de référence           : 20782.800 u.t.
+Type de référence            : Plan public DISTANCE réévalué en DURÉE, non optimalité temporelle
+Source de référence          : data/instances/C1_2_1.sol
+Écart à la référence         : -0.1063 %
+Gap certifié                 : NON DISPONIBLE
+Temps CPU résolution         : 0.703 s
+Temps réel résolution        : 0.787 s
+Temps total processus        : 2.454 s
+Budget demandé               : 5.000 s
+Garde-fou processus          : 120.000 s
+Dépassement budget demandé   : 0.000 s
+Contraintes                  : VALIDÉES
+Écart négatif : durée inférieure à la référence réalisable ; pas une preuve d’optimalité.
+
+========================================================================
+TEST CVRPTW
+========================================================================
+Instance                     : C1_4_1
+Famille                      : C1
+Nombre de clients            : 400
+Méthode                      : refined — Hybride renforcé : constructions propres, LS PyVRP, partitionnement HiGHS
+Graine                       : 4101
+FAISABILITÉ                  : OUI
+Statut                       : feasible
+Véhicules utilisés           : 40
+Durée des trajets            : 7162.900 u.t.
+Durée des attentes           : 0.000 u.t.
+Durée des services           : 36000.000 u.t.
+DURÉE TOTALE                 : 43162.900 u.t.
+Durée de référence           : 43664.200 u.t.
+Type de référence            : Plan public DISTANCE réévalué en DURÉE, non optimalité temporelle
+Source de référence          : data/instances/C1_4_1.sol
+Écart à la référence         : -1.1481 %
+Gap certifié                 : NON DISPONIBLE
+Temps CPU résolution         : 1.047 s
+Temps réel résolution        : 1.161 s
+Temps total processus        : 2.760 s
+Budget demandé               : 5.000 s
+Garde-fou processus          : 120.000 s
+Dépassement budget demandé   : 0.000 s
+Contraintes                  : VALIDÉES
+Écart négatif : durée inférieure à la référence réalisable ; pas une preuve d’optimalité.
+
+========================================================================
+TEST CVRPTW
+========================================================================
+Instance                     : C1_6_1
+Famille                      : C1
+Nombre de clients            : 600
+Méthode                      : refined — Hybride renforcé : constructions propres, LS PyVRP, partitionnement HiGHS
+Graine                       : 4101
+FAISABILITÉ                  : OUI
+Statut                       : feasible
+Véhicules utilisés           : 60
+Durée des trajets            : 14099.600 u.t.
+Durée des attentes           : 0.000 u.t.
+Durée des services           : 54000.000 u.t.
+DURÉE TOTALE                 : 68099.600 u.t.
+Durée de référence           : 68564.200 u.t.
+Type de référence            : Plan public DISTANCE réévalué en DURÉE, non optimalité temporelle
+Source de référence          : data/instances/C1_6_1.sol
+Écart à la référence         : -0.6776 %
+Gap certifié                 : NON DISPONIBLE
+Temps CPU résolution         : 1.500 s
+Temps réel résolution        : 1.581 s
+Temps total processus        : 3.179 s
+Budget demandé               : 5.000 s
+Garde-fou processus          : 120.000 s
+Dépassement budget demandé   : 0.000 s
+Contraintes                  : VALIDÉES
+Écart négatif : durée inférieure à la référence réalisable ; pas une preuve d’optimalité.
+
+========================================================================
+TEST CVRPTW
+========================================================================
+Instance                     : C1_8_1
+Famille                      : C1
+Nombre de clients            : 800
+Méthode                      : refined — Hybride renforcé : constructions propres, LS PyVRP, partitionnement HiGHS
+Graine                       : 4101
+FAISABILITÉ                  : OUI
+Statut                       : feasible
+Véhicules utilisés           : 81
+Durée des trajets            : 25794.700 u.t.
+Durée des attentes           : 67.500 u.t.
+Durée des services           : 72000.000 u.t.
+DURÉE TOTALE                 : 97862.200 u.t.
+Durée de référence           : 97704.100 u.t.
+Type de référence            : Plan public DISTANCE réévalué en DURÉE, non optimalité temporelle
+Source de référence          : data/instances/C1_8_1.sol
+Écart à la référence         : +0.1618 %
+Gap certifié                 : NON DISPONIBLE
+Temps CPU résolution         : 2.344 s
+Temps réel résolution        : 2.330 s
+Temps total processus        : 3.954 s
+Budget demandé               : 5.000 s
+Garde-fou processus          : 120.000 s
+Dépassement budget demandé   : 0.000 s
+Contraintes                  : VALIDÉES
+
+========================================================================
+TEST CVRPTW
+========================================================================
+Instance                     : C1_10_1
+Famille                      : C1
+Nombre de clients            : 1000
+Méthode                      : refined — Hybride renforcé : constructions propres, LS PyVRP, partitionnement HiGHS
+Graine                       : 4101
+FAISABILITÉ                  : OUI
+Statut                       : feasible
+Véhicules utilisés           : 102
+Durée des trajets            : 43688.900 u.t.
+Durée des attentes           : 202.000 u.t.
+Durée des services           : 90000.000 u.t.
+DURÉE TOTALE                 : 133890.900 u.t.
+Durée de référence           : 133803.100 u.t.
+Type de référence            : Plan public DISTANCE réévalué en DURÉE, non optimalité temporelle
+Source de référence          : data/instances/C1_10_1.sol
+Écart à la référence         : +0.0656 %
+Gap certifié                 : NON DISPONIBLE
+Temps CPU résolution         : 3.047 s
+Temps réel résolution        : 3.254 s
+Temps total processus        : 4.868 s
+Budget demandé               : 5.000 s
+Garde-fou processus          : 120.000 s
+Dépassement budget demandé   : 0.000 s
+Contraintes                  : VALIDÉES
+
+COMPARAISON — classement en durée réalisable, par instance et graine
+Budgets de recherche et temps totaux sont distincts ; échecs non classés.
+Instance / n / graine | Méthode | Durée | Faisable | Véhicules | Réel(s) | Budget(s) | Écart(%) | Rang
+C101 / 100 / 4101 | refined | 9827.300 | OUI | 10 | 0.516 | 5.000 | +0.0000 | 1
+Meilleure(s) méthode(s) sur ce cas/essai : refined
+C101 / 25 / 4101 | refined | 2623.500 | OUI | 3 | 0.445 | 5.000 | +0.0000 | 1
+Meilleure(s) méthode(s) sur ce cas/essai : refined
+C101 / 50 / 4101 | refined | 5036.500 | OUI | 6 | 0.457 | 5.000 | +1.6428 | 1
+Meilleure(s) méthode(s) sur ce cas/essai : refined
+C1_10_1 / 1000 / 4101 | refined | 133890.900 | OUI | 102 | 3.254 | 5.000 | +0.0656 | 1
+Meilleure(s) méthode(s) sur ce cas/essai : refined
+C1_2_1 / 200 / 4101 | refined | 20760.700 | OUI | 20 | 0.787 | 5.000 | -0.1063 | 1
+Meilleure(s) méthode(s) sur ce cas/essai : refined
+C1_4_1 / 400 / 4101 | refined | 43162.900 | OUI | 40 | 1.161 | 5.000 | -1.1481 | 1
+Meilleure(s) méthode(s) sur ce cas/essai : refined
+C1_6_1 / 600 / 4101 | refined | 68099.600 | OUI | 60 | 1.581 | 5.000 | -0.6776 | 1
+Meilleure(s) méthode(s) sur ce cas/essai : refined
+C1_8_1 / 800 / 4101 | refined | 97862.200 | OUI | 81 | 2.330 | 5.000 | +0.1618 | 1
+Meilleure(s) méthode(s) sur ce cas/essai : refined
+
+BILAN : 8/8 réalisables.
+CSV : C:\Users\user\Downloads\CVRPTW_REMISE_PROF_20261112T203928\results\local\commandes_terminal_runs_progressif\RESULTATS.csv
+Label : commandes_terminal_runs_progressif
+
+
+STDERR

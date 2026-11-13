@@ -18,8 +18,8 @@ coûts ont été vérifiés. Elles ne constituent pas une preuve de conformité 
 | Audit | Terminé dans le périmètre statique confirmé | Cahier transmis, bilan de conformité, sauvegardes Git |
 | Compatibilité | Vérifiée avec réserves explicites | Phonin non certifié directement ; cinq contrôles numériques, OR-Tools indépendant |
 | Corrections | Effectuées | Modèle statique, provenance, comparateurs, variante ILS testée séparément |
-| Tests | Réussis | 182 réussites, deux modules optionnels ignorés |
-| Notebook | Corrigé et réexécuté | 16 cellules, zéro erreur, dernier passage 33,99 s |
+| Tests | Réussis | 194 réussites, deux modules optionnels ignorés |
+| Notebook | Corrigé et réexécuté | 16 cellules, zéro erreur, dernier passage 44,35 s |
 | Benchmarks progressifs | Terminés pour les trois lots pilotes | 119 résolutions, 117 faisables, deux échecs conservés ; tailles 25 à 1000 |
 | Statistiques et figures | Produites | CSV complets, statistiques par lot, PNG/SVG et explications |
 | Validation finale | Réussie dans le périmètre documenté | VALIDATION_FINALE_STATIQUE.json, données et sources figées contrôlées |
@@ -238,3 +238,54 @@ push, PDF, Word ou ZIP. Pour les tests, la commande pytest du début reste valab
   projet en cours via `scripts/validate_terminal_commands.py --phase checks`.
 - Les preuves des commandes seront dans `results/terminal_validation/` ; aucun
   lancement automatique des 356 instances et aucun écrasement d'un ancien lot.
+
+### Commandes terminal : vérification terminée
+
+- Fiche complète : `COMMANDES_TERMINAL.md`. Script PowerShell réellement testé :
+  `scripts/demo_terminal.ps1`. Le notebook et sa copie à envoyer ont été actualisés.
+- **18 commandes automatisées validées** : aides, pytest, validateur, petites
+  instances, six familles, huit tailles, comparatif à six profils, référence
+  indisponible, véritable échec PyVRP, garde-fou, deux processus et relectures.
+- Suite complète : **194 réussites, 2 modules TD optionnels ignorés**.
+  Validateur `validate_soutenance.py` réussi, avec transcriptions sauvegardées.
+- Profils complémentaires construction/sans partitionnement/renforcé+ILS aussi
+  exécutés. Les neuf profils de l'interface sont opérationnels dans ce périmètre.
+- `validate_terminal_artifacts.py` vérifie **32 enregistrements**, 30 faisables
+  et deux échecs attendus, dans douze campagnes. Vérification des tournées,
+  horaires, coûts, décompositions, écarts signés, CSV/JSON et sources figées.
+  Reçu : `livraison/VALIDATION_COMMANDES_TERMINAL.json`.
+- Les sources des campagnes sont dédupliquées dans
+  `results/terminal_validation/sources/`, avec `SOURCE_INDEX.json` : les preuves
+  et le code exécuté ne restent pas uniquement dans `results/local/` ignoré.
+- Progressif à budget demandé 5 s : huit solutions réalisables aux tailles
+  25/50/100/200/400/600/800/1000, références et temps réels documentés dans la fiche.
+- C1_10_6/1000, graine 4101, budget demandé 30 s : durée 140502,9, témoin
+  réévalué 133754,7, écart **+5,0452 %**, réel résolution **3,452 s**,
+  CPU **3,312 s**. Pas de certificat d'optimalité en durée.
+- Les six méthodes comparées sur C101/25 trouvent 2623,5 ; les écarts nuls
+  sont conservés sans prétendre prouver un optimum. La construction seule
+  présente +8,4925 % sur ce cas : dépassement réel conservé.
+- Échec réel : PyVRP sur R2_10_8, recherche 0,001 s, statut `not_found`.
+  Garde-fou 0,05 s testé : statut `time_limit`, environ 0,0675 s observée.
+  Les deux retours 1 sont attendus et ne représentent pas des données rendues
+  artificiellement irréalisables. Aucun coût ni gap fictif n'est affiché.
+- Le garde-fou 120 s surveille le processus entier (initialisation comprise),
+  tandis que le CPU/réel de résolution exclut chargement et préchauffage.
+  Un léger dépassement dû à la surveillance ou à l'arrêt reste possible.
+- Dernière exécution intégrale du notebook : **16 cellules, zéro erreur,
+  44,35 s**. Validation statique finale réussie avec la suite à 194 tests.
+- Les algorithmes et les anciennes campagnes sont conservés ; ces essais
+  de commandes ne sont pas fusionnés dans les moyennes historiques.
+
+Reprise sans recherche :
+
+```powershell
+python scripts/validate_terminal_artifacts.py
+python scripts/validate_final_static.py
+python scripts/test_instances.py --show-results commandes_terminal_runs_comparaison --show-routes
+```
+
+Sur ce PC, utiliser l'interpréteur exact de `COMMANDES_TERMINAL.md` (`$py`).
+L'installation portable n'a pas été simulée sur un second ordinateur. Le ZIP
+créé avant cette mission n'a pas été régénéré automatiquement. Commits locaux
+et résultats de cette passe sauvegardés ; aucun push demandé.

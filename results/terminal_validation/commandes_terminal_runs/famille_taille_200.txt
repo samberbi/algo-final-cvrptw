@@ -1,0 +1,48 @@
+1 instances ; 1 résolutions ; 1 processus maximum
+Départs zéro ; trajets fixes/symétriques ; objectif trajets + attentes + services, retour compris.
+Dossier : C:\Users\user\Downloads\CVRPTW_REMISE_PROF_20261112T203928\results\local\commandes_terminal_runs_R1_200
+Budget : recherche + construction pour ILS/SA/hybride/PyVRP ; total souple pour renforcé.
+CPU/réel résolution excluent le préchauffage ; le garde-fou inclut tout le processus.
+Un arrêt par surveillance peut dépasser légèrement la limite lors de l’arrêt du processus.
+
+========================================================================
+TEST CVRPTW
+========================================================================
+Instance                     : R1_2_1
+Famille                      : R1
+Nombre de clients            : 200
+Méthode                      : refined — Hybride renforcé : constructions propres, LS PyVRP, partitionnement HiGHS
+Graine                       : 4101
+FAISABILITÉ                  : OUI
+Statut                       : feasible
+Véhicules utilisés           : 23
+Durée des trajets            : 6011.400 u.t.
+Durée des attentes           : 1974.300 u.t.
+Durée des services           : 2000.000 u.t.
+DURÉE TOTALE                 : 9985.700 u.t.
+Durée de référence           : 12222.500 u.t.
+Type de référence            : Plan public DISTANCE réévalué en DURÉE, non optimalité temporelle
+Source de référence          : data/instances/R1_2_1.sol
+Écart à la référence         : -18.3007 %
+Gap certifié                 : NON DISPONIBLE
+Temps CPU résolution         : 0.641 s
+Temps réel résolution        : 0.774 s
+Temps total processus        : 3.492 s
+Budget demandé               : 5.000 s
+Garde-fou processus          : 120.000 s
+Dépassement budget demandé   : 0.000 s
+Contraintes                  : VALIDÉES
+Écart négatif : durée inférieure à la référence réalisable ; pas une preuve d’optimalité.
+
+COMPARAISON — classement en durée réalisable, par instance et graine
+Budgets de recherche et temps totaux sont distincts ; échecs non classés.
+Instance / n / graine | Méthode | Durée | Faisable | Véhicules | Réel(s) | Budget(s) | Écart(%) | Rang
+R1_2_1 / 200 / 4101 | refined | 9985.700 | OUI | 23 | 0.774 | 5.000 | -18.3007 | 1
+Meilleure(s) méthode(s) sur ce cas/essai : refined
+
+BILAN : 1/1 réalisables.
+CSV : C:\Users\user\Downloads\CVRPTW_REMISE_PROF_20261112T203928\results\local\commandes_terminal_runs_R1_200\RESULTATS.csv
+Label : commandes_terminal_runs_R1_200
+
+
+STDERR

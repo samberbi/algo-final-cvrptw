@@ -1232,3 +1232,47 @@ remplacent pas une étude statistique. Les meilleurs résultats historiques à
 budgets différents restent dans
 `results/time_objective/best_duration/COUVERTURE_472_ESSAIS.csv`.
 
+
+## Annexe — Commandes terminal vérifiées et nouvelle interface
+
+La fiche `COMMANDES_TERMINAL.md`, à la racine du projet, contient les commandes
+PowerShell réellement testées. Les scripts `test_instances.py` et
+`run_benchmark.py` partagent une interface. Les fonctions utilisées par les
+anciennes reprises restent conservées ; les algorithmes et les résultats
+historiques ne sont pas remplacés.
+
+```powershell
+python scripts/test_instances.py --instances C101 --size 25 --seconds 5 --show-routes
+python scripts/run_benchmark.py --progressive --seconds 5 --label commandes_terminal_runs_progressif
+python scripts/run_benchmark.py --instance C101 --size 25 --methods ils sa pyvrp hybrid refined ortools --seconds 5 --reference independent --label commandes_terminal_runs_comparaison
+python scripts/test_instances.py --show-results commandes_terminal_runs_comparaison --show-routes
+```
+
+Dans ces exemples, `python` doit être celui des dépendances du projet ; la
+fiche donne le chemin Windows réellement utilisé et l'installation portable.
+Le terminal affiche faisabilité, décomposition, référence et source, écart
+signé, gap certifié seulement si disponible, CPU, réel, budget et statut.
+`--show-routes` affiche les listes de clients et les horaires. La relecture
+`--show-results` ne lance aucune nouvelle recherche.
+
+Les six familles à 100 clients et les huit tailles 25–1000 ont été exécutées.
+La comparaison à six méthodes sur C101/25 retourne des coûts identiques à
+2623,5 : un écart nul au comparateur réalisable n'est pas une preuve d'optimum.
+Sur C1_10_6/1000 à budget 30 s, la résolution mesurée donne 140502,9 et
++5,0452 % au plan public réévalué en durée, avec faisabilité contrôlée.
+
+La suite complète de cette passe compte **194 réussites et deux modules
+optionnels ignorés**. Le validateur du projet réussit. Les échecs `not_found`
+et `time_limit` ont été réellement testés avec des budgets volontairement très
+courts ; ils restent sauvegardés et ne reçoivent pas de coût ni de gap fictif.
+Les logs et preuves sont dans `results/terminal_validation/`. Ces essais
+valident les commandes et ne sont pas fusionnés avec les moyennes historiques.
+
+Le garde-fou est de 120 secondes CPU/réelles par processus par défaut,
+initialisation comprise. Les temps de résolution excluent le préchauffage,
+dont le coût reste visible dans le temps total du processus. Les appels
+natifs et la surveillance peuvent dépasser légèrement un budget ; le
+dépassement est mesuré. L'arrêt surveillé ne promet pas une borne stricte
+à l'instant exact. Les références manquantes sont affichées NON DISPONIBLE,
+sans invalider une solution réalisable ; les pourcentages signés sont conservés.
+

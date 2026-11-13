@@ -1,0 +1,42 @@
+usage: test_instances.py [-h] [--instances INSTANCES [INSTANCES ...]]
+                         [--sizes {25,50,100,200,400,600,800,1000} [{25,50,100,200,400,600,800,1000} ...]]
+                         [--families {C1,C2,R1,R2,RC1,RC2} [{C1,C2,R1,R2,RC1,RC2} ...]]
+                         [--progressive] [--all] [--limit LIMIT]
+                         [--method {construction,ils,sa,pyvrp,hybrid,refined,refined_no_partition,refined_ils,ortools,duration_refined}]
+                         [--methods {construction,ils,sa,pyvrp,hybrid,refined,refined_no_partition,refined_ils,ortools,duration_refined} [{construction,ils,sa,pyvrp,hybrid,refined,refined_no_partition,refined_ils,ortools,duration_refined} ...]]
+                         [--seconds SECONDS] [--max-seconds MAX_SECONDS]
+                         [--seeds SEEDS [SEEDS ...]] [--workers WORKERS]
+                         [--reference {auto,public,independent,none}]
+                         [--label LABEL] [--dry-run]
+                         [--show-results [SHOW_RESULTS]] [--show-routes]
+                         [--gaps-only]
+
+Commandes terminal communes : sélection sûre, références explicites,
+sauvegardes.
+
+options:
+  -h, --help            show this help message and exit
+  --instances INSTANCES [INSTANCES ...], --instance INSTANCES [INSTANCES ...]
+  --sizes {25,50,100,200,400,600,800,1000} [{25,50,100,200,400,600,800,1000} ...], --size {25,50,100,200,400,600,800,1000} [{25,50,100,200,400,600,800,1000} ...]
+  --families {C1,C2,R1,R2,RC1,RC2} [{C1,C2,R1,R2,RC1,RC2} ...], --family {C1,C2,R1,R2,RC1,RC2} [{C1,C2,R1,R2,RC1,RC2} ...]
+  --progressive         Un cas C1 par taille, sauf familles explicites
+  --all                 Toutes les instances correspondant à la sélection
+                        explicite
+  --limit LIMIT
+  --method {construction,ils,sa,pyvrp,hybrid,refined,refined_no_partition,refined_ils,ortools,duration_refined}
+  --methods {construction,ils,sa,pyvrp,hybrid,refined,refined_no_partition,refined_ils,ortools,duration_refined} [{construction,ils,sa,pyvrp,hybrid,refined,refined_no_partition,refined_ils,ortools,duration_refined} ...]
+  --seconds SECONDS
+  --max-seconds MAX_SECONDS
+                        Garde-fou CPU et réel, processus et préchauffage
+                        compris
+  --seeds SEEDS [SEEDS ...]
+  --workers WORKERS
+  --reference {auto,public,independent,none}
+  --label LABEL
+  --dry-run, --list
+  --show-results [SHOW_RESULTS]
+  --show-routes
+  --gaps-only
+
+
+STDERR

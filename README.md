@@ -75,6 +75,14 @@ Les commandes courtes sont dans [TESTER_SUR_PORTABLE.md](docs/TESTER_SUR_PORTABL
 
 Les expériences TD sont archivées dans [EXPLORATION_TD_HORS_PERIMETRE.md](docs/EXPLORATION_TD_HORS_PERIMETRE.md). Elles ne valident pas le modèle principal à trajets fixes, symétriques et départs nuls.
 
+## Commandes terminal vérifiées
+
+La fiche [COMMANDES_TERMINAL.md](COMMANDES_TERMINAL.md) donne les commandes
+PowerShell, le Python exact, les six familles, les tailles 25–1000, neuf profils,
+les comparaisons, les tournées, les gaps et la relecture sans calcul. Les preuves
+sont dans `results/terminal_validation/`. Le script `scripts/demo_terminal.ps1`
+prépare une démonstration courte. Aucun lancement implicite des 356 instances.
+
 ## Finalisation statique du 13 novembre
 
 Le livrable actuel est `notebooks/Livrable_Final_CVRPTW.ipynb`. Les nouvelles

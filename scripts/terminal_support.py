@@ -17,6 +17,17 @@ ROOT=Path(__file__).resolve().parents[1]
 SIZES=[25,50,100,200,400,600,800,1000]
 FAMILIES=['C1','C2','R1','R2','RC1','RC2']
 METHODS=['construction','ils','sa','pyvrp','hybrid','refined','refined_no_partition','refined_ils','ortools']
+METHOD_LABELS={
+    'construction':'Construction propre regret-2',
+    'ils':'ILS autonome, opérateurs propres',
+    'sa':'Recuit autonome, opérateurs propres',
+    'pyvrp':'PyVRP/HGS externe seul',
+    'hybrid':'ILS propre puis HGS externe PyVRP',
+    'refined':'Hybride renforcé : constructions propres, LS PyVRP, partitionnement HiGHS',
+    'refined_no_partition':'Renforcé sans partitionnement, LS PyVRP externe',
+    'refined_ils':'Renforcé puis ILS propre dans le temps restant',
+    'ortools':'Google OR-Tools externe, objectif durée complète'
+}
 
 
 def family(name):
@@ -212,7 +223,7 @@ def number(value,suffix='',signed=False):
 def show(record,show_routes=False):
     r=record['measurement']
     values=[('Instance',r['instance']),('Famille',r.get('family',family(r['instance']))),
-        ('Nombre de clients',r.get('n','NON DISPONIBLE')),('Méthode',r['method']),('Graine',r['seed']),
+        ('Nombre de clients',r.get('n','NON DISPONIBLE')),('Méthode',r['method']+' — '+METHOD_LABELS.get(r['method'],r['method'])),('Graine',r['seed']),
         ('FAISABILITÉ','OUI' if r['valid'] else 'NON'),('Statut',r.get('status','historique')),
         ('Véhicules utilisés',r.get('vehicles') if r['valid'] else 'NON DISPONIBLE'),
         ('Durée des trajets',number(r.get('travel'),' u.t.')),('Durée des attentes',number(r.get('waiting'),' u.t.')),

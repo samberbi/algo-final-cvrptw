@@ -1,0 +1,586 @@
+{
+  "schema": "terminal_v2",
+  "measurement": {
+    "instance": "C101",
+    "family": "C1",
+    "n": 25,
+    "method": "refined_no_partition",
+    "seed": 4101,
+    "valid": true,
+    "status": "feasible",
+    "wall_s": 0.4539582000579685,
+    "cpu_s": 0.34375,
+    "requested_seconds": 1.0,
+    "process_wall_s": 2.0992575999116525,
+    "process_cpu_s": 1.328125,
+    "timing_scope": "solve_and_final_verification",
+    "guard_s": 120.0,
+    "duration": 2623.5,
+    "vehicles": 3,
+    "travel": 294.5,
+    "waiting": 79.0,
+    "service": 2250.0,
+    "reference_duration": 2623.5,
+    "reference_type": "OR-Tools indépendant enregistré, solution réalisable non prouvée optimale",
+    "reference_source": "results/final_static/pilote25/runs/C101_25_ortools_4101.json",
+    "delta_reference_pct": 0.0,
+    "gap_duree_pct": 0.0,
+    "certified_gap_pct": null,
+    "overrun_s": 0,
+    "error": null
+  },
+  "result": {
+    "status": "feasible",
+    "routes": [
+      [
+        13,
+        17,
+        18,
+        19,
+        11,
+        9,
+        6,
+        23,
+        22,
+        21
+      ],
+      [
+        20,
+        24,
+        25,
+        10,
+        16,
+        14,
+        12,
+        4,
+        2,
+        1
+      ],
+      [
+        5,
+        3,
+        7,
+        8,
+        15
+      ]
+    ],
+    "cost": 2623.5,
+    "metrics": {
+      "valid": true,
+      "errors": [],
+      "vehicles": 3,
+      "duration": 26235.0,
+      "distance": 2945.0,
+      "travel": 2945.0,
+      "waiting": 790.0,
+      "makespan": 10682.0,
+      "routes": [
+        {
+          "duration": 10268.0,
+          "travel": 1044.0,
+          "distance": 1044.0,
+          "waiting": 224.0,
+          "load": 170.0,
+          "schedule": [
+            {
+              "client": 13,
+              "arrival": 308.0,
+              "start": 308.0,
+              "finish": 1208.0
+            },
+            {
+              "client": 17,
+              "arrival": 1248.0,
+              "start": 1248.0,
+              "finish": 2148.0
+            },
+            {
+              "client": 18,
+              "arrival": 2178.0,
+              "start": 2178.0,
+              "finish": 3078.0
+            },
+            {
+              "client": 19,
+              "arrival": 3128.0,
+              "start": 3128.0,
+              "finish": 4028.0
+            },
+            {
+              "client": 11,
+              "arrival": 4256.0,
+              "start": 4480.0,
+              "finish": 5380.0
+            },
+            {
+              "client": 9,
+              "arrival": 5411.0,
+              "start": 5411.0,
+              "finish": 6311.0
+            },
+            {
+              "client": 6,
+              "arrival": 6333.0,
+              "start": 6333.0,
+              "finish": 7233.0
+            },
+            {
+              "client": 23,
+              "arrival": 7417.0,
+              "start": 7417.0,
+              "finish": 8317.0
+            },
+            {
+              "client": 22,
+              "arrival": 8347.0,
+              "start": 8347.0,
+              "finish": 9247.0
+            },
+            {
+              "client": 21,
+              "arrival": 9267.0,
+              "start": 9267.0,
+              "finish": 10167.0
+            }
+          ]
+        },
+        {
+          "duration": 10682.0,
+          "travel": 1116.0,
+          "distance": 1116.0,
+          "waiting": 566.0,
+          "load": 190.0,
+          "schedule": [
+            {
+              "client": 20,
+              "arrival": 100.0,
+              "start": 100.0,
+              "finish": 1000.0
+            },
+            {
+              "client": 24,
+              "arrival": 1050.0,
+              "start": 1050.0,
+              "finish": 1950.0
+            },
+            {
+              "client": 25,
+              "arrival": 1970.0,
+              "start": 1970.0,
+              "finish": 2870.0
+            },
+            {
+              "client": 10,
+              "arrival": 3042.0,
+              "start": 3570.0,
+              "finish": 4470.0
+            },
+            {
+              "client": 16,
+              "arrival": 4712.0,
+              "start": 4750.0,
+              "finish": 5650.0
+            },
+            {
+              "client": 14,
+              "arrival": 5670.0,
+              "start": 5670.0,
+              "finish": 6570.0
+            },
+            {
+              "client": 12,
+              "arrival": 6600.0,
+              "start": 6600.0,
+              "finish": 7500.0
+            },
+            {
+              "client": 4,
+              "arrival": 7740.0,
+              "start": 7740.0,
+              "finish": 8640.0
+            },
+            {
+              "client": 2,
+              "arrival": 8676.0,
+              "start": 8676.0,
+              "finish": 9576.0
+            },
+            {
+              "client": 1,
+              "arrival": 9596.0,
+              "start": 9596.0,
+              "finish": 10496.0
+            }
+          ]
+        },
+        {
+          "duration": 5285.0,
+          "travel": 785.0,
+          "distance": 785.0,
+          "waiting": 0.0,
+          "load": 100.0,
+          "schedule": [
+            {
+              "client": 5,
+              "arrival": 151.0,
+              "start": 151.0,
+              "finish": 1051.0
+            },
+            {
+              "client": 3,
+              "arrival": 1061.0,
+              "start": 1061.0,
+              "finish": 1961.0
+            },
+            {
+              "client": 7,
+              "arrival": 1981.0,
+              "start": 1981.0,
+              "finish": 2881.0
+            },
+            {
+              "client": 8,
+              "arrival": 2909.0,
+              "start": 2909.0,
+              "finish": 3809.0
+            },
+            {
+              "client": 15,
+              "arrival": 4025.0,
+              "start": 4025.0,
+              "finish": 4925.0
+            }
+          ]
+        }
+      ]
+    },
+    "objective": "duration",
+    "partition_enabled": false,
+    "recombination": null,
+    "before_partition": 2623.5,
+    "after_partition": 2623.5,
+    "partition_gain": 0.0,
+    "pool_columns": 8,
+    "trace": [
+      {
+        "elapsed_s": 0.05070480005815625,
+        "best": 2628.8,
+        "constructor": "savings",
+        "restart": 0
+      },
+      {
+        "elapsed_s": 0.052322100033052266,
+        "best": 2623.5,
+        "constructor": "sequential",
+        "restart": 0
+      },
+      {
+        "elapsed_s": 0.05288750003091991,
+        "best": 2623.5,
+        "neighbors": 60,
+        "restart": 0
+      },
+      {
+        "elapsed_s": 0.05345630005467683,
+        "best": 2623.5,
+        "neighbors": 80,
+        "restart": 0
+      },
+      {
+        "elapsed_s": 0.05403900006785989,
+        "best": 2623.5,
+        "neighbors": 120,
+        "restart": 0
+      },
+      {
+        "elapsed_s": 0.055737500078976154,
+        "best": 2623.5,
+        "constructor": "savings",
+        "restart": 1
+      },
+      {
+        "elapsed_s": 0.05722670000977814,
+        "best": 2623.5,
+        "constructor": "sequential",
+        "restart": 1
+      },
+      {
+        "elapsed_s": 0.05781830009073019,
+        "best": 2623.5,
+        "neighbors": 60,
+        "restart": 1
+      },
+      {
+        "elapsed_s": 0.058382000075653195,
+        "best": 2623.5,
+        "neighbors": 80,
+        "restart": 1
+      },
+      {
+        "elapsed_s": 0.05893590010236949,
+        "best": 2623.5,
+        "neighbors": 120,
+        "restart": 1
+      },
+      {
+        "elapsed_s": 0.060167500050738454,
+        "best": 2623.5,
+        "constructor": "savings",
+        "restart": 2
+      },
+      {
+        "elapsed_s": 0.06178470002487302,
+        "best": 2623.5,
+        "constructor": "sequential",
+        "restart": 2
+      },
+      {
+        "elapsed_s": 0.06256010010838509,
+        "best": 2623.5,
+        "neighbors": 60,
+        "restart": 2
+      },
+      {
+        "elapsed_s": 0.06347900000400841,
+        "best": 2623.5,
+        "neighbors": 80,
+        "restart": 2
+      },
+      {
+        "elapsed_s": 0.06434800010174513,
+        "best": 2623.5,
+        "neighbors": 120,
+        "restart": 2
+      },
+      {
+        "elapsed_s": 0.06573930010199547,
+        "best": 2623.5,
+        "constructor": "savings",
+        "restart": 3
+      },
+      {
+        "elapsed_s": 0.06729090004228055,
+        "best": 2623.5,
+        "constructor": "sequential",
+        "restart": 3
+      },
+      {
+        "elapsed_s": 0.06787760008592159,
+        "best": 2623.5,
+        "neighbors": 60,
+        "restart": 3
+      },
+      {
+        "elapsed_s": 0.06843900005333126,
+        "best": 2623.5,
+        "neighbors": 80,
+        "restart": 3
+      },
+      {
+        "elapsed_s": 0.0689977000001818,
+        "best": 2623.5,
+        "neighbors": 120,
+        "restart": 3
+      }
+    ],
+    "runtime_s": 0.0696112000150606,
+    "attribution": "Own constructions/pool/partition model; external PyVRP Local Search and SciPy HiGHS"
+  },
+  "reference": {
+    "duration": 2623.5,
+    "type": "OR-Tools indépendant enregistré, solution réalisable non prouvée optimale",
+    "source": "results/final_static/pilote25/runs/C101_25_ortools_4101.json",
+    "certified": false,
+    "metrics": {
+      "valid": true,
+      "errors": [],
+      "vehicles": 3,
+      "duration": 26235.0,
+      "distance": 2945.0,
+      "travel": 2945.0,
+      "waiting": 790.0,
+      "makespan": 10682.0,
+      "routes": [
+        {
+          "duration": 10268.0,
+          "travel": 1044.0,
+          "distance": 1044.0,
+          "waiting": 224.0,
+          "load": 170.0,
+          "schedule": [
+            {
+              "client": 13,
+              "arrival": 308.0,
+              "start": 308.0,
+              "finish": 1208.0
+            },
+            {
+              "client": 17,
+              "arrival": 1248.0,
+              "start": 1248.0,
+              "finish": 2148.0
+            },
+            {
+              "client": 18,
+              "arrival": 2178.0,
+              "start": 2178.0,
+              "finish": 3078.0
+            },
+            {
+              "client": 19,
+              "arrival": 3128.0,
+              "start": 3128.0,
+              "finish": 4028.0
+            },
+            {
+              "client": 11,
+              "arrival": 4256.0,
+              "start": 4480.0,
+              "finish": 5380.0
+            },
+            {
+              "client": 9,
+              "arrival": 5411.0,
+              "start": 5411.0,
+              "finish": 6311.0
+            },
+            {
+              "client": 6,
+              "arrival": 6333.0,
+              "start": 6333.0,
+              "finish": 7233.0
+            },
+            {
+              "client": 23,
+              "arrival": 7417.0,
+              "start": 7417.0,
+              "finish": 8317.0
+            },
+            {
+              "client": 22,
+              "arrival": 8347.0,
+              "start": 8347.0,
+              "finish": 9247.0
+            },
+            {
+              "client": 21,
+              "arrival": 9267.0,
+              "start": 9267.0,
+              "finish": 10167.0
+            }
+          ]
+        },
+        {
+          "duration": 10682.0,
+          "travel": 1116.0,
+          "distance": 1116.0,
+          "waiting": 566.0,
+          "load": 190.0,
+          "schedule": [
+            {
+              "client": 20,
+              "arrival": 100.0,
+              "start": 100.0,
+              "finish": 1000.0
+            },
+            {
+              "client": 24,
+              "arrival": 1050.0,
+              "start": 1050.0,
+              "finish": 1950.0
+            },
+            {
+              "client": 25,
+              "arrival": 1970.0,
+              "start": 1970.0,
+              "finish": 2870.0
+            },
+            {
+              "client": 10,
+              "arrival": 3042.0,
+              "start": 3570.0,
+              "finish": 4470.0
+            },
+            {
+              "client": 16,
+              "arrival": 4712.0,
+              "start": 4750.0,
+              "finish": 5650.0
+            },
+            {
+              "client": 14,
+              "arrival": 5670.0,
+              "start": 5670.0,
+              "finish": 6570.0
+            },
+            {
+              "client": 12,
+              "arrival": 6600.0,
+              "start": 6600.0,
+              "finish": 7500.0
+            },
+            {
+              "client": 4,
+              "arrival": 7740.0,
+              "start": 7740.0,
+              "finish": 8640.0
+            },
+            {
+              "client": 2,
+              "arrival": 8676.0,
+              "start": 8676.0,
+              "finish": 9576.0
+            },
+            {
+              "client": 1,
+              "arrival": 9596.0,
+              "start": 9596.0,
+              "finish": 10496.0
+            }
+          ]
+        },
+        {
+          "duration": 5285.0,
+          "travel": 785.0,
+          "distance": 785.0,
+          "waiting": 0.0,
+          "load": 100.0,
+          "schedule": [
+            {
+              "client": 5,
+              "arrival": 151.0,
+              "start": 151.0,
+              "finish": 1051.0
+            },
+            {
+              "client": 3,
+              "arrival": 1061.0,
+              "start": 1061.0,
+              "finish": 1961.0
+            },
+            {
+              "client": 7,
+              "arrival": 1981.0,
+              "start": 1981.0,
+              "finish": 2881.0
+            },
+            {
+              "client": 8,
+              "arrival": 2909.0,
+              "start": 2909.0,
+              "finish": 3809.0
+            },
+            {
+              "client": 15,
+              "arrival": 4025.0,
+              "start": 4025.0,
+              "finish": 4925.0
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "error": null,
+  "instance_sha256": "8ea76375b2ca4331e02ec988f6739ea1bb056a3c8b80467153850f7beca29e11"
+}

@@ -38,7 +38,7 @@ Les dix petits cas exacts sont recertifiés par une énumération indépendante.
 La tentative MILP C101/25 à dix secondes reste au statut limite de temps.
 
 Le notebook a été réexécuté : seize cellules de code, aucune erreur. La suite
-actuelle compte 182 tests réussis et deux modules TD optionnels ignorés dans
+actuelle compte 194 tests réussis et deux modules TD optionnels ignorés dans
 l'environnement statique. Le reçu est `livraison/VALIDATION_FINALE_STATIQUE.json`.
 Les CSV conservent coûts, décomposition, faisabilité, temps, graines, sources et
 références. Les figures PNG/SVG sont dans `livraison/figures_final_static/`.

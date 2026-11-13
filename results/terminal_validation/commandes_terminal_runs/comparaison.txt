@@ -1,0 +1,192 @@
+1 instances ; 6 résolutions ; 1 processus maximum
+Départs zéro ; trajets fixes/symétriques ; objectif trajets + attentes + services, retour compris.
+Dossier : C:\Users\user\Downloads\CVRPTW_REMISE_PROF_20261112T203928\results\local\commandes_terminal_runs_comparaison
+Budget : recherche + construction pour ILS/SA/hybride/PyVRP ; total souple pour renforcé.
+CPU/réel résolution excluent le préchauffage ; le garde-fou inclut tout le processus.
+Un arrêt par surveillance peut dépasser légèrement la limite lors de l’arrêt du processus.
+
+========================================================================
+TEST CVRPTW
+========================================================================
+Instance                     : C101
+Famille                      : C1
+Nombre de clients            : 25
+Méthode                      : ils — ILS autonome, opérateurs propres
+Graine                       : 4101
+FAISABILITÉ                  : OUI
+Statut                       : feasible
+Véhicules utilisés           : 3
+Durée des trajets            : 323.900 u.t.
+Durée des attentes           : 49.600 u.t.
+Durée des services           : 2250.000 u.t.
+DURÉE TOTALE                 : 2623.500 u.t.
+Durée de référence           : 2623.500 u.t.
+Type de référence            : OR-Tools indépendant enregistré, solution réalisable non prouvée optimale
+Source de référence          : results/final_static/pilote25/runs/C101_25_ortools_4101.json
+Écart à la référence         : +0.0000 %
+Gap certifié                 : NON DISPONIBLE
+Temps CPU résolution         : 5.016 s
+Temps réel résolution        : 5.009 s
+Temps total processus        : 7.304 s
+Budget demandé               : 5.000 s
+Garde-fou processus          : 120.000 s
+Dépassement budget demandé   : 0.009 s
+Contraintes                  : VALIDÉES
+
+========================================================================
+TEST CVRPTW
+========================================================================
+Instance                     : C101
+Famille                      : C1
+Nombre de clients            : 25
+Méthode                      : sa — Recuit autonome, opérateurs propres
+Graine                       : 4101
+FAISABILITÉ                  : OUI
+Statut                       : feasible
+Véhicules utilisés           : 3
+Durée des trajets            : 294.500 u.t.
+Durée des attentes           : 79.000 u.t.
+Durée des services           : 2250.000 u.t.
+DURÉE TOTALE                 : 2623.500 u.t.
+Durée de référence           : 2623.500 u.t.
+Type de référence            : OR-Tools indépendant enregistré, solution réalisable non prouvée optimale
+Source de référence          : results/final_static/pilote25/runs/C101_25_ortools_4101.json
+Écart à la référence         : +0.0000 %
+Gap certifié                 : NON DISPONIBLE
+Temps CPU résolution         : 5.016 s
+Temps réel résolution        : 5.006 s
+Temps total processus        : 6.479 s
+Budget demandé               : 5.000 s
+Garde-fou processus          : 120.000 s
+Dépassement budget demandé   : 0.006 s
+Contraintes                  : VALIDÉES
+
+========================================================================
+TEST CVRPTW
+========================================================================
+Instance                     : C101
+Famille                      : C1
+Nombre de clients            : 25
+Méthode                      : pyvrp — PyVRP/HGS externe seul
+Graine                       : 4101
+FAISABILITÉ                  : OUI
+Statut                       : feasible
+Véhicules utilisés           : 3
+Durée des trajets            : 294.500 u.t.
+Durée des attentes           : 79.000 u.t.
+Durée des services           : 2250.000 u.t.
+DURÉE TOTALE                 : 2623.500 u.t.
+Durée de référence           : 2623.500 u.t.
+Type de référence            : OR-Tools indépendant enregistré, solution réalisable non prouvée optimale
+Source de référence          : results/final_static/pilote25/runs/C101_25_ortools_4101.json
+Écart à la référence         : +0.0000 %
+Gap certifié                 : NON DISPONIBLE
+Temps CPU résolution         : 5.359 s
+Temps réel résolution        : 5.499 s
+Temps total processus        : 5.902 s
+Budget demandé               : 5.000 s
+Garde-fou processus          : 120.000 s
+Dépassement budget demandé   : 0.499 s
+Contraintes                  : VALIDÉES
+
+========================================================================
+TEST CVRPTW
+========================================================================
+Instance                     : C101
+Famille                      : C1
+Nombre de clients            : 25
+Méthode                      : hybrid — ILS propre puis HGS externe PyVRP
+Graine                       : 4101
+FAISABILITÉ                  : OUI
+Statut                       : feasible
+Véhicules utilisés           : 3
+Durée des trajets            : 323.900 u.t.
+Durée des attentes           : 49.600 u.t.
+Durée des services           : 2250.000 u.t.
+DURÉE TOTALE                 : 2623.500 u.t.
+Durée de référence           : 2623.500 u.t.
+Type de référence            : OR-Tools indépendant enregistré, solution réalisable non prouvée optimale
+Source de référence          : results/final_static/pilote25/runs/C101_25_ortools_4101.json
+Écart à la référence         : +0.0000 %
+Gap certifié                 : NON DISPONIBLE
+Temps CPU résolution         : 5.000 s
+Temps réel résolution        : 5.105 s
+Temps total processus        : 6.568 s
+Budget demandé               : 5.000 s
+Garde-fou processus          : 120.000 s
+Dépassement budget demandé   : 0.105 s
+Contraintes                  : VALIDÉES
+
+========================================================================
+TEST CVRPTW
+========================================================================
+Instance                     : C101
+Famille                      : C1
+Nombre de clients            : 25
+Méthode                      : refined — Hybride renforcé : constructions propres, LS PyVRP, partitionnement HiGHS
+Graine                       : 4101
+FAISABILITÉ                  : OUI
+Statut                       : feasible
+Véhicules utilisés           : 3
+Durée des trajets            : 294.500 u.t.
+Durée des attentes           : 79.000 u.t.
+Durée des services           : 2250.000 u.t.
+DURÉE TOTALE                 : 2623.500 u.t.
+Durée de référence           : 2623.500 u.t.
+Type de référence            : OR-Tools indépendant enregistré, solution réalisable non prouvée optimale
+Source de référence          : results/final_static/pilote25/runs/C101_25_ortools_4101.json
+Écart à la référence         : +0.0000 %
+Gap certifié                 : NON DISPONIBLE
+Temps CPU résolution         : 0.312 s
+Temps réel résolution        : 0.419 s
+Temps total processus        : 1.897 s
+Budget demandé               : 5.000 s
+Garde-fou processus          : 120.000 s
+Dépassement budget demandé   : 0.000 s
+Contraintes                  : VALIDÉES
+
+========================================================================
+TEST CVRPTW
+========================================================================
+Instance                     : C101
+Famille                      : C1
+Nombre de clients            : 25
+Méthode                      : ortools — Google OR-Tools externe, objectif durée complète
+Graine                       : 4101
+FAISABILITÉ                  : OUI
+Statut                       : feasible
+Véhicules utilisés           : 3
+Durée des trajets            : 294.500 u.t.
+Durée des attentes           : 79.000 u.t.
+Durée des services           : 2250.000 u.t.
+DURÉE TOTALE                 : 2623.500 u.t.
+Durée de référence           : 2623.500 u.t.
+Type de référence            : OR-Tools indépendant enregistré, solution réalisable non prouvée optimale
+Source de référence          : results/final_static/pilote25/runs/C101_25_ortools_4101.json
+Écart à la référence         : +0.0000 %
+Gap certifié                 : NON DISPONIBLE
+Temps CPU résolution         : 5.391 s
+Temps réel résolution        : 5.747 s
+Temps total processus        : 6.177 s
+Budget demandé               : 5.000 s
+Garde-fou processus          : 120.000 s
+Dépassement budget demandé   : 0.747 s
+Contraintes                  : VALIDÉES
+
+COMPARAISON — classement en durée réalisable, par instance et graine
+Budgets de recherche et temps totaux sont distincts ; échecs non classés.
+Instance / n / graine | Méthode | Durée | Faisable | Véhicules | Réel(s) | Budget(s) | Écart(%) | Rang
+C101 / 25 / 4101 | hybrid | 2623.500 | OUI | 3 | 5.105 | 5.000 | +0.0000 | 1
+C101 / 25 / 4101 | ils | 2623.500 | OUI | 3 | 5.009 | 5.000 | +0.0000 | 1
+C101 / 25 / 4101 | ortools | 2623.500 | OUI | 3 | 5.747 | 5.000 | +0.0000 | 1
+C101 / 25 / 4101 | pyvrp | 2623.500 | OUI | 3 | 5.499 | 5.000 | +0.0000 | 1
+C101 / 25 / 4101 | refined | 2623.500 | OUI | 3 | 0.419 | 5.000 | +0.0000 | 1
+C101 / 25 / 4101 | sa | 2623.500 | OUI | 3 | 5.006 | 5.000 | +0.0000 | 1
+Meilleure(s) méthode(s) sur ce cas/essai : hybrid, ils, ortools, pyvrp, refined, sa
+
+BILAN : 6/6 réalisables.
+CSV : C:\Users\user\Downloads\CVRPTW_REMISE_PROF_20261112T203928\results\local\commandes_terminal_runs_comparaison\RESULTATS.csv
+Label : commandes_terminal_runs_comparaison
+
+
+STDERR
