@@ -7,6 +7,7 @@ ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT))
 import nbformat
 import pandas as pd
+from algo.comparison_status import present
 from scripts.revision_duree import write_markdown
 
 
@@ -41,8 +42,10 @@ def main():
     progressive=pd.read_csv(ROOT/'results/local/commandes_terminal_runs_progressif/RESULTATS.csv')
     comparative=pd.read_csv(ROOT/'results/local/commandes_terminal_runs_comparaison/RESULTATS.csv')
     large=pd.read_csv(ROOT/'results/local/commandes_terminal_1000_30s/RESULTATS.csv').iloc[0]
-    actual=progressive[['instance','n','duration','delta_reference_pct','wall_s','cpu_s']].to_markdown(index=False,floatfmt='.4f')
-    compare=comparative[['method','duration','valid','vehicles','wall_s','delta_reference_pct']].to_markdown(index=False,floatfmt='.4f')
+    progressive['comparaison']=progressive.apply(lambda r:present(r.duration,r.reference_duration,valid=r.valid),axis=1)
+    comparative['comparaison']=comparative.apply(lambda r:present(r.duration,r.reference_duration,valid=r.valid),axis=1)
+    actual=progressive[['instance','n','duration','comparaison','wall_s','cpu_s']].to_markdown(index=False,floatfmt='.4f')
+    compare=comparative[['method','duration','valid','vehicles','wall_s','comparaison']].to_markdown(index=False,floatfmt='.4f')
     text=r'''# Commandes terminal CVRPTW — PowerShell Windows
 
 Les commandes de cette fiche ont été vérifiées sur le projet. Les transcriptions,

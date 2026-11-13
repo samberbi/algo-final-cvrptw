@@ -12,6 +12,7 @@ import json
 import re
 import time
 import traceback
+from algo.comparison_status import present
 
 ROOT=Path(__file__).resolve().parents[1]
 SIZES=[25,50,100,200,400,600,800,1000]
@@ -231,7 +232,7 @@ def show(record,show_routes=False):
         ('Durée de référence',number(r.get('reference_duration'),' u.t.')),
         ('Type de référence',r.get('reference_type','Plan public distance réévalué en durée')),
         ('Source de référence',r.get('reference_source') or 'NON DISPONIBLE'),
-        ('Écart à la référence',number(r.get('delta_reference_pct'),' %',True)),
+        ('Comparaison à la référence',present(r.get('duration'),r.get('reference_duration'),valid=r['valid'])),
         ('Gap certifié',number(r.get('certified_gap_pct'),' %',True)),
         ('Temps CPU résolution',number(r.get('cpu_s'),' s')),('Temps réel résolution',number(r.get('wall_s'),' s')),
         ('Temps total processus',number(r.get('process_wall_s'),' s')),
@@ -241,7 +242,7 @@ def show(record,show_routes=False):
     print('\n'+'='*72+'\nTEST CVRPTW\n'+'='*72,flush=True)
     for key,value in values:print(f'{key:28} : {value}',flush=True)
     delta=r.get('delta_reference_pct')
-    if delta is not None and delta<0:print('Écart négatif : durée inférieure à la référence réalisable ; pas une preuve d’optimalité.',flush=True)
+    if delta is not None and delta<0:print('Solution améliorante vérifiée ; référence heuristique dépassée, sans preuve d’optimalité.',flush=True)
     if delta is not None and delta>6:print('Le seuil indicatif de +6 % est dépassé. Valeur réelle conservée.',flush=True)
     if r.get('error'):print('Erreur : '+r['error'],flush=True)
     if show_routes and (record.get('result') or {}).get('routes') is not None:
@@ -257,7 +258,7 @@ def show(record,show_routes=False):
 def comparison(rows):
     lines=['\nCOMPARAISON — classement en durée réalisable, par instance et graine',
            'Budgets de recherche et temps totaux sont distincts ; échecs non classés.',
-           'Instance / n / graine | Méthode | Durée | Faisable | Véhicules | Réel(s) | Budget(s) | Écart(%) | Rang']
+           'Instance / n / graine | Méthode | Durée | Faisable | Véhicules | Réel(s) | Budget(s) | Comparaison / statut | Rang']
     keys=sorted({(r['instance'],r.get('n'),r['seed']) for r in rows},key=str)
     for key in keys:
         group=[r for r in rows if (r['instance'],r.get('n'),r['seed'])==key]
@@ -266,7 +267,7 @@ def comparison(rows):
             rank=str(costs.index(r['duration'])+1) if r['valid'] else '—'
             lines.append(f"{key[0]} / {key[1]} / {key[2]} | {r['method']} | {number(r.get('duration'))} | "
                 f"{'OUI' if r['valid'] else 'NON'} | {r.get('vehicles') or '—'} | {number(r.get('wall_s'))} | "
-                f"{number(r.get('requested_seconds'))} | {number(r.get('delta_reference_pct'),signed=True)} | {rank}")
+                f"{number(r.get('requested_seconds'))} | {present(r.get('duration'),r.get('reference_duration'),valid=r['valid'])} | {rank}")
         best=[r['method'] for r in group if r['valid'] and r['duration']==costs[0]] if costs else []
         lines.append('Meilleure(s) méthode(s) sur ce cas/essai : '+(', '.join(best) if best else 'aucune solution réalisable'))
     return '\n'.join(lines)

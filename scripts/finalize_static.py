@@ -19,6 +19,9 @@ def main():
         with (folder/'CONSOLE_RAPPORT.txt').open('w',encoding='utf-8') as out,redirect_stdout(out):
             report(folder)
     scripts=['figures_final_static.py','recenter_final_static.py','complete_final_static_report.py']
+    if (ROOT/'results/presentation_status/AUDIT.json').exists():
+        # Reclasser les comparaisons après génération, avant exécution du notebook.
+        scripts.append('present_gap_status.py')
     if args.execute:scripts.append('execute_final_notebook.py')
     if args.validate:scripts.append('validate_final_static.py')
     for name in scripts:

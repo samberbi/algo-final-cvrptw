@@ -290,6 +290,36 @@ L'installation portable n'a pas été simulée sur un second ordinateur. Le ZIP
 créé avant cette mission n'a pas été régénéré automatiquement. Commits locaux
 et résultats de cette passe sauvegardés ; aucun push demandé.
 
+## Présentation par statuts — audit et mise en œuvre
+
+- Demande acceptée : conserver les moteurs et les résultats, remplacer les
+  comparaisons non positives par des statuts explicites dans la présentation.
+  Aucun ralentissement ni détérioration volontaire de l'algorithme.
+- Recalcul indépendant depuis les coordonnées et tournées : **1321 comparaisons**,
+  dont **947 références dépassées, 129 égalités, 245 écarts positifs**. Aucune
+  anomalie détectée dans ce registre consolidé ; plusieurs lignes peuvent
+  représenter un même essai ou une vue d'archive, pas de faux nouveaux runs.
+- **61 groupes à moyenne ou médiane nulle** examinés séparément. Pas de preuve
+  d'optimalité déduite d'une moyenne nulle ou d'une égalité heuristique.
+- Audit technique par cas : `AUDIT_GAPS_FINAL.md`, coûts, anciennes valeurs,
+  nouveau calcul, cause, référence et vérification. Les valeurs d'origine sont
+  conservées dans `results/presentation_status/` et les CSV historiques.
+- `algo/comparison_status.py` : statuts optimum/référence dépassée/égalée/
+  comparaison indisponible ; contradiction face à un optimum certifié bloquante.
+- Moyennes/médianes conditionnelles aux seuls écarts positifs, avec effectif
+  et comptage de tous les autres statuts. Les valeurs supérieures à six restent.
+  Les graphiques de benchmark concernés sont remplacés par des effectifs de
+  statuts et une distribution conditionnelle clairement légendée.
+- Les paramètres nuls et variations signées de l'étude de sensibilité sont
+  préservés : ce ne sont pas des gaps à une référence de benchmark.
+- Interface terminal cohérente avec cette présentation ; CSV/JSON gardent leurs
+  écarts signés pour l'audit. Guide des commandes et notebook actualisés.
+- Tests complets : **206 réussites, deux modules optionnels ignorés**.
+- Reprise : `python scripts/audit_gap_status.py`, puis
+  `python scripts/present_gap_status.py`, `python scripts/execute_final_notebook.py`
+  et `python scripts/validate_gap_presentation.py`. Le finaliseur général appelle
+  désormais la couche de présentation après génération des tableaux.
+
 ## Tableau complet des écarts conservés
 
 - Export sans nouvelle résolution : `scripts/export_all_gaps.py`.
