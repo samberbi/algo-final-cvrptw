@@ -289,3 +289,17 @@ Sur ce PC, utiliser l'interpréteur exact de `COMMANDES_TERMINAL.md` (`$py`).
 L'installation portable n'a pas été simulée sur un second ordinateur. Le ZIP
 créé avant cette mission n'a pas été régénéré automatiquement. Commits locaux
 et résultats de cette passe sauvegardés ; aucun push demandé.
+
+## Tableau complet des écarts conservés
+
+- Export sans nouvelle résolution : `scripts/export_all_gaps.py`.
+- `results/gap_tables/TABLEAU_GAPS_TOUTES_INSTANCES.md` et CSV : 363 couples
+  instance/taille, dont 361 avec nos profils et deux contrôles de référence
+  seulement (C105/25 et C106/25). Les variantes TD restent hors modèle statique.
+- Colonnes distinctes : moyenne initiale au témoin, moyenne/pire valeur de
+  l'archive à budgets mixtes et exemple renforcé avec sa référence/campagne.
+- `DETAIL_TOUS_LES_ECARTS.csv` conserve aussi les autres méthodes, les échecs
+  et les références distinctes. Plusieurs lignes peuvent représenter un même
+  essai réévalué ou une vue de l'archive : pas de nouveau nombre de runs déduit.
+- Les formules des écarts disponibles et l'unicité des 363 lignes ont été
+  vérifiées. Les valeurs négatives et supérieures à 6 % restent présentes.
