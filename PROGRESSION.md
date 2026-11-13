@@ -340,6 +340,29 @@ et résultats de cette passe sauvegardés ; aucun push demandé.
   pas un gap certifié sous six pour cent sur tout le catalogue et ne transforme
   pas une moyenne conditionnelle en moyenne de toutes les instances.
 
+## Ablation acceptée : variante simplifiée explicite
+
+- Test de la construction seule déjà disponible : douze tentatives regret-2,
+  aucun ILS/recuit, aucune Local Search PyVRP, aucun HGS ni partitionnement.
+  Aucun changement de la version de production ou de ses meilleures solutions.
+- Lot fixé avant les mesures : six familles Solomon à 100 clients, C101/25,
+  R2_10_8/1000 ; graines 4101 et 4102 ; construction contre renforcé à budget
+  demandé cinq secondes. La construction se termine après ses douze tentatives,
+  sans consommer artificiellement tout le budget. Temps réels et CPU conservés.
+- **32/32 solutions réalisables**, coûts et références réévalués indépendamment
+  depuis les coordonnées et les tournées. Références consultées après recherche.
+- Construction seule : C101/25 **9,1748 %**, C101/100 **4,5979 %**,
+  RC101/100 **10,7601 %**, moyennes sur les deux graines. C201/100 égale la
+  référence ; les quatre autres cas la dépassent sur les deux graines.
+- Sur les 16 essais de construction : six écarts positifs (moyenne conditionnelle
+  **8,1776 %**, quatre dépassant six), deux égalités, huit références améliorées.
+  Cette simplification ne garantit donc pas un intervalle de qualité choisi.
+- Sources, protocole, résultats signés, horaires et rapport sont conservés dans
+  `results/simplified_variant/variante_simplifiee_comparaison/`.
+- Commande exécutée : `python scripts/run_benchmark.py --instances C101:25 C101:100 C201:100 R101:100 R201:100 RC101:100 RC201:100 R2_10_8:1000 --methods construction refined --seconds 5 --seeds 4101 4102 --label variante_simplifiee_comparaison`.
+- Relecture/validation des résultats : `python scripts/report_simplified_variant.py`.
+  Ce rapport est une étude séparée, non une réécriture du benchmark principal.
+
 ## Tableau complet des écarts conservés
 
 - Export sans nouvelle résolution : `scripts/export_all_gaps.py`.
