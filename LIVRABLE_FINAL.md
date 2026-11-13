@@ -6,15 +6,13 @@
 
 Nous cherchons des tournées livrant chaque client exactement une fois, respectant la capacité, les fenêtres strictes et la fermeture du dépôt. Notre objectif est la **somme des durées des tournées**, avec trajets, attentes et services, pour des départs fixés à zéro. Le temps d’exécution du solveur est mesuré séparément.
 
-La méthode associe notre constructeur et notre ILS à un HGS externe fourni par **PyVRP 0.12.2**, explicitement attribué à ses auteurs. Les expériences utilisent les données Solomon et Gehring–Homberger, sans les modifier. Les temps de trajet restent statiques ; le trafic dépendant de l’heure demandé dans l’énoncé n’est pas traité dans cette version statique.
+La méthode associe notre constructeur et notre ILS à un HGS externe fourni par **PyVRP 0.12.2**, explicitement attribué à ses auteurs. Les expériences utilisent les données Solomon et Gehring–Homberger, sans les modifier. Conformément aux hypothèses professorales confirmées, les temps de trajet sont fixes et symétriques. Les fenêtres concernent le début des services.
 
 Le rapport présente successivement le problème, sa formulation, l’algorithme, le protocole, les statistiques descriptives et les limites. Les fichiers individuels permettent de vérifier les solutions et les calculs.
 
 <!-- RESULTATS_ACTUELS_DUREE_BEGIN -->
 **Résultats actuels après optimisation ciblée.** L'archive de couverture contient 472 solutions sur 356 instances : toutes sont réalisables et leur écart au plan témoin en durée est inférieur à +6 %, avec un maximum de **+5.76 %**. Cette archive conserve les meilleurs résultats observés avec des budgets différents ; elle n'est pas une nouvelle campagne à temps uniforme. Sur les 26 instances retestées, l'écart moyen vaut **+1.98 %** et le pire essai **+5.19 %**. La section 6.9 explique les modifications, les temps supplémentaires et la conservation des tournées. Les écarts élevés des sections précédentes décrivent la campagne initiale avant ces corrections.
 <!-- RESULTATS_ACTUELS_DUREE_END -->
-
-**Extension Dabia2013 validée** : un pilote distinct à 25 clients minimise la durée complète avec trajets dépendant de l’heure et départs optimisés. Voir section 6.13. Les résultats statiques à 100–1 000 clients restent conservés, avec leurs écarts aux témoins réévalués ; ils ne sont pas renommés en gaps temporels certifiés.
 
 ## 1. Du réseau routier à la durée d’une tournée
 
@@ -34,7 +32,34 @@ Deux ordres de visite peuvent parcourir la même distance et produire des attent
 
 **Intérêt et lien avec le modèle.** Le trajet total et les services sont identiques ; les six unités gagnées proviennent uniquement de l'attente. Ce diagramme explique concrètement pourquoi nous minimisons la durée et pourquoi un gain de distance ne se transpose pas automatiquement en gain de durée. Il prépare la récurrence des horaires et les variables de retour de la formulation mathématique.
 
-## 2. Modélisation mathématique du CVRPTW en durée
+## 2. Complexité et vérification du modèle
+
+Le problème de décision associé demande s'il existe une solution réalisable de durée totale au plus B. Nous montrons sa difficulté par une réduction **du TSP vers notre CVRPTW statique**, et non dans le sens inverse.
+
+Considérons une instance du TSP symétrique à m sommets, avec des coûts entiers non négatifs $c_{ij}$ et un seuil B. Un sommet devient le dépôt et les $m-1$ autres deviennent les clients. Nous fixons un seul véhicule, $q_i=1$, $Q=m-1$, des services nuls, et les fenêtres $[0,H]$ avec $H=m\max(1,\max_{i,j}c_{ij})$. Les temps de trajet reprennent exactement les coûts du TSP. Toutes les capacités et fenêtres sont alors non bloquantes pour un circuit hamiltonien ; aucun temps d'attente n'est imposé.
+
+Un circuit du TSP de coût au plus B donne donc une tournée CVRPTW de durée au plus B. Réciproquement, une solution CVRPTW de cette instance doit utiliser son unique véhicule pour visiter tous les clients exactement une fois et revenir au dépôt ; elle décrit un circuit hamiltonien dont le coût est au plus sa durée, donc au plus B. La transformation utilise une matrice de taille quadratique et un horizon de représentation binaire polynomiale. L'optimisation est ainsi **NP-difficile**.
+
+Pour la version de décision à données entières ou rationnelles encodées, une liste de tournées est un certificat de taille polynomiale. Nous vérifions couverture, charges, fenêtres, retours et durée par propagation des horaires au plus tôt. Cette vérification est polynomiale ; la version de décision est donc **NP-complète**. La preuve concerne le problème général statique : elle ne prétend pas démontrer la difficulté de chaque instance particulière ni l'optimalité d'une métaheuristique.
+
+Le PLNE de `controle/plne.py` est réellement résolu par HiGHS avec le coût placé sur les variables de retour $R_k$. Sur dix petits cas de 3 à 5 clients, nous comparons son résultat à une énumération indépendante des tournées et partitions. Les deux méthodes prouvent les mêmes optimums en durée. Un cas comprend des arcs nuls pour vérifier que le flot empêche les cycles isolés.
+
+| instance         |   n | optimum   | returned   | gap_pct   | calculation_s   |
+|:-----------------|----:|:----------|:-----------|:----------|:----------------|
+| exact-duration-0 |   3 | 69,400    | 69,400     | 0,000     | 0,138           |
+| exact-duration-1 |   4 | 77,600    | 77,600     | 0,000     | 0,137           |
+| exact-duration-2 |   5 | 107,100   | 107,100    | 0,000     | 0,654           |
+| exact-duration-3 |   3 | 86,200    | 86,200     | 0,000     | 0,057           |
+| exact-duration-4 |   4 | 88,200    | 88,200     | 0,000     | 0,147           |
+| exact-duration-5 |   5 | 106,100   | 106,100    | 0,000     | 0,788           |
+| exact-duration-6 |   3 | 96,400    | 96,400     | 0,000     | 0,089           |
+| exact-duration-7 |   4 | 74,900    | 74,900     | 0,000     | 0,138           |
+| exact-duration-8 |   5 | 109,100   | 109,100    | 0,000     | 0,652           |
+| exact-duration-9 |   3 | 66,000    | 66,000     | 0,000     | 0,041           |
+
+Ces dix cas contrôlent la formulation ; ils ne démontrent pas l’optimalité des solutions à 100–1 000 clients.
+
+## 3. Modélisation mathématique du CVRPTW en durée
 
 Nous formalisons le **CVRPTW statique étudié ici** : un dépôt unique, des véhicules homogènes, des livraisons indivisibles, une tournée au plus par véhicule et des trajets fixes et symétriques. L'attente avant ouverture est autorisée. Le début du service doit appartenir à la fenêtre du client et le retour doit respecter la fermeture du dépôt. Les bornes sont inclusives. Le trafic variable, les ramassages, les dépôts multiples et les flottes hétérogènes ne font pas partie des expériences réalisées.
 
@@ -51,7 +76,7 @@ Les véhicules peuvent aller du départ à un client, entre deux clients distinc
 
 **Paramètres.** Pour chaque client $i\in C$, soient $q_i,s_i,e_i,l_i\in\mathbb R_{\ge0}$ : sa demande est $q_i$, sa durée de service $s_i$ et sa fenêtre de début de service $[e_i,l_i]$. Soient $Q,H\in\mathbb R_{>0}$ la capacité commune et la fermeture du dépôt. Comme dans les données acceptées par `Instance`, nous supposons $0\le e_i\le l_i\le H$ pour tout $i\in C$. Pour chaque arc $(i,j)\in A$, soient $d_{ij},c_{ij}\in\mathbb R_{\ge0}$ sa distance et son temps de trajet. Les départs sont fixés au temps zéro. Dans les benchmarks du projet, temps de trajet et distances ont les mêmes valeurs numériques ; le modèle distingue néanmoins leurs rôles et leurs unités.
 
-**Pourquoi fixer le départ à zéro ?** Nous supposons que le temps mobilisé de chaque véhicule utilisé est compté depuis une même origine, l'ouverture du dépôt. Cette convention simplifie les horaires et aligne le PLNE, notre contrôleur et PyVRP ; ce n'est pas une obligation générale du CVRPTW ni une consigne explicite de l'énoncé. Si les départs $D_k$ devenaient des décisions libres, il faudrait minimiser $\sum_k(R_k-D_k)$ et adapter les contraintes de départ ainsi que l'évaluation de tous les témoins. Retarder le départ peut éviter une attente sur tournée : les pourcentages des deux conventions ne seraient donc pas interchangeables. Cette extension n'est pas implémentée dans les expériences présentées.
+**Pourquoi fixer le départ à zéro ?** Nous supposons que le temps mobilisé de chaque véhicule utilisé est compté depuis une même origine, l'ouverture du dépôt. Cette convention simplifie les horaires et aligne le PLNE, notre contrôleur et PyVRP ; ce n'est pas une obligation générale du CVRPTW et correspond au périmètre professoral confirmé pour cette finalisation. Si les départs $D_k$ devenaient des décisions libres, il faudrait minimiser $\sum_k(R_k-D_k)$ et adapter les contraintes de départ ainsi que l'évaluation de tous les témoins. Retarder le départ peut éviter une attente sur tournée : les pourcentages des deux conventions ne seraient donc pas interchangeables. Cette extension n'est pas implémentée dans les expériences présentées.
 
 **Variables de décision et domaines.**
 
@@ -168,33 +193,6 @@ Chaque client affecté consomme une unité reçue du dépôt. Le dépôt en éme
 
 
 **Pourquoi le grand M est valide.** Les bornes $0\le t_i,t_j\le H$ impliquent $t_i+s_i+c_{ij}-t_j\le H+s_{\max}+c_{\max}$. Cette valeur désactive donc la propagation d'un arc non utilisé. Des bornes par arc peuvent renforcer le solveur exact sans modifier les solutions autorisées. Le modèle contient de l'ordre de $Kn^2$ variables d'arcs/flots et contraintes : l'exact sert ici aux petits cas.
-
-## 3. Complexité et vérification du modèle
-
-Le problème de décision associé demande s'il existe une solution réalisable de durée totale au plus B. Nous montrons sa difficulté par une réduction **du TSP vers notre CVRPTW statique**, et non dans le sens inverse.
-
-Considérons une instance du TSP symétrique à m sommets, avec des coûts entiers non négatifs $c_{ij}$ et un seuil B. Un sommet devient le dépôt et les $m-1$ autres deviennent les clients. Nous fixons un seul véhicule, $q_i=1$, $Q=m-1$, des services nuls, et les fenêtres $[0,H]$ avec $H=m\max(1,\max_{i,j}c_{ij})$. Les temps de trajet reprennent exactement les coûts du TSP. Toutes les capacités et fenêtres sont alors non bloquantes pour un circuit hamiltonien ; aucun temps d'attente n'est imposé.
-
-Un circuit du TSP de coût au plus B donne donc une tournée CVRPTW de durée au plus B. Réciproquement, une solution CVRPTW de cette instance doit utiliser son unique véhicule pour visiter tous les clients exactement une fois et revenir au dépôt ; elle décrit un circuit hamiltonien dont le coût est au plus sa durée, donc au plus B. La transformation utilise une matrice de taille quadratique et un horizon de représentation binaire polynomiale. L'optimisation est ainsi **NP-difficile**.
-
-Pour la version de décision à données entières ou rationnelles encodées, une liste de tournées est un certificat de taille polynomiale. Nous vérifions couverture, charges, fenêtres, retours et durée par propagation des horaires au plus tôt. Cette vérification est polynomiale ; la version de décision est donc **NP-complète**. La preuve concerne le problème général statique : elle ne prétend pas démontrer la difficulté de chaque instance particulière ni l'optimalité d'une métaheuristique.
-
-Le PLNE de `controle/plne.py` est réellement résolu par HiGHS avec le coût placé sur les variables de retour $R_k$. Sur dix petits cas de 3 à 5 clients, nous comparons son résultat à une énumération indépendante des tournées et partitions. Les deux méthodes prouvent les mêmes optimums en durée. Un cas comprend des arcs nuls pour vérifier que le flot empêche les cycles isolés.
-
-| instance         |   n | optimum   | returned   | gap_pct   | calculation_s   |
-|:-----------------|----:|:----------|:-----------|:----------|:----------------|
-| exact-duration-0 |   3 | 69,400    | 69,400     | 0,000     | 0,138           |
-| exact-duration-1 |   4 | 77,600    | 77,600     | 0,000     | 0,137           |
-| exact-duration-2 |   5 | 107,100   | 107,100    | 0,000     | 0,654           |
-| exact-duration-3 |   3 | 86,200    | 86,200     | 0,000     | 0,057           |
-| exact-duration-4 |   4 | 88,200    | 88,200     | 0,000     | 0,147           |
-| exact-duration-5 |   5 | 106,100   | 106,100    | 0,000     | 0,788           |
-| exact-duration-6 |   3 | 96,400    | 96,400     | 0,000     | 0,089           |
-| exact-duration-7 |   4 | 74,900    | 74,900     | 0,000     | 0,138           |
-| exact-duration-8 |   5 | 109,100   | 109,100    | 0,000     | 0,652           |
-| exact-duration-9 |   3 | 66,000    | 66,000     | 0,000     | 0,041           |
-
-Ces dix cas contrôlent la formulation ; ils ne démontrent pas l’optimalité des solutions à 100–1 000 clients.
 
 ## 4. Algorithme et lien avec le code
 
@@ -436,6 +434,24 @@ Pour les petits cas, une preuve d’optimalité permet un véritable gap $100(T/
 $$L=\sum_i s_i+\operatorname{MST}(G,c)\le T^*.$$
 
 L’union des tournées rejoint le dépôt et tous les clients ; son temps de trajet est au moins celui d’un arbre couvrant minimal. L’attente est non négative et les services sont obligatoires. Ainsi $100(T/L-1)$ borne supérieurement le gap à l’optimum, mais peut être très pessimiste. Il ne s’agit pas d’une BKS. Les trois notions — optimum prouvé, borne inférieure et plan témoin — restent séparées dans les tableaux.
+
+### Périmètre final et compatibilité des références
+
+Les hypothèses retenues sont $c_{ij}=c_{ji}$, sans dépendance à l’heure,
+départs à zéro et $\min\sum_k R_k$. Un graphe orienté décrit les décisions
+de visite même si ses temps de parcours sont symétriques. Les départs et
+retours virtuels représentent le même dépôt physique.
+
+Les campagnes historiques restent conservées. Leurs écarts aux plans distance
+réévalués sont distincts du nouveau pilote à référence OR-Tools indépendante.
+La compatibilité complète des optima Phonin n'est pas établie : nous ne leur
+attribuons pas de gaps certifiés. Les variantes à trajets variables et départs
+optimisés sont archivées hors du modèle principal.
+
+La vérification des références est décrite dans
+`docs/COMPATIBILITE_REFERENCES_STATIQUES.md`. Les résultats négatifs, nuls,
+supérieurs à 6 % et les échecs restent visibles ; aucun pourcentage n'est plafonné.
+
 
 ## 6. Résultats et statistique descriptive
 
@@ -914,164 +930,11 @@ Pour reproduire ce lot optionnel (trois résolutions seulement) :
 
 La continuation est destinée uniquement à C2_10_2 et vérifie la marge CPU mesurée avant de démarrer. Les tests rapides de l’annexe restent disponibles pour un simple contrôle de fonctionnement.
 
-### 6.13. Extension temporelle : pilote Dabia2013 à objectif compatible
-
-**Pourquoi cette extension ?** Les fichiers de référence DIMACS des campagnes
-précédentes optimisent les trajets. Leur durée recalculée permet une comparaison
-descriptive, mais pas un gap à une BKS en durée. Nous conservons ces expériences
-et ajoutons un pilote distinct, avec un objectif et des références temporels
-compatibles. Aucun ancien pourcentage n'est renommé en nouveau gap.
-
-**Données et périmètre.** Six instances de Dabia2013 à **25 clients** représentent
-C1, C2, R1, R2, RC1 et RC2. Les 18 fichiers instance/fonctions temporelles/BKS
-sont téléchargés sans modification depuis la révision
-`331ec306b7908e0c9a264d1fc1341a938340ab79` de MAMUT-routing. Le manifeste conserve
-les URL et empreintes SHA256. Il s'agit de dérivés temporels de Solomon, pas des
-fichiers DIMACS statiques à 100 clients portant parfois le même nom. Les unités
-de temps natives de Dabia sont conservées sans appliquer notre conversion
-DIMACS par dix. Les durées brutes des deux jeux ne doivent pas être mélangées.
-
-**Adaptation mathématique.** Le temps d'arrivée sur un arc est désormais une
-fonction de son heure de départ :
-
-$$
-\alpha_{ij}(t)=t+\tau_{ij}(t).
-$$
-
-Pour une tournée $p=(v_1,\ldots,v_m)$ partant à $D_p$, les horaires sont :
-
-$$
-A_{v_1}=\alpha_{0v_1}(D_p),\quad
-B_{v_j}=\max(A_{v_j},e_{v_j}),\quad
-F_{v_j}=B_{v_j}+s_{v_j},
-$$
-$$
-A_{v_{j+1}}=\alpha_{v_jv_{j+1}}(F_{v_j}),\quad
-R_p=\alpha_{v_m0}(F_{v_m}).
-$$
-
-Les débuts de service respectent $B_i\le l_i$, les charges et la flotte restent
-bornées, et le retour respecte la fermeture du dépôt. Le départ est cette fois
-**une décision**, dans le domaine autorisé par les données. L'objectif devient :
-
-$$
-\boxed{\min T_{TD}=\sum_{p}(R_p-D_p)}
-=T_{\mathrm{trajets}}+T_{\mathrm{attentes}}+T_{\mathrm{services}}.
-$$
-
-Ce changement est nécessaire pour respecter le benchmark. Il ne s'agit pas de
-réétiqueter le modèle statique $\min\sum_kR_k$ à départs nuls. Le PLNE de la
-section 2 reste un modèle **statique**, non un solveur exact de cette extension.
-Les fonctions temporelles sont évaluées en double précision selon le contrat
-canonique `td-fold/2`, avec prise en compte des changements de vitesse pendant
-les trajets ; elles ne sont pas remplacées par une matrice de temps constants.
-
-**Algorithme réellement exécuté et attribution.** Dans `algo/dabia.py`, notre
-code effectue l'insertion séquentielle, la descente locale avec relocate, swap,
-2-opt et 2-opt*, les perturbations/redémarrages ILS et la conservation de la
-meilleure solution. Chaque ordre de tournée proposé est évalué avec son départ
-optimal par **MAMUT-routing-lib 0.12.0**, bibliothèque externe également utilisée
-comme contrôleur canonique final. Ce calcul d'horaire n'est pas présenté comme
-une invention ou une implémentation personnelle. Ce pilote n'utilise **ni le
-HGS statique PyVRP ni un nouveau solveur exact externe**. Un cache par instance
-réutilise les évaluations de tournées identiques. L'acceptation locale exige une
-amélioration supérieure à $10^{-8}$ unités ; cette tolérance de recherche ne
-modifie ni les données ni le coût de validation du contrôleur.
-
-**Vérification.** Les coûts de référence sont relus et vérifiés après la recherche,
-jamais utilisés pour construire ou arrêter la solution. Une seconde simulation
-avant reconstruit trajets, attentes et services à partir des départs retenus ;
-elle utilise une tolérance diagnostique de $10^{-7}$ pour les arrondis. La
-validation normative reste le contrôleur MAMUT sans epsilon. Les tests couvrent
-aussi les doublons, clients absents, capacité, variations de trajet selon le
-départ, conservation des clients par les mouvements et monotonie de l'archive.
-
-**Protocole du pilote.** Après six résolutions préliminaires conservées, un second
-lot de **18 résolutions enregistrées** couvre six instances et trois graines
-(4101–4103), avec cinq secondes de budget souple par résolution. Cela représente
-24 résolutions enregistrées au total sur ces deux lots, pas 24 instances. Le lot
-ci-dessous est le second seulement. Les trois workers réduisent le délai du lot,
-mais chaque CPU est mesuré dans le processus qui résout l'instance. Le chargement,
-la construction, la recherche et la simulation finale sont comptés ; le
-démarrage de l'interpréteur et le contrôle ultérieur du témoin sont exclus.
-
-**Résultats mesurés.** Les 18 solutions sont réalisables et leur coût canonique
-est exactement égal à celui de la BKS correspondante : gap moyen et maximal
-**0 %**, sans valeur négative et sans plafonnement. Ce zéro est une égalité
-effective des coûts canoniques de nos solutions et des références.
-Les écarts-types sont nuls sur ces trois graines ; cela ne garantit pas la même
-stabilité sur des instances plus grandes.
-
-| Instance | Clients | Graines | Durée moyenne (u.t. Dabia) | BKS Duration | Gap moyen (%) | Écart-type durée | CPU moyen (s) |
-|---|---:|---:|---:|---:|---:|---:|---:|
-| C101 | 25 | 3 | 24709.177158 | 24709.177158 | +0.000000 | 0.000000 | 4.917 |
-| C201 | 25 | 3 | 25606.020742 | 25606.020742 | +0.000000 | 0.000000 | 5.005 |
-| R101 | 25 | 3 | 9079.419193 | 9079.419193 | +0.000000 | 0.000000 | 4.953 |
-| R201 | 25 | 3 | 7932.168491 | 7932.168491 | +0.000000 | 0.000000 | 5.000 |
-| RC101 | 25 | 3 | 7038.613082 | 7038.613082 | +0.000000 | 0.000000 | 5.010 |
-| RC201 | 25 | 3 | 8375.471792 | 8375.471792 | +0.000000 | 0.000000 | 5.016 |
-
-Les CPU totaux observés ne dépassent pas **5.031 s**, et les temps écoulés
-totaux ne dépassent pas **5.042 s**. Ces mesures respectent deux minutes sur
-ce pilote ; ce n'est pas une garantie sur toute machine ou toute taille.
-
-![Construction et ILS temporel sur les six instances du pilote.](livraison/duree_figures/dabia_avant_apres.png)
-
-**Lecture et intérêt.** Chaque paire de barres compare le coût construit et le
-coût final moyen des trois graines, avec les unités propres à Dabia. Le service
-reste obligatoire dans les deux coûts. C201 est déjà au coût de référence après
-construction ; l'ILS ne lui apporte donc aucun gain mesuré. Sur R201, RC101 et
-RC201, les baisses depuis la construction valent respectivement environ
-17,50 %, 12,24 % et 12,36 %. Cette comparaison mesure l'apport de la recherche
-combinée, pas l'effet isolé de chacun des quatre mouvements.
-
-![Traces observées des trois graines pour chacune des six instances.](livraison/duree_figures/dabia_convergence.png)
-
-**Lecture et continuité.** Les courbes en escalier tracent uniquement les records
-enregistrés, normalisés par le coût de construction, puis prolongés jusqu'au
-temps réel de fin. Des courbes superposées sont possibles. Cette figure complète
-le tableau final en montrant la progression de la recherche ; elle ne démontre
-ni optimalité globale ni généralisation à 100 ou 1 000 clients.
-
-**Statut des références et limites.** Les six fichiers indiquent historiquement
-une preuve d'optimalité, mais C101, R201 et RC201 portent une note de réévaluation
-du coût après le passage à `td-fold/2`, avec recertification encore en attente.
-Nous conservons donc le libellé prudent **gap à une BKS Duration compatible**,
-sans revendiquer six preuves nouvelles d'optimalité. Le contrôleur, ses versions
-et les notes originales sont enregistrés. Ce pilote de développement ne couvre
-que six instances choisies à 25 clients et ne remplace pas les campagnes statiques
-à 100–1 000 clients. Aucun résultat à 50/100 clients Dabia ni à 1 000 clients
-temporels n'a été exécuté dans cette étape. L'ablation des opérateurs et une
-validation sur un lot non utilisé pour la mise au point restent à faire.
-
-**Sources et reproduction.** Données :
-[MAMUT Dabia2013](https://github.com/ANR-MAMUT/MAMUT-routing/tree/331ec306b7908e0c9a264d1fc1341a938340ab79/benchmarks/TDVRPTW/Dabia2013).
-Méthodologie d'origine : Dabia et al. (2013) et Lera-Romero et al. (2020).
-Contrôleur externe : [MAMUT-routing-lib](https://github.com/ANR-MAMUT/MAMUT-routing-lib),
-version 0.12.0. Sources de nos essais, données, références et diagnostics sont
-dans `results/dabia2013/` et `data/dabia2013/`.
-
-Depuis le dossier du projet, environnement optionnel indépendant :
-
-```powershell
-py -3.12 -m venv .venv_dabia
-.\.venv_dabia\Scripts\python.exe -m pip install -r requirements-dabia.txt
-.\.venv_dabia\Scripts\python.exe -m pytest tests/test_dabia.py -q
-.\.venv_dabia\Scripts\python.exe scripts/validate_dabia.py
-.\.venv_dabia\Scripts\python.exe scripts/benchmark_dabia.py --instances R201 --seconds 5 --label demo_dabia
-```
-
-La dernière commande affiche directement le coût, la BKS en durée, le gap signé,
-le CPU et le temps réel. Chaque relance crée un dossier numéroté si nécessaire.
-Les anciennes commandes `test_instances.py` continuent à résoudre le modèle
-statique ; leur écart au témoin ne devient pas un gap Dabia.
-
-
 ## 7. Reproduction, limites et conclusion
 
 Le changement porte sur le modèle, le coût des mouvements, l’acceptation, l’archive, le HGS et les mesures. Une simple substitution du mot « distance » par « temps » aurait laissé le solveur optimiser le mauvais critère. Les cas de test distinguent explicitement ces deux objectifs.
 
-La campagne montre le comportement observé en durée sur les 356 instances et la stabilité sur trois cas répétés. Les limites restent : temps de trajet statiques, tailles plafonnées à 1 000 clients, dix secondes de recherche dans la campagne initiale et des reprises ciblées plus longues, peu de graines sur la couverture globale et absence d’optimum temporel officiel pour les grandes instances. La borne MST peut être faible. Les services constants peuvent réduire les pourcentages relatifs sans prouver que les trajets et attentes sont proches de leurs meilleurs niveaux : leur décomposition doit accompagner les résultats.
+La campagne montre le comportement observé en durée sur les 356 instances et la stabilité sur trois cas répétés. Les limites restent : absence de preuve d’optimalité en durée sur les grandes tailles, tailles plafonnées à 1 000 clients, dix secondes de recherche dans la campagne initiale et des reprises ciblées plus longues, peu de graines sur la couverture globale et absence d’optimum temporel officiel pour les grandes instances. La borne MST peut être faible. Les services constants peuvent réduire les pourcentages relatifs sans prouver que les trajets et attentes sont proches de leurs meilleurs niveaux : leur décomposition doit accompagner les résultats.
 
 Les compléments séparent une sensibilité contrôlée à quatre secondes de recherche et une analyse des scénarios sur les mesures initiales. Les phases mutualisées de la sensibilité ont des temps totaux recomposés ; les reprises d’optimisation conservent leur effort cumulé. Ces études ne prouvent ni un optimum temporel sur les grandes instances ni une généralisation à tous les budgets.
 
@@ -1094,14 +957,12 @@ L’objectif de la CLI est la durée par défaut. Les routines historiques en di
 
 ## Références
 
-- Sujet CESI, *Algorithmique et optimisation*, énoncé : minimisation de la durée totale et prise en compte annoncée du trafic horaire ; ce dernier point reste non réalisé ici.
+- Sujet CESI, *Algorithmique et optimisation*, énoncé : minimisation de la durée totale et prise en compte annoncée du trafic horaire ; le modèle principal suit la confirmation professorale de trajets fixes et symétriques.
 - Support CESI, *Corbeille d’exercices — Statistiques descriptives*, exercices 1–8 : indicateurs, quantiles, covariance/Pearson, moindres carrés, R² et représentations.
 - [PyVRP, code source version 0.12.2](https://github.com/PyVRP/PyVRP/tree/v0.12.2) : moteur HGS externe, durée, fenêtres et paramètres de véhicules.
 - [Documentation PyVRP : temps et durées](https://pyvrp.org/notebooks/duration_constraints.html) ; les propriétés utilisées sont également vérifiées dans la version 0.12.2 installée.
 - [Règles officielles DIMACS VRPTW](https://dimacs.rutgers.edu/programs/implementation-challenges/vehicle-routing/implementation-challenge-vehicle-routing/vrp-with-time-windows) : objectif de référence en distance, flotte maximale et convention des arcs.
 - [Données PyVRP/Instances](https://github.com/PyVRP/Instances), révision figée dans `data/manifest.json`.
-
-**Bilan de l’extension temporelle.** Le pilote de la section 6.13 ajoute une évaluation à BKS Duration compatible : 18/18 solutions réalisables, au coût des BKS sur six instances à 25 clients et trois graines. Les 16 tests spécifiques passent. Le modèle statique, ses comparaisons et ses limites restent distincts. Le passage temporel à 50/100 clients et au-delà, ainsi que la recertification signalée dans certaines références, ne sont pas présentés comme achevés.
 
 ## Annexe — Tests rapides pour la soutenance
 
@@ -1190,3 +1051,4 @@ l'optimum temporel. Ces tests courts ne garantissent pas un écart sous 6 % et n
 remplacent pas une étude statistique. Les meilleurs résultats historiques à
 budgets différents restent dans
 `results/time_objective/best_duration/COUVERTURE_472_ESSAIS.csv`.
+

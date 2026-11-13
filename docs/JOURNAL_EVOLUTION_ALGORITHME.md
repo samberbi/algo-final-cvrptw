@@ -32,8 +32,3 @@ Les sections 6.10 et 6.11 ajoutent une [sensibilité contrôlée](SENSIBILITE_CO
 ## Réduction du temps CPU
 
 Le profil renforcé réutilise désormais les voisins calculés sur une même instance immuable et évite les transferts identiques vers le moteur. Le tri stable et les préfixes sont vérifiés contre PyVRP. La [section CPU et parallélisme](TEMPS_CPU_ET_PARALLELISME.md) rapporte les mesures avant/après à travail et coûts identiques, puis les résultats sur un, deux et quatre processus. Le calcul du CPU inclut tous les workers. Aucun ancien temps écoulé n’est renommé en temps CPU ; les meilleurs résultats historiques restent conservés.
-
-
-## Extension temporelle Dabia2013
-
-Le module `algo/dabia.py` ajoute une insertion et un ILS propres avec relocate, swap, 2-opt et 2-opt*. Les évaluations utilisent les fonctions temporelles et départs optimaux du contrôleur externe MAMUT 0.12.0 (`td-fold/2`), sans HGS statique. Le manifeste fige six instances à 25 clients. Après six essais préliminaires, 18 résolutions à trois graines sont réalisables et au coût des BKS Duration, avec CPU maximal 5,031 s sur ce pilote. Les 16 tests de l’extension passent. Les limites, les notes de recertification et les paramètres sont détaillés dans [EXTENSION_DABIA2013.md](EXTENSION_DABIA2013.md). Les anciennes campagnes statiques ne sont ni supprimées ni renommées.

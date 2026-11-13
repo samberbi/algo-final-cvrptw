@@ -65,12 +65,13 @@ def main():
         assert hashlib.sha256((folder/'source'/name).read_bytes()).hexdigest()==expected_hash,name
     # Conserver aussi les dépendances et scripts utilisés pour la reproductibilité.
     hashes={}
-    paths=list((ROOT/'algo').glob('*.py'))+[ROOT/'scripts'/name for name in
-        ['optimize_duration_outliers.py','continue_duration_outliers.py','summarize_duration_optimization.py','validate_duration_optimization.py']]
+    # Une validation ne doit jamais attribuer du code actuel à une ancienne campagne.
+    # Les seuls fichiers historiques recevables sont ceux déjà figés dans son reçu.
+    paths=[ROOT/name for name in frozen_expected]
     for path in paths:
         rel=path.relative_to(ROOT)
         destination=folder/'source'/rel;destination.parent.mkdir(parents=True,exist_ok=True)
-        if not destination.exists():destination.write_bytes(path.read_bytes())
+        if not destination.exists():raise AssertionError('Source historique absente : '+str(rel))
         hashes[rel.as_posix()]=hashlib.sha256(destination.read_bytes()).hexdigest()
     receipt=dict(validated=True,objective='sum_route_duration',departures=0,
         reference_kind='Duration of feasible distance-BKS plan, not a proven duration optimum',

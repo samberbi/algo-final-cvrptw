@@ -62,3 +62,26 @@ prioritaires. Prochaine action : compatibilité Phonin 2025, puis pilote statiqu
   dernières consignes professorales fournies.
 - Ne jamais transformer, plafonner ou prendre la valeur absolue d'un écart pour
   satisfaire le seuil. Les statuts optimum/BKS/témoin/borne restent distincts.
+
+## Bilan A–B et corrections prioritaires
+
+- Sauvegarde initiale : commit `51adb56` ; résultats antérieurs préservés.
+- Compatibilité : `docs/COMPATIBILITE_REFERENCES_STATIQUES.md` ; six comparaisons
+  numériques dans `results/final_static/reference_audit/PHONIN_VERIFICATION.csv`.
+  Cinq nouvelles résolutions OR-Tools à 25 clients, trois secondes chacune ;
+  C101/100 est seulement réévalué, sans nouveau run.
+- Phonin : retour explicite dans l'équation (9), mais précision, intégralité
+  temporelle et preuves détaillées non suffisamment établies pour annoncer
+  un gap d'optimalité compatible. Concordance numérique ne vaut pas certification.
+- Sous-instances 25/50 : 16 préfixes standards, manifeste parent/SHA ; archives
+  originales bloquées HTTP 403, aucune prétention de téléchargement réussi.
+- Comparateur OR-Tools indépendant : coût somme des spans Time, départs nuls,
+  coûts d'arcs nuls ; attentes, services et retours vérifiés dans le coût natif.
+- **5 tests ciblés réussis** : `results/final_static/tests_contract.xml`.
+- Notebook et Markdown recentrés sur le modèle statique ; complexité placée
+  avant les équations. Exploration TD conservée dans
+  `docs/EXPLORATION_TD_HORS_PERIMETRE.md`, exclue des exigences du validateur.
+- Correction de provenance : le validateur historique n'ajoute plus du code
+  nouveau aux sources figées d'une campagne passée.
+- Prochaine étape : pilote contrôlé, puis tests globaux et exécution complète
+  du notebook. Aucun lancement de 356 instances ou push automatique.

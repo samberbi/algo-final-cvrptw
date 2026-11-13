@@ -71,40 +71,6 @@ Le trafic dépendant de l’heure et les tailles supérieures à 1 000 clients n
 
 Les commandes courtes sont dans [TESTER_SUR_PORTABLE.md](docs/TESTER_SUR_PORTABLE.md) et à la fin du notebook : deux cas C1/C2, deux R1/R2, deux RC1/RC2 ou deux cas à 1 000 clients. Une graine et cinq secondes par résolution. Le reçu courant est `livraison/VALIDATION_SOUTENANCE.json`. La section CPU reste informative : la qualité des solutions prime, avec un objectif sous +6 % au témoin en durée et sous 120 secondes CPU par instance difficile. Ces deux critères sont à mesurer séparément. Les tests de cinq secondes ne sont pas le profil de meilleure qualité.
 
-## Extension temporelle Dabia2013
+## Exploration hors périmètre
 
-
-Le [pilote Dabia2013](docs/EXTENSION_DABIA2013.md), section **6.13 du notebook**,
-compare le même objectif `Duration` des deux côtés : trajets, attentes, services,
-avec départs optimisés et trajets dépendant de l'heure. C'est un nouveau profil,
-distinct du modèle statique à départs nuls décrit plus haut. Les coûts natifs des
-deux benchmarks ne sont pas mélangés.
-
-Six instances à **25 clients**, trois graines, cinq secondes par résolution :
-**18/18 solutions réalisables et au coût des BKS**, gap moyen/maximal 0 %, CPU
-maximal mesuré 5,031 s. Six essais préliminaires sont également conservés. Les
-références C101, R201 et RC201 signalent une recertification en attente après
-changement d'arithmétique ; le rapport ne revendique pas de nouvelle preuve
-d'optimalité. Aucune mesure Dabia à 50/100 clients ou à 1 000 clients n'est annoncée.
-
-**Contribution :** notre insertion séquentielle, ILS, relocate/swap/2-opt/2-opt*,
-cache et orchestration ; évaluation des départs optimaux et contrôle fournis
-par le moteur externe **MAMUT-routing-lib 0.12.0**. Le HGS statique PyVRP n'est
-pas utilisé pour ce pilote.
-
-```powershell
-py -3.12 -m venv .venv_dabia
-.\.venv_dabia\Scripts\python.exe -m pip install -r requirements-dabia.txt
-.\.venv_dabia\Scripts\python.exe -m pytest tests/test_dabia.py -q
-.\.venv_dabia\Scripts\python.exe scripts/validate_dabia.py
-.\.venv_dabia\Scripts\python.exe scripts/benchmark_dabia.py --instances R201 --seconds 5 --label essai_dabia_R201
-```
-
-Le dernier appel résout une seule instance et affiche le gap BKS Duration dans
-le terminal. Les relances créent automatiquement un nouveau dossier numéroté.
-Pour les six familles : omettre `--instances R201`. Les fichiers sont écrits dans
-`results/dabia2013/<label>/`. La validation des résultats fournis est
-`results/dabia2013/VALIDATION.json` ; le XML des **16 tests TD réussis** est
-`results/dabia2013/tests.xml`. Dans l'environnement historique sans MAMUT,
-la suite statique conserve **171 tests réussis** ; le module TD y est explicitement
-ignoré et doit être vérifié dans son environnement séparé.
+Les expériences TD sont archivées dans [EXPLORATION_TD_HORS_PERIMETRE.md](docs/EXPLORATION_TD_HORS_PERIMETRE.md). Elles ne valident pas le modèle principal à trajets fixes, symétriques et départs nuls.
