@@ -81,8 +81,8 @@ def test_cli_uses_duration_by_default(tmp_path):
     from pathlib import Path
     root=Path(__file__).resolve().parents[1]
     target=tmp_path/'duration.json'
-    subprocess.run([sys.executable,'cli.py','C101','--seconds','.1','--output',str(target)],
-                   cwd=root,check=True,capture_output=True,text=True,timeout=60)
+    subprocess.run([sys.executable,'-X','utf8','cli.py','C101','--seconds','.1','--output',str(target)],
+                   cwd=root,check=True,capture_output=True,text=True,encoding='utf-8',timeout=60)
     result=json.loads(target.read_text())
     assert result['objective']=='duration' and result['metrics']['valid']
     assert result['cost']==pytest.approx(result['metrics']['duration']/10)

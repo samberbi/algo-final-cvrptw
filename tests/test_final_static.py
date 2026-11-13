@@ -53,3 +53,35 @@ def test_exact_capacity_and_depot_boundary():
     # La fermeture du dépôt doit être cohérente avec H.
     r=solve(ins,.1)
     assert r['cost']==11. and verify(r['routes'],ins)['valid']
+
+
+def test_fractional_capacity_is_not_silently_changed():
+    with pytest.raises(ValueError,match='entières'):
+        solve(replace(example(),capacity=6.25),.1)
+
+
+def test_no_vehicle_is_proven_impossible_without_native_crash():
+    result=solve(replace(example(),vehicles=0),.1)
+    assert result['status']=='proven_infeasible' and result['routes'] is None
+
+
+def test_standalone_pyvrp_uses_same_duration_objective():
+    from algo.pyvrp_standalone_duration import solve as standalone
+    result=standalone(example(),.15,4101)
+    assert result['status']=='feasible' and result['cost']==28.
+    assert result['metrics']['waiting']==10  # 1 u.t. d'attente, incluse dans les 28 u.t.
+
+
+@pytest.mark.parametrize('partition',[False,True])
+def test_partition_ablation_preserves_verified_archive(partition):
+    from algo.refined_ablation import solve as refined
+    result=refined(example(),4101,.4,partition=partition,restarts=1)
+    assert result['metrics']['valid'] and result['cost']==28.
+    assert result['partition_gain']>=0
+    assert (result['recombination'] is not None)==partition
+
+
+def test_own_ils_extension_cannot_worsen_its_initial_solution():
+    from algo.refined_with_ils import solve as candidate
+    result=candidate(example(),4101,.2)
+    assert result['metrics']['valid'] and result['cost']<=result['before_ils']

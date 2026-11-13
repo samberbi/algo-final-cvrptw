@@ -85,3 +85,30 @@ prioritaires. Prochaine action : compatibilité Phonin 2025, puis pilote statiqu
   nouveau aux sources figées d'une campagne passée.
 - Prochaine étape : pilote contrôlé, puis tests globaux et exécution complète
   du notebook. Aucun lancement de 356 instances ou push automatique.
+
+## Pilote de validation et nouveau candidat
+
+- Pilote `results/final_static/pilote25/` : **24/24 résolutions réalisables**,
+  trois instances (C101, R101, RC201 à 25 clients), huit méthodes, graine 4101.
+  Référence OR-Tools indépendante à 6 s, recherches à 2 s (budgets et temps
+  totaux distincts). Les constructions C101 et RC201 dépassent 6 % ; aucune
+  transformation du pourcentage. Les méthodes optimisées vont ici de 0 à 0,912 %.
+- Ce premier pilote a partiellement chevauché les tests automatisés : ses temps
+  ne servent pas à conclure sur une accélération. Le prochain lot sera séquentiel
+  sans autre campagne CPU lancée par nous en parallèle.
+- Ablation explicite du partitionnement : `algo/refined_ablation.py`, mêmes
+  constructions/voisinages, gain du MILP mesuré sur le même réservoir. Sur les
+  trois cas du pilote, aucun gain de coût attribuable au partitionnement.
+- PyVRP seul démarre de sa population native : aucune solution ILS injectée.
+  Module : `algo/pyvrp_standalone_duration.py`. HGS reste un moteur externe.
+- Hypothèse testable : le renforcé termine parfois après quelques centièmes de
+  seconde. `algo/refined_with_ils.py` réserve et utilise le budget restant pour
+  notre ILS ; variante expérimentale, pas nouveau profil par défaut.
+- Tests : **176 réussis, 2 optionnels ignorés** dans la suite complète avant
+  les nouveaux contrôles. Puis **26 ciblés réussis** après ajout des contrats
+  PyVRP/ablation. Un test nouveau attendait à tort zéro attente sur le jouet :
+  corrigé à 1 u.t. (10 unités internes) ; XML du premier échec conservé.
+- Sous-processus du test CLI : encodage UTF-8 explicite pour supprimer une
+  erreur de décodage Windows qui n'était pas un échec du solveur.
+- Reprise du pilote : même commande avec le même label, JSON existants conservés.
+  Un changement de code/protocole impose un nouveau label ; snapshots sauvegardés.
