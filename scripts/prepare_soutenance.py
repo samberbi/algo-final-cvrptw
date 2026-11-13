@@ -99,12 +99,30 @@ budgets différents restent dans
 def main():
     target = ROOT/'notebooks/Livrable_Final_CVRPTW.ipynb'
     nb = nbformat.read(target, as_version=4)
-    nb.cells = [c for c in nb.cells if not c.metadata.get('soutenance_commands')
-                and not c.metadata.get('cpu_completion')]
+    nb.cells = [c for c in nb.cells if not c.metadata.get('soutenance_commands')]
+    if not any(c.metadata.get('cpu_completion') for c in nb.cells):
+        from scripts.report_cpu_efficiency import add_to_notebook
+        add_to_notebook(nb)
+    cpu_cell = next(c for c in nb.cells if c.metadata.get('cpu_completion'))
+    if 'Priorité de qualité et limite de calcul' not in cpu_cell.source:
+        cpu_cell.source += '''
+
+**Priorité de qualité et limite de calcul.** La qualité des solutions reste
+prioritaire : l'objectif expérimental est un écart inférieur à +6 % au plan
+témoin en durée, avec moins de 120 secondes CPU par instance difficile. Le cache
+retenu a donné les mêmes coûts sur les douze paires mesurées. Réduire les budgets
+HGS a laissé certains essais au-dessus de 6 % ; ces profils courts ne remplacent
+donc pas les reprises longues. Les 58 secondes historiques sont du temps écoulé
+cumulé, pas une mesure CPU. Le respect des deux critères doit être vérifié sur
+le profil complet et le matériel utilisé. Les commandes de cinq secondes de
+l'annexe servent à contrôler le fonctionnement, sans garantir la même qualité.
+'''
+    if (ROOT/'results/time_objective/quality_cpu_check/summary.json').exists():
+        from scripts.report_quality_time import text as quality_text
+        marker = '\n\n### Contrôle conjoint qualité–CPU'
+        cpu_cell.source = cpu_cell.source.split(marker)[0]+'\n\n'+quality_text()
     for current in nb.cells:
         if current.cell_type == 'markdown':
-            current.source = '\n'.join(line for line in current.source.split('\n')
-                if not ('CPU' in line and ('cache' in line.lower() or '6.12' in line or 'multiprocessus' in line)))
             current.source = current.source.replace('scripts/valider_duree.py', 'scripts/validate_soutenance.py')
             current.source = current.source.replace('livraison/TESTS.xml', 'livraison/TESTS_SOUTENANCE.xml')
             current.source = current.source.replace('python scripts/validate_soutenance.py\npython -m pytest tests -q --junitxml=livraison/TESTS_SOUTENANCE.xml',
@@ -130,7 +148,7 @@ def main():
     # Une validation requiert d'abord le XML de tests : l'annexe fait foi pour l'ordre.
     marker = '\n## Version de soutenance : tests sur le portable\n'
     text = text.split(marker)[0]
-    text += marker + '\nLes commandes courtes sont dans [TESTER_SUR_PORTABLE.md](docs/TESTER_SUR_PORTABLE.md) et à la fin du notebook : deux cas C1/C2, deux R1/R2, deux RC1/RC2 ou deux cas à 1 000 clients. Une graine et cinq secondes par résolution. Le reçu courant est `livraison/VALIDATION_SOUTENANCE.json`. L’étude CPU détaillée a été retirée du livrable ; les mesures restent archivées.\n'
+    text += marker + '\nLes commandes courtes sont dans [TESTER_SUR_PORTABLE.md](docs/TESTER_SUR_PORTABLE.md) et à la fin du notebook : deux cas C1/C2, deux R1/R2, deux RC1/RC2 ou deux cas à 1 000 clients. Une graine et cinq secondes par résolution. Le reçu courant est `livraison/VALIDATION_SOUTENANCE.json`. La section CPU reste informative : la qualité des solutions prime, avec un objectif sous +6 % au témoin en durée et sous 120 secondes CPU par instance difficile. Ces deux critères sont à mesurer séparément. Les tests de cinq secondes ne sont pas le profil de meilleure qualité.\n'
     readme.write_text(text, encoding='utf-8')
 
 

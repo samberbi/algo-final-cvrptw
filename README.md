@@ -69,4 +69,4 @@ Le trafic dépendant de l’heure et les tailles supérieures à 1 000 clients n
 
 ## Version de soutenance : tests sur le portable
 
-Les commandes courtes sont dans [TESTER_SUR_PORTABLE.md](docs/TESTER_SUR_PORTABLE.md) et à la fin du notebook : deux cas C1/C2, deux R1/R2, deux RC1/RC2 ou deux cas à 1 000 clients. Une graine et cinq secondes par résolution. Le reçu courant est `livraison/VALIDATION_SOUTENANCE.json`. L’étude CPU détaillée a été retirée du livrable ; les mesures restent archivées.
+Les commandes courtes sont dans [TESTER_SUR_PORTABLE.md](docs/TESTER_SUR_PORTABLE.md) et à la fin du notebook : deux cas C1/C2, deux R1/R2, deux RC1/RC2 ou deux cas à 1 000 clients. Une graine et cinq secondes par résolution. Le reçu courant est `livraison/VALIDATION_SOUTENANCE.json`. La section CPU reste informative : la qualité des solutions prime, avec un objectif sous +6 % au témoin en durée et sous 120 secondes CPU par instance difficile. Ces deux critères sont à mesurer séparément. Les tests de cinq secondes ne sont pas le profil de meilleure qualité.

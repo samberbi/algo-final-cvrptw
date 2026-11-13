@@ -16,6 +16,8 @@ def main():
     for script in ['analyze_duration.py', 'validate_duration_optimization.py',
                    'validate_reporting_completion.py']:
         subprocess.run([sys.executable, str(ROOT/'scripts'/script)], cwd=ROOT, check=True)
+    if (ROOT/'results/time_objective/quality_cpu_check/summary.json').exists():
+        subprocess.run([sys.executable, str(ROOT/'scripts/report_quality_time.py')], cwd=ROOT, check=True)
     manifest = json.loads((ROOT/'data/manifest.json').read_text())
     for name, info in manifest['files'].items():
         path = ROOT/'data/instances'/name

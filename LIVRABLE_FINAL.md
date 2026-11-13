@@ -341,6 +341,8 @@ Le partage évalué est 5 s d’ILS puis 5 s de HGS. Ce réglage constitue une b
 | Audit exhaustif des écarts temporels | Contrôler le seuil par essai et par instance | 646 solutions et 356 témoins revalidés ; dépassements listés en section 6.7 |
 | Constructions alternatives et intensification locale | Réduire les mauvaises durées de départ | Essais exploratoires séparés, solutions revalidées et régressions conservées |
 | Carte, horaires et temps d'exécution | Relier représentation, objectif et coût de calcul | Figures issues des mêmes résultats enregistrés et commentées individuellement |
+| Cache local des voisinages | Supprimer les tris répétés sur une instance immuable | Listes identiques à PyVRP et coûts identiques sur douze paires ; CPU mesuré en section 6.12 |
+| Étude multiprocessus | Distinguer délai de réponse et CPU consommé | Un, deux et quatre processus ; parent et workers comptés, démarrage publié |
 
 L’implémentation propre de l’ILS, les adaptateurs et la vérification sont dans le projet ; le moteur génétique externe appartient à PyVRP. Les commentaires du code expliquent les fonctions et les points sensibles.
 
@@ -818,6 +820,98 @@ Le gain depuis la construction est $G=100(T_{\mathrm{construction}}-T_{\mathrm{f
 
 **Association et causalité.** Sur les soixante cas à 1 000 clients, la corrélation de Pearson entre ouverture relative des fenêtres et part d'attente vaut -0.269, et celle entre demande relative à Q et remplissage vaut 0.227. Ces associations modestes ne suffisent pas à isoler un effet causal des contraintes. La colonne d'attente du témoin rappelle aussi que les plans de référence n'ont pas été sélectionnés pour minimiser ce temps : leurs écarts de durée peuvent différer fortement selon les familles.
 
+### 6.12. Réduction du temps CPU et étude du parallélisme
+
+**Trois temps à distinguer.** La durée des tournées est notre objectif métier, exprimé en unités du benchmark. Le temps écoulé du programme mesure l'attente de l'utilisateur en secondes. Le temps CPU mesure le travail utilisateur et noyau des processeurs. Le parallélisme peut réduire l'attente tout en consommant davantage de CPU : quatre processus occupés chacun dix secondes peuvent représenter environ quarante secondes CPU. Réduire le temps de calcul est un critère de performance, sans remplacer l'objectif de durée ni les contraintes de validité.
+
+**Profilage et modification retenue.** Dans le profil renforcé, la proximité des clients était triée à nouveau à chaque demande de voisins, alors que les données d'une instance restent identiques. Sur le cas instrumenté C1_10_6, les tris NumPy passent de 22 à 1 après ajout du cache. `DurationLocalSearch.neighbors` conserve un ordre stable couvrant les voisinages prévus et réutilise ses préfixes pour 40, 60, 80 et 120 voisins. Une demande plus grande reconstruit cet ordre ; une autre instance reçoit un nouveau cache. Le transfert des voisins vers le moteur est également évité lorsque leur nombre effectif ne change pas. Les tests comparent les listes à celles de PyVRP, y compris après agrandissement et aux bornes de taille.
+
+Cette optimisation est développée dans notre orchestration Python ; la recherche locale reste fournie par PyVRP. Nous ne supprimons pas les vérifications pour gagner du temps. Les données, les opérateurs, les graines et l'objectif restent identiques.
+
+**Comparaison à travail fixé.** C103, C1_10_6, R1_10_5 et RC2_10_5 sont testées avec les graines 8301–8303. Chaque version effectue les mêmes quatre départs et le même programme de recherche : 24 résolutions, soit douze paires. L'ordre avant/après alterne ; le préchauffage est exclu. Le plafond de sécurité de soixante secondes n'est jamais atteint. Les coûts et le nombre d'étapes sont identiques dans les douze paires, et toutes les solutions sont réalisables. Le profilage instrumenté sert à localiser les coûts ; les temps comparatifs ci-dessous sont mesurés sans ce profilage.
+
+Le CPU est mesuré par `time.process_time`, qui inclut les threads natifs du processus, et le temps écoulé par `time.perf_counter`. Le tableau donne les moyennes des trois graines par instance. Le gain CPU vaut $100(1-\overline{C}_{\mathrm{après}}/\overline{C}_{\mathrm{avant}})$ ; il ne s'agit pas d'un gap de tournée au BKS.
+
+| Instance   |   Clients | CPU avant (s)   | CPU après (s)   | Réduction CPU (%)   | Écoulé avant (s)   | Écoulé après (s)   |
+|:-----------|----------:|:----------------|:----------------|:--------------------|:-------------------|:-------------------|
+| C103       |       100 | 0,167           | 0,146           | 12,500              | 0,166              | 0,167              |
+| C1_10_6    |      1000 | 5,036           | 2,995           | 40,538              | 5,280              | 3,177              |
+| R1_10_5    |      1000 | 4,479           | 2,417           | 46,047              | 4,771              | 2,615              |
+| RC2_10_5   |      1000 | 5,891           | 3,854           | 34,571              | 6,231              | 4,123              |
+
+Sur les douze paires, la somme des temps CPU diminue de **39.57 %**, à coût de tournée identique. Cette valeur concerne le profil renforcé et ce lot ; elle ne s’applique pas rétroactivement à toutes les campagnes ou au moteur ILS autonome.
+
+![CPU et temps écoulé avant/après réutilisation des voisinages.](livraison/duree_figures/cpu_cache.png)
+
+**Lecture du graphique.** Chaque paire de barres compare les mêmes trois graines, avec le même travail et les mêmes coûts finaux. À gauche, la hauteur est le CPU consommé ; à droite, le temps attendu par l'utilisateur. La baisse montre l'effet du cache, sans retirer de clients, de mouvements ou de contrôles. Les petites durées restent sensibles à la granularité des compteurs Windows et au bruit de la machine.
+
+**Intérêt et continuité.** Après l'analyse des paramètres de recherche, cette figure étudie une accélération de l'implémentation conservant le calcul. Le cache réduit le travail répété ; le parallélisme étudié ensuite répartit ce travail sur plusieurs cœurs et répond à une autre question.
+
+**Parallélisme testé.** Un portefeuille de quatre départs indépendants, graines 9301–9304, résout chaque instance C1_10_6, R1_10_5 et RC2_10_5. Les mêmes tâches, avec quatre départs internes chacune, sont exécutées sur un, deux puis quatre processus, avec deux répétitions et des affinités CPU enregistrées. Cela représente dix-huit portefeuilles et 72 recherches individuelles. Le meilleur résultat du portefeuille est conservé et validé ; les coûts par graine sont identiques entre les niveaux de parallélisme dans ce lot. Cette comparaison garde le travail constant : elle ne donne pas quatre fois plus de départs au mode parallèle.
+
+Le CPU total additionne le parent et tous ses workers. Sous Windows, des handles conservés permettent de lire `GetProcessTimes` après l'arrêt des workers : le tableau des lots inclut donc aussi leurs imports, préchauffages et fermetures. Mesurer uniquement le CPU du parent aurait sous-estimé la consommation. Les tableaux par instance ci-dessous utilisent un pool déjà initialisé ; le premier chargement de l'instance et sa validation restent inclus. Les valeurs moyennes portent sur trois instances et deux répétitions, soit six portefeuilles par réglage.
+
+|   Processus |   Portefeuilles | Écoulé moyen (s)   | CPU cumulé moyen (s)   | Accélération écoulée   | Variation CPU (%)   |
+|------------:|----------------:|:-------------------|:-----------------------|:-----------------------|:--------------------|
+|           1 |               6 | 12,820             | 12,122                 | 1,000                  | 0,000               |
+|           2 |               6 | 6,834              | 12,935                 | 1,876                  | 6,702               |
+|           4 |               6 | 3,919              | 14,089                 | 3,271                  | 16,219              |
+
+![Parallélisme : attendre moins longtemps peut consommer davantage de CPU.](livraison/duree_figures/cpu_parallelisme.png)
+
+**Lecture des deux panneaux.** Le panneau gauche mesure le délai pour terminer les mêmes quatre recherches et valider leur meilleure solution. Le panneau droit additionne le travail CPU des processus pendant ce portefeuille. Les unités sont des secondes dans les deux cas, mais leur sens diffère : les valeurs du panneau droit ne doivent pas être divisées par le nombre de processus. Tous les résultats de durée restent identiques à travail égal dans cette expérience.
+
+**Intérêt et choix.** Le cache réduit le CPU de chaque recherche ; multiplier les processus réduit surtout la latence. Dans le lot mesuré, le mode séquentiel optimisé reste le choix économe en CPU, tandis que plusieurs processus conviennent si le délai de réponse est prioritaire. L'autorisation du multithreading ne signifie donc pas qu'utiliser tous les cœurs minimise la consommation CPU. Notre expérimentation emploie plusieurs processus pour isoler les états et les graines sous CPython 3.12 ; ce n'est pas l'activation automatique de threads dans PyVRP.
+
+**Démarrage et fermeture inclus.** Chaque lot suivant exécute les trois instances avec le même portefeuille. Le temps total part de la création du pool et se termine après son arrêt ; il exclut seulement le lancement initial de l'interpréteur parent, commun au protocole. Les temps CPU des workers couvrent leur vie entière. Le coût du démarrage peut réduire l'intérêt du parallélisme pour une seule petite instance.
+
+|   Processus |   Lots | Démarrage moyen (s)   | Lot complet écoulé (s)   | Lot complet CPU (s)   |
+|------------:|-------:|:----------------------|:-------------------------|:----------------------|
+|           1 |      2 | 1,684                 | 40,542                   | 38,016                |
+|           2 |      2 | 1,787                 | 22,728                   | 42,008                |
+|           4 |      2 | 1,921                 | 14,167                   | 49,297                |
+
+**Portée et reproductibilité.** Les anciens résultats restent conservés avec leurs temps écoulés d'origine ; nous ne leur attribuons pas un CPU non mesuré. La mesure CPU actuelle concerne les nouvelles campagnes `cpu_optimization/`. Les sources avant/après, mesures par graine, coûts, contraintes et temps complets sont archivés. L'amélioration n'est pas une preuve de minimum CPU global, ni une garantie d'accélération identique sur tout ordinateur. À budget limité, le cache peut aussi laisser explorer davantage de solutions ; ce bénéfice de qualité nécessiterait une campagne distincte à budget fixé. Les meilleurs résultats précédents ne sont pas remplacés par les essais de performance.
+
+Sources techniques : [Python, horloges de mesure](https://docs.python.org/3.12/library/time.html#time.process_time), [Windows, temps des processus](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getprocesstimes). Les opérateurs externes restent attribués à PyVRP 0.12.2.
+
+
+**Tests de non-régression.** La suite enregistrée après optimisation compte 171 tests réussis, 0 échecs et 0 tests ignorés. Elle inclut les comparaisons des voisinages calculés et cachés ; son fichier XML est conservé avec les mesures CPU.
+
+**Priorité de qualité et limite de calcul.** La qualité des solutions reste
+prioritaire : l'objectif expérimental est un écart inférieur à +6 % au plan
+témoin en durée, avec moins de 120 secondes CPU par instance difficile. Le cache
+retenu a donné les mêmes coûts sur les douze paires mesurées. Réduire les budgets
+HGS a laissé certains essais au-dessus de 6 % ; ces profils courts ne remplacent
+donc pas les reprises longues. Les 58 secondes historiques sont du temps écoulé
+cumulé, pas une mesure CPU. Le respect des deux critères doit être vérifié sur
+le profil complet et le matériel utilisé. Les commandes de cinq secondes de
+l'annexe servent à contrôler le fonctionnement, sans garantir la même qualité.
+
+
+### Contrôle conjoint qualité–CPU sur trois reprises difficiles
+
+Ces trois résolutions ont été recalculées à neuf, sans transmettre les témoins au moteur. La construction renforcée est suivie de HGS externe pendant 30 puis 20 secondes. C2_10_2, encore à +6,02 %, reçoit ensuite 50 secondes supplémentaires, facturées au cumul. Le temps de cette première tentative reste compté.
+
+| Instance | Graine | Écart en durée | CPU cumulé (s) | Temps écoulé cumulé (s) |
+|---|---:|---:|---:|---:|
+| C2_10_2 | 4101 | +1.47 % | 103.61 | 108.72 |
+| C2_10_7 | 4101 | +5.70 % | 54.41 | 56.05 |
+| C2_10_7 | 4102 | +5.25 % | 55.17 | 56.70 |
+
+Le CPU inclut le préchauffage mesuré dans chaque worker et toutes les phases de résolution, y compris la vérification finale ; le démarrage de l’interpréteur est exclu. Les trois instances sont lancées sur des processus distincts. La limite de deux minutes est contrôlée **par résolution**, pas sur la somme CPU des trois workers. Cette vérification est a posteriori ; elle ne constitue pas un arrêt matériel garanti à 120 secondes.
+
+Ces cas ont été sélectionnés pour leur lenteur historique : ce contrôle ne garantit pas les deux critères sur toutes les instances, graines et machines. Les écarts portent sur les durées des plans témoins, pas sur des optimums temporels. Les meilleurs résultats historiques restent conservés séparément.
+
+Pour reproduire ce lot optionnel (trois résolutions seulement) :
+
+```powershell
+.\.venv\Scripts\python.exe scripts/check_quality_time.py --label qualite_portable
+.\.venv\Scripts\python.exe scripts/continue_quality_time.py --label qualite_portable
+```
+
+La continuation est destinée uniquement à C2_10_2 et vérifie la marge CPU mesurée avant de démarrer. Les tests rapides de l’annexe restent disponibles pour un simple contrôle de fonctionnement.
+
 ## 7. Reproduction, limites et conclusion
 
 Le changement porte sur le modèle, le coût des mouvements, l’acceptation, l’archive, le HGS et les mesures. Une simple substitution du mot « distance » par « temps » aurait laissé le solveur optimiser le mauvais critère. Les cas de test distinguent explicitement ces deux objectifs.
@@ -826,6 +920,9 @@ La campagne montre le comportement observé en durée sur les 356 instances et l
 
 Les compléments séparent une sensibilité contrôlée à quatre secondes de recherche et une analyse des scénarios sur les mesures initiales. Les phases mutualisées de la sensibilité ont des temps totaux recomposés ; les reprises d’optimisation conservent leur effort cumulé. Ces études ne prouvent ni un optimum temporel sur les grandes instances ni une généralisation à tous les budgets.
 
+
+
+La section 6.12 mesure séparément la réduction du CPU par cache et la baisse du temps écoulé par parallélisme, avec le coût de tous les processus. Le profil économe ne confond pas ces deux objectifs.
 
 Les fichiers `results/time_objective/catalogue/runs/` contiennent les solutions, temps et traces. Le protocole et les sources effectivement exécutées sont conservés. `scripts/analyze_duration.py` recalcule les contraintes, les références et les statistiques ; `scripts/validate_soutenance.py` contrôle la remise. Le notebook recalcule les analyses et exemples, sans relancer les 646 résolutions.
 

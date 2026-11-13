@@ -14,6 +14,8 @@
 | Audit exhaustif des écarts temporels | Contrôler le seuil par essai et par instance | 646 solutions et 356 témoins revalidés ; dépassements listés en section 6.7 |
 | Constructions alternatives et intensification locale | Réduire les mauvaises durées de départ | Essais exploratoires séparés, solutions revalidées et régressions conservées |
 | Carte, horaires et temps d'exécution | Relier représentation, objectif et coût de calcul | Figures issues des mêmes résultats enregistrés et commentées individuellement |
+| Cache local des voisinages | Supprimer les tris répétés sur une instance immuable | Listes identiques à PyVRP et coûts identiques sur douze paires ; CPU mesuré en section 6.12 |
+| Étude multiprocessus | Distinguer délai de réponse et CPU consommé | Un, deux et quatre processus ; parent et workers comptés, démarrage publié |
 
 L’implémentation propre de l’ILS, les adaptateurs et la vérification sont dans le projet ; le moteur génétique externe appartient à PyVRP. Les commentaires du code expliquent les fonctions et les points sensibles.
 
@@ -25,3 +27,8 @@ Le profil `duration_refined` ajoute plusieurs constructions, une recherche local
 ## Compléments expérimentaux et rédactionnels
 
 Les sections 6.10 et 6.11 ajoutent une [sensibilité contrôlée](SENSIBILITE_CONTROLEE_DUREE.md) du profil ILS–HGS et une [analyse des scénarios](ANALYSE_SCENARIOS_DUREE.md) sur le catalogue initial. Le contexte métier, la réduction TSP, les fenêtres par objet/client, le départ à zéro et les budgets sont explicités. Cette passe ne modifie pas les opérateurs, le profil par défaut ou les meilleures tournées conservées.
+
+
+## Réduction du temps CPU
+
+Le profil renforcé réutilise désormais les voisins calculés sur une même instance immuable et évite les transferts identiques vers le moteur. Le tri stable et les préfixes sont vérifiés contre PyVRP. La [section CPU et parallélisme](TEMPS_CPU_ET_PARALLELISME.md) rapporte les mesures avant/après à travail et coûts identiques, puis les résultats sur un, deux et quatre processus. Le calcul du CPU inclut tous les workers. Aucun ancien temps écoulé n’est renommé en temps CPU ; les meilleurs résultats historiques restent conservés.
