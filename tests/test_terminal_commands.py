@@ -1,0 +1,94 @@
+"""Contrats CLI : sélection bornée, références non circulaires, coûts et échecs."""
+import json
+from pathlib import Path
+import pytest
+from scripts import terminal_support as terminal
+from scripts.run_benchmark import parser,replay
+
+
+def test_default_selection_is_one_c101_not_whole_catalogue():
+    rows=terminal.select_cases(terminal.catalog())
+    assert [(r['instance'],r['n']) for r in rows]==[('C101',100)]
+
+
+def test_unambiguous_small_sizes_and_large_instance_inference():
+    rows=terminal.catalog()
+    assert terminal.select_cases(rows,['C101'],[25])[0]['n']==25
+    assert terminal.select_cases(rows,['C1_10_6'])[0]['n']==1000
+    assert terminal.select_cases(rows,['C101:50'])[0]['n']==50
+
+
+def test_progressive_is_eight_cases_not_all_instances():
+    rows=terminal.select_cases(terminal.catalog(),progressive=True)
+    assert [r['n'] for r in rows]==terminal.SIZES
+    assert len(rows)==8
+
+
+def test_all_six_families_at_100_and_explicit_all():
+    rows=terminal.catalog()
+    selected=terminal.select_cases(rows,sizes=[100],families=terminal.FAMILIES)
+    assert len(selected)==6 and {r['family'] for r in selected}==set(terminal.FAMILIES)
+    assert len(terminal.select_cases(rows,sizes=[100],all_cases=True))==56
+
+
+def test_unknown_instance_does_not_silently_disappear():
+    with pytest.raises(ValueError,match='absente'):
+        terminal.select_cases(terminal.catalog(),['C101','INCONNUE'])
+
+
+def test_labels_are_unique_and_cannot_escape_store(tmp_path):
+    assert terminal.unique_folder('same',tmp_path).name=='same'
+    assert terminal.unique_folder('same',tmp_path).name=='same_2'
+    with pytest.raises(ValueError):terminal.unique_folder('../escape',tmp_path)
+
+
+def test_wrong_announced_cost_and_incomplete_coverage_rejected():
+    from tests.test_final_static import example
+    ins=example()
+    with pytest.raises(ValueError,match='Coût annoncé'):
+        terminal.verified_result(ins,dict(routes=[[2,1]],cost=0))
+    with pytest.raises(ValueError,match='Contraintes invalides'):
+        terminal.verified_result(ins,dict(routes=[[1]],cost=1))
+
+
+def test_signed_gaps_and_unavailable_certificate_are_preserved():
+    record=dict(instance='C101',n=100,family='C1',method='ils',seed=1,valid=True,status='feasible',
+        wall_s=1,cpu_s=1,requested_seconds=5,result={'metrics':dict(duration=900,travel=400,waiting=100,vehicles=1)})
+    row=terminal.row_from(record,dict(duration=100,type='feasible',source='external',certified=False))
+    assert row['delta_reference_pct']==pytest.approx(-10) and row['certified_gap_pct'] is None
+    row=terminal.row_from(record,dict(duration=None,type='NON DISPONIBLE',source=None))
+    assert row['delta_reference_pct'] is None
+
+
+def test_cached_reference_is_external_not_own_best_solution():
+    entry=next(r for r in terminal.catalog() if r['instance']=='C101' and r['n']==25)
+    ref=terminal.find_reference(entry,terminal.load_case(entry),'independent')
+    assert ref['duration']==2623.5 and '_ortools_' in ref['source'] and not ref['certified']
+
+
+def test_cli_aliases_accept_legacy_usage():
+    args=parser().parse_args(['--instances','C101','--method','duration_refined','--label','x'])
+    assert args.method=='duration_refined'
+    args=parser().parse_args(['--instance','C101','--size','25','--methods','ils','refined'])
+    assert args.sizes==[25] and args.methods==['ils','refined']
+
+
+def test_failed_results_keep_na_and_are_not_ranked(tmp_path):
+    record=dict(instance='R101',family='R1',n=100,method='pyvrp',seed=1,valid=False,
+        status='not_found',wall_s=.1,cpu_s=.1,requested_seconds=.1,result=dict(routes=None,status='not_found'))
+    row=terminal.row_from(record,dict(duration=100,type='external',source='x',certified=False))
+    assert row['duration'] is None and row['delta_reference_pct'] is None
+    terminal.save_tables(tmp_path,[dict(measurement=row,result=record['result'])],1)
+    assert json.loads((tmp_path/'BILAN.json').read_text())['failed']==1
+    assert 'aucune solution' in (tmp_path/'SYNTHESE.txt').read_text(encoding='utf-8')
+
+
+def test_replay_keeps_existing_files_unchanged(monkeypatch,tmp_path,capsys):
+    monkeypatch.setattr('scripts.run_benchmark.ROOT',tmp_path)
+    folder=tmp_path/'results/local/saved';folder.mkdir(parents=True)
+    row=dict(instance='C101',n=100,family='C1',method='ils',seed=1,valid=False,status='not_found',
+        duration=None,wall_s=1,cpu_s=1,requested_seconds=1,delta_reference_pct=None)
+    path=folder/'result.json';path.write_text(json.dumps(dict(measurement=row,result=None)))
+    before=path.read_bytes()
+    replay('saved',show_routes=True)
+    assert path.read_bytes()==before and 'LECTURE SEULE' in capsys.readouterr().out

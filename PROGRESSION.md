@@ -219,3 +219,22 @@ push, PDF, Word ou ZIP. Pour les tests, la commande pytest du début reste valab
 - Prochaine extension scientifique éventuelle : renforcer les références
   indépendantes sur un petit lot difficile et augmenter les répétitions, avant
   toute campagne exhaustive. Aucune mesure future n'est incluse dans les tableaux.
+
+## Mission commandes terminal — nouvelle passe
+
+- Interface commune `scripts/run_benchmark.py`, également appelée par
+  `scripts/test_instances.py`. Les fonctions historiques utilisées par les
+  reprises CPU sont conservées. Aucun algorithme de résolution modifié.
+- Sélection 25/50/100/200/400/600/800/1000, familles, plusieurs méthodes, labels
+  automatiques, relecture, tournées et horaires, classement selon durée faisable.
+- Références lues après résolution : plan public réévalué ou OR-Tools figé
+  indépendant ; gap certifié indisponible en l'absence de preuve compatible.
+- Processus isolés avec surveillance du CPU et du temps réel ; limite par
+  défaut 120 secondes, initialisation comprise. Arrêt surveillé, pas promesse
+  d'une borne mathématique stricte sur l'instant de terminaison.
+- Premier essai réellement exécuté C101/25 : durée 2623,5, trois véhicules,
+  faisable, affichage de la décomposition et des horaires dans le terminal.
+- Douze tests ciblés de l'interface réussis. Suite complète et validateur du
+  projet en cours via `scripts/validate_terminal_commands.py --phase checks`.
+- Les preuves des commandes seront dans `results/terminal_validation/` ; aucun
+  lancement automatique des 356 instances et aucun écrasement d'un ancien lot.

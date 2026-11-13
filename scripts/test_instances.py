@@ -111,7 +111,7 @@ def execute(job):
         return row, None
 
 
-def main():
+def legacy_main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--sizes', nargs='+', type=int, default=[100, 200, 400, 600, 800, 1000])
     parser.add_argument('--instances', nargs='+', help='Sous-lot explicite pour un test rapide')
@@ -213,6 +213,13 @@ def main():
           f"Tournees et protocole : {folder}", flush=True)
     if not all(r['valid'] for r in rows):
         raise SystemExit(1)
+
+
+def main():
+    # Les fonctions historiques importées par les reprises CPU sont conservées.
+    # La CLI commune ajoute 25/50, familles, méthodes, labels automatiques et garde-fou.
+    from scripts.run_benchmark import main as terminal_main
+    terminal_main()
 
 
 if __name__ == '__main__':
