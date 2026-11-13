@@ -30,10 +30,9 @@ supériorité générale de la variante ILS. Le comparateur indépendant est par
 plus faible que notre méthode ; les écarts négatifs restent visibles. Aucun
 résultat n'a été plafonné, renommé en preuve d'optimalité ou supprimé.
 
-Le notebook canonique est 
-otebooks/Livrable_Final_CVRPTW.ipynb. La copie de
+Le notebook canonique est `notebooks/Livrable_Final_CVRPTW.ipynb`. La copie de
 lecture avec figures intégrées est
-C:/Users/user/Downloads/Livrable_Final_CVRPTW_A_ENVOYER.ipynb (environ 2,93 Mo).
+`C:/Users/user/Downloads/Livrable_Final_CVRPTW_A_ENVOYER.ipynb` (environ 2,93 Mo).
 Son exécution exige le projet complet ; elle ne remplace pas le dépôt.
 
 ## État sauvegardé avant la révision finale
@@ -216,7 +215,7 @@ push, PDF, Word ou ZIP. Pour les tests, la commande pytest du début reste valab
   tournées pendant la dernière validation, sans nouvelle recherche.
 - Aucun nouvel export PDF/Word/ZIP ou push GitHub. Commits locaux conservés.
 - Quota Codex : toujours inaccessible. Toute reprise doit partir des fichiers
-  et de la commande scripts/finalize_static.py --execute --validate ci-dessus.
+  et de la commande `scripts/finalize_static.py --execute --validate` ci-dessus.
 - Prochaine extension scientifique éventuelle : renforcer les références
   indépendantes sur un petit lot difficile et augmenter les répétitions, avant
   toute campagne exhaustive. Aucune mesure future n'est incluse dans les tableaux.
