@@ -1,96 +1,41 @@
 ---
 title: "Optimisation de tournées de livraison CVRPTW"
-subtitle: "ILS–HGS — Catalogue complet et réduction des pires écarts"
+subtitle: "Durée totale — Modélisation, ILS–HGS et statistique descriptive"
 toc-title: "Sommaire"
 lang: fr-FR
 ---
 
 
-**CESI — Algorithmique et optimisation — Modèle, implémentation et validation expérimentale**
+**CESI — Algorithmique et optimisation — 13 novembre 2026**
 
-## 1. Problème, contribution et résultat principal
+Nous cherchons des tournées livrant chaque client exactement une fois, respectant la capacité, les fenêtres strictes et la fermeture du dépôt. Notre objectif est la **somme des durées des tournées**, avec trajets, attentes et services, pour des départs fixés à zéro. Le temps d’exécution du solveur est mesuré séparément.
 
-Nous cherchons des tournées qui livrent chaque client une seule fois, respectent la capacité et les fenêtres horaires strictes, puis reviennent au dépôt avant sa fermeture. Pour comparer les solutions aux références DIMACS, l’objectif expérimental est la distance totale. Le nombre de véhicules constitue une borne maximale ; aucun véhicule supplémentaire ne permet de violer une contrainte.
+La méthode associe notre constructeur et notre ILS à un HGS externe fourni par **PyVRP 0.12.2**, explicitement attribué à ses auteurs. Les expériences utilisent les données Solomon et Gehring–Homberger, sans les modifier. Les temps de trajet restent statiques ; la prise en compte d’un trafic dépendant de l’heure demeure une extension non démontrée.
 
-Nous avons développé le constructeur, notre recherche locale itérée, les contrôles et leur intégration avec le moteur HGS de **PyVRP 0.12.2**, attribué à ses auteurs. Le HGS est une bibliothèque externe ; notre contribution porte sur la solution hybride, son code d’intégration, sa validation et son évaluation.
+Le rapport présente successivement le problème, sa formulation, l’algorithme, le protocole, les statistiques descriptives et les limites. Les fichiers individuels permettent de vérifier les solutions et les calculs.
 
-Le catalogue complet contient **356 instances**, de 100 à 1 000 clients. La campagne comprend **472 pipelines évalués**, dont **448 nouveaux** et **24 réutilisés avec leur temps intégralement compté**. La moyenne donnant le même poids à chaque instance est **2.078 %**. Le périmètre complémentaire de **116 instances à 100 et 1 000 clients**, avec deux graines par instance, obtient **1.946 %**.
+```text
+646 résolutions en durée ; 356 instances ; toutes réalisables.
+```
 
-La moyenne à 1 000 clients, les cas défavorables, la couverture et les temps sont détaillés dans les tableaux. Une moyenne sous un seuil ne signifie pas que chaque instance respecte ce seuil. Les différentes pondérations sont explicitement distinguées.
+## 1. Du réseau routier à la durée d’une tournée
 
-Le sujet initial évoque également la durée et le trafic variable. Notre périmètre est statique et symétrique : nous calculons durée, attente et service, mais optimisons ici la distance compatible avec les références. Le trafic variable, une garantie d’optimalité et les tailles supérieures à 1 000 clients ne sont pas démontrés.
+Le dépôt et les clients forment les sommets d’un graphe orienté ; un arc représente un trajet possible. Les temps de trajet sont $c_{ij}$, les demandes $q_i$, les services $s_i$ et les fenêtres $[e_i,l_i]$. Une solution est une liste de tournées ; le dépôt 0 est implicite au départ et au retour.
 
+Deux ordres de visite peuvent parcourir la même distance et produire des attentes différentes. Sur l’exemple suivant, le trajet total vaut 18 et les services totalisent 9 dans les deux cas. L’attente vaut 7 dans l’ordre 1 puis 2, contre 1 dans l’autre : les durées sont 34 et 28. Le deuxième ordre est meilleur pour notre objectif.
 
-**Lecture des campagnes.** Dans le livrable, les sections 1 à 8 décrivent la campagne de référence. La section 9 présente les nouveaux essais : après dix reprises ciblées avec un budget supplémentaire, le pire gap de l’archive est 6.889 %. Les anciens résultats et leurs budgets restent identifiés. Le nouveau profil à 120 s est accessible avec `--method ils_hgs_refined` et dans le web « ILS court + HGS (v9) ».
+![Figure 1 — Temps symétriques : chaque trait représente les deux arcs de sens opposés. Cet exemple pédagogique ne constitue pas un benchmark.](figures/figure_01.png)
 
+![Figure 2 — Attente, service et trajet sont distincts. À trajet total égal, la durée peut changer.](figures/figure_02.png)
 
+```text
+[[1, 2]] trajets 18.0 attente 7.0 services 9.0 durée 34.0
+[[2, 1]] trajets 18.0 attente 1.0 services 9.0 durée 28.0
+```
 
-### 1.1. Représentation du problème par un graphe
+## 2. Modélisation mathématique du CVRPTW en durée
 
-Nous représentons le réseau de livraison par un graphe orienté complet :
-
-$$G_{phys}=(V_{phys},A_{phys}),\qquad V_{phys}=\{0\}\cup C,\qquad C=\{1,\ldots,n\},$$
-$$A_{phys}=\{(i,j)\in V_{phys}\times V_{phys}:i\ne j\}.$$
-
-Le sommet 0 est le dépôt et chaque sommet i de C représente un client. Un client porte trois informations : sa demande $q_i$, son temps de service $s_i$ et sa fenêtre de début de service $[e_i,l_i]$. Chaque arc $(i,j)$ porte une distance $d_{ij}$ et un temps de trajet $c_{ij}$. Le graphe est orienté parce que l’ordre des visites et la propagation des horaires ont un sens. Dans les instances étudiées, les coûts sont symétriques ; les deux arcs opposés existent donc avec les mêmes coûts.
-
-Une tournée est un circuit $0\to i_1\to\cdots\to i_p\to0$. Une solution contient au plus K tournées non vides et répartit les clients entre elles, sans oubli ni doublon. Sa distance est la somme des distances de tous leurs arcs. Les fenêtres ne sont pas représentées par de nouveaux sommets : elles limitent les horaires auxquels un sommet peut être visité.
-
-Pour un client $j\in C$ précédé par le sommet i, nous calculons le début du service au plus tôt :
-
-$$t_j=\max\{e_j,\ t_i+s_i+c_{ij}\},\qquad t_j\le l_j.$$
-
-Le temps de service au dépôt est nul et le départ est fixé à zéro. Si $\mathcal R_k$ désigne la liste des clients de la tournée du véhicule k, la capacité impose $\sum_{i\in\mathcal R_k}q_i\le Q$ ; le retour doit survenir avant H. Le dessin ci-dessous illustre ces notions sur quatre clients. Cet exemple pédagogique est vérifié par le même contrôleur que les benchmarks ; il ne fait pas partie des 472 essais.
-
-La formulation de la section 2 utilise ensuite deux copies du dépôt, o pour le départ et r pour le retour. Elles représentent toujours le même lieu physique. Cette séparation permet d’écrire les horaires de départ et de retour sans imposer une seule variable de temps à deux événements distincts.
-
-
-![Figure 1 — Modélisation du réseau en graphe orienté ; deux tournées réalisables sur un exemple pédagogique vérifié.](figures/figure_01.png)
-
-### 1.2. Lire les notations avant les équations
-
-| Notation | Signification | Nature |
-|---|---|---|
-| $n,C$ | Nombre de clients et ensemble des clients | Données et ensemble |
-| $K,\mathcal K$ | Nombre maximal de véhicules et ensemble de leurs indices | Données et ensemble |
-| $Q,H$ | Capacité commune et fermeture du dépôt | Données |
-| $q_i,s_i,[e_i,l_i]$ | Demande, service et fenêtre du client i | Données |
-| $d_{ij},c_{ij}$ | Distance et temps de trajet de i vers j | Données |
-| $x_{ij}^k$ | Le véhicule k utilise-t-il l’arc $(i,j)$ ? | Variable binaire |
-| $y_i^k,u_k$ | Affectation du client i et utilisation du véhicule k | Variables binaires |
-| $t_i,R_k$ | Début du service chez i et heure de retour du véhicule k | Variables continues |
-| $f_{ij}^k$ | Flot artificiel qui garantit la connexion au dépôt | Variable continue auxiliaire |
-
-Nous distinguons le nombre K de l’ensemble $\mathcal K$, et la tournée $\mathcal R_k$ de la variable $R_k$, qui désigne une heure de retour dans les équations du modèle.
-
-La section 2 précise les domaines, l’objectif et chaque contrainte. Les variables de flot ne modélisent pas une marchandise supplémentaire : elles servent à empêcher un cycle de clients isolé du dépôt, même si certains temps tronqués sont nuls.
-
-
-## 2. Données, horaires et formulation
-
-### 2.1. Une solution et son évaluation
-
-Une solution est une liste de tournées : `[[1,3],[2,4]]` signifie dépôt → 1 → 3 → dépôt et dépôt → 2 → 4 → dépôt. Le dépôt est implicite dans les listes. Les données contiennent coordonnées, demandes, services, fenêtres, matrices de trajet et distance, capacité et flotte maximale.
-
-![Figure 2 — Données et solution](figures/figure_02.png)
-
-**Lecture.** Les données définissent les contraintes ; les listes proposent un ordre. Le contrôleur recalcule les horaires et la couverture. Une carte satisfaisante visuellement ne prouve pas la faisabilité.
-
-Pour deux visites successives i puis j, avec départ fixé à zéro et service nul au dépôt :
-
-$$a_j=t_i+s_i+c_{ij},\qquad t_j=\max(a_j,e_j),\qquad b_j=t_j+s_j.$$
-
-L'arrivée est a, le début du service t et sa fin b. L'attente est $t_j-a_j$. La fenêtre borne le début : $e_j\le t_j\le l_j$, bornes comprises. Une arrivée anticipée permet d'attendre ; la fin du service peut dépasser $l_j$ si la suite et le retour restent réalisables.
-
-![Figure 3 — Trajet, attente et service](figures/figure_03.png)
-
-**Lecture.** Le trajet, l'attente et le service occupent trois périodes distinctes. Les fenêtres strictes n'interdisent pas d'arriver avant l'ouverture.
-
-Pour un véhicule k, soit $R_k$ son retour, nul s'il est inutilisé. La distance D somme les arcs parcourus ; la durée totale est $\sum_k R_k$ et le makespan est $\max_k R_k$. Deux solutions de même distance peuvent avoir des attentes différentes.
-
-### 2.2. Formulation PLNE complète et lecture des contraintes
-
-Nous formalisons le **même CVRPTW que celui du projet** : un dépôt unique, des véhicules homogènes, des livraisons indivisibles, une tournée au plus par véhicule et des trajets fixes et symétriques. L'attente avant ouverture est autorisée. Le début du service doit appartenir à la fenêtre du client et le retour doit respecter la fermeture du dépôt. Les bornes sont inclusives. Le trafic variable, les ramassages, les dépôts multiples et les flottes hétérogènes ne font pas partie des expériences réalisées.
+Nous formalisons le **CVRPTW statique étudié ici** : un dépôt unique, des véhicules homogènes, des livraisons indivisibles, une tournée au plus par véhicule et des trajets fixes et symétriques. L'attente avant ouverture est autorisée. Le début du service doit appartenir à la fenêtre du client et le retour doit respecter la fermeture du dépôt. Les bornes sont inclusives. Le trafic variable, les ramassages, les dépôts multiples et les flottes hétérogènes ne font pas partie des expériences réalisées.
 
 **Ensembles et indices.** Le nombre de clients est l'entier $n\ge1$. Leur ensemble est $C=\{1,\ldots,n\}$. Le nombre maximal de véhicules est l'entier $K\ge0$ et leur ensemble d'indices est $\mathcal K=\{1,\ldots,K\}$. Ainsi, $n$ et $K$ sont des nombres ; $C$ et $\mathcal K$ sont des ensembles. L'écriture $\forall i\in C$ signifie « pour chaque client i appartenant à C ». Elle ne désigne pas une boucle « tant que ».
 
@@ -121,11 +66,19 @@ La variable t est l'heure de **début du service**, pas l'heure d'arrivée. La v
 
 Enfin, $f_{ij}^k\in\mathbb R_{\ge0}$, pour chaque $(i,j)\in A$ et chaque $k\in\mathcal K$, est un flot artificiel assurant la connexion au dépôt. Il représente un outil mathématique, pas la marchandise dans le camion.
 
-**Objectif du benchmark : distance totale.**
+### 2.1. Fonction objectif : minimiser la durée totale
 
-$$\min D=\sum_{k\in\mathcal K}\sum_{(i,j)\in A}d_{ij}x_{ij}^k.$$
+$$\boxed{\min T=\sum_{k\in\mathcal K}R_k}.$$
 
-Nous additionnons les distances des arcs parcourus par tous les véhicules. Le nombre de camions est un maximum autorisé, sans priorité lexicographique ni coût fixe ajouté. La durée totale avec attente est étudiée séparément ; son coût ne doit pas être comparé à une référence en distance.
+Chaque véhicule part à zéro. $R_k$ est donc sa durée de tournée, retour au dépôt compris ; $R_k=0$ s’il n’est pas utilisé. Nous minimisons la somme des temps mobilisés, et non le retour du dernier véhicule $\max_kR_k$ ni le temps de calcul du programme.
+
+Pour une solution réalisable, cette durée se décompose en :
+
+$$T=\sum_{k\in\mathcal K}\sum_{(i,j)\in A}c_{ij}x_{ij}^k+\sum_{i\in C}s_i+\sum_{i\in C}w_i,$$
+
+où $w_i$ est l’attente avant le début du service, calculée à partir des horaires. La somme des services est constante pour une instance : elle est comptée mais ne constitue pas un gain que l’algorithme peut supprimer. Trajets et attentes peuvent varier. Les véhicules restent limités par la flotte disponible, sans priorité lexicographique ni coût fixe ajouté.
+
+### 2.2. Contraintes et lecture opérationnelle
 
 **C1 — Affecter chaque client exactement une fois.**
 
@@ -176,7 +129,7 @@ $$t_j\ge t_i+s_i+c_{ij}-M(1-x_{ij}^k)
 
 Pour chaque paire de clients distincts et chaque véhicule, emprunter l'arc de i vers j impose de terminer le service chez i puis le trajet avant de commencer chez j. Si cet arc n'est pas utilisé, M désactive l'implication. Une borne par arc pourrait renforcer une résolution exacte sans changer les règles métier.
 
-Le PLNE impose l'existence d'horaires réalisables, sans exiger systématiquement les horaires au plus tôt pour l'objectif distance. Une fois l'ordre fixé, `verify()` recalcule les horaires au plus tôt : arrivée = fin précédente + trajet ; début = maximum entre arrivée et ouverture ; fin = début + service.
+Les contraintes imposent des horaires réalisables ; minimiser la somme des retours sélectionne une durée minimale pour les tournées retenues. Une fois l'ordre fixé, `verify()` recalcule les horaires au plus tôt : arrivée = fin précédente + trajet ; début = maximum entre arrivée et ouverture ; fin = début + service.
 
 **C7 — Fixer le retour et respecter la fermeture du dépôt.**
 
@@ -208,520 +161,334 @@ Chaque client affecté consomme une unité reçue du dépôt. Le dépôt en éme
 
 **Pourquoi le grand M est valide.** Les bornes $0\le t_i,t_j\le H$ impliquent $t_i+s_i+c_{ij}-t_j\le H+s_{\max}+c_{\max}$. Cette valeur désactive donc la propagation d'un arc non utilisé. Des bornes par arc peuvent renforcer le solveur exact sans modifier les solutions autorisées. Le modèle contient de l'ordre de $Kn^2$ variables d'arcs/flots et contraintes : l'exact sert ici aux petits cas.
 
-## 3. Complexité et contrôle exact
+## 3. Complexité et vérification du modèle
 
-Pour une entrée rationnelle et un seuil B, la décision demande s'il existe une solution réalisable de distance au plus B. Un certificat donne les tournées ; couverture, charges, horaires et coût se vérifient en temps polynomial dans la taille binaire de l'entrée.
+Le problème généralise le TSP : avec un seul véhicule, des fenêtres larges, des services nuls et une capacité non bloquante, minimiser la durée revient à minimiser le coût d’un circuit du TSP. Cette réduction est polynomiale : l’optimisation est NP-difficile. Les contraintes de temps et de capacité rendent l’exploration pratique plus exigeante ; elles ne donnent pas une garantie d’optimalité à une métaheuristique.
 
-Un TSP symétrique à coûts positifs se réduit au problème : un véhicule, demandes unitaires, capacité n, services nuls, temps égaux aux coûts, horizon $H=(n+1)c_{\max}$ et fenêtres [0,H]. Les contraintes deviennent non bloquantes et les circuits de même coût se correspondent. La transformation est polynomiale : la décision générale est NP-complète et l'optimisation NP-difficile. Cela n'interdit pas de résoudre exactement certains petits cas.
+Le PLNE de `controle/plne.py` est réellement résolu par HiGHS avec le coût placé sur les variables de retour $R_k$. Sur dix petits cas de 3 à 5 clients, nous comparons son résultat à une énumération indépendante des tournées et partitions. Les deux méthodes prouvent les mêmes optimums en durée. Un cas comprend des arcs nuls pour vérifier que le flot empêche les cycles isolés.
 
-Le module `controle/plne.py` traduit réellement C1–C8 dans SciPy/HiGHS. Une borne inférieure, une solution réalisable et une preuve d'optimalité ont des statuts distincts. Les dix petits cas de contrôle sont conservés ; ils valident le modèle et ne constituent pas des références pour les grandes instances.
+| instance         |   n | optimum   | returned   | gap_pct   | calculation_s   |
+|:-----------------|----:|:----------|:-----------|:----------|:----------------|
+| exact-duration-0 |   3 | 69,400    | 69,400     | 0,000     | 0,138           |
+| exact-duration-1 |   4 | 77,600    | 77,600     | 0,000     | 0,137           |
+| exact-duration-2 |   5 | 107,100   | 107,100    | 0,000     | 0,654           |
+| exact-duration-3 |   3 | 86,200    | 86,200     | 0,000     | 0,057           |
+| exact-duration-4 |   4 | 88,200    | 88,200     | 0,000     | 0,147           |
+| exact-duration-5 |   5 | 106,100   | 106,100    | 0,000     | 0,788           |
+| exact-duration-6 |   3 | 96,400    | 96,400     | 0,000     | 0,089           |
+| exact-duration-7 |   4 | 74,900    | 74,900     | 0,000     | 0,138           |
+| exact-duration-8 |   5 | 109,100   | 109,100    | 0,000     | 0,652           |
+| exact-duration-9 |   3 | 66,000    | 66,000     | 0,000     | 0,041           |
 
-| clients | graine | statut | coût | borne | temps |
-| --- | --- | --- | --- | --- | --- |
-| 4 | 11 | optimal | 147,000 | 147,000 | 0,009 |
-| 4 | 22 | optimal | 113,200 | 113,200 | 0,004 |
-| 6 | 11 | optimal | 187,700 | 187,700 | 0,019 |
-| 6 | 22 | optimal | 178,500 | 178,500 | 0,018 |
-| 8 | 11 | optimal | 187,700 | 187,700 | 0,052 |
-| 8 | 22 | optimal | 181,700 | 181,700 | 0,123 |
-| 10 | 11 | optimal | 198,400 | 198,400 | 0,153 |
-| 10 | 22 | optimal | 190,300 | 190,300 | 0,391 |
-| 12 | 11 | time_limit | 242,700 | 223,300 | 8,074 |
-| 12 | 22 | optimal | 215,800 | 215,800 | 0,662 |
+Ces dix cas contrôlent la formulation ; ils ne démontrent pas l’optimalité des solutions à 100–1 000 clients.
 
-HiGHS certifie 9/10 optimums. La ligne à limite de temps conserve son incumbent et sa borne ; elle n'est pas appelée optimale.
+## 4. Algorithme et lien avec le code
 
-## 4. Méthodes et améliorations retenues
+### 4.1. Construire, perturber, intensifier et conserver le meilleur
 
-### 4.1. Construire un départ commun
+Le constructeur utilise des insertions regret-2 respectant capacité et horaires. Les surcoûts de trajet guident les positions ; parmi douze constructions complètes, la meilleure est sélectionnée selon sa **durée réelle**. La construction est mesurée et ajoutée au temps total.
 
-Le constructeur essaie douze insertions par regret-2 : une sans bruit, puis onze avec un classement perturbé. Pour un client i, si les deux meilleurs surcoûts réalisables dans des tournées distinctes sont $\Delta_i^{(1)}\le\Delta_i^{(2)}$, son regret est $r_i=\Delta_i^{(2)}-\Delta_i^{(1)}$. Les clients avec peu d'alternatives sont prioritaires. Le meilleur départ complet est gardé ; un échec de construction ne prouve pas une impossibilité.
+Notre ILS copie la solution courante, tente quatre perturbations réalisables, puis une descente locale échantillonnée et bornée. Les mouvements sont relocate, swap, inversion 2-opt et échange de fins de tournées 2-opt*. Chaque mouvement recalcule les horaires complets des tournées touchées : une économie d’arcs ne suffit pas à prouver une amélioration de durée.
 
-**Entrées :** instance, graine et nombre d'essais. **Sorties :** listes de tournées et coût/temps de construction. La recherche ne lit aucune BKS. Le même départ est donné aux méthodes comparées et son temps est publié séparément.
+La candidate est acceptée si sa durée reste dans une tolérance de 0,5 % autour du record. Toute amélioration stricte met à jour une copie de l’archive. Après cent cycles sans record, la recherche repart de cette archive. Le budget mural est contrôlé entre les blocs de mouvements ; un bloc commencé peut légèrement dépasser la limite, et le temps réel est publié.
 
-```python
-def construct(ins, seed=0, attempts=12):
-    """Construit plusieurs solutions initiales par insertion regret-2.
-    Le premier essai est déterministe, les suivants diversifient les insertions.
-    Renvoie les meilleures tournées réalisables et les mesures de construction ;
-    renvoie None comme solution si tous les essais échouent. Aucune BKS n’est lue."""
-    start = time.perf_counter()
-    rng = random.Random(seed)
-    best = math.inf
-    routes = None
-    for attempt in range(attempts):
-        a, l = encode([], ins)
-        if k.repair_fast(
-            a,
-            l,
-            len(l) - 1,
-            *arrays(ins),
-            2,
-            0.0 if attempt == 0 else 0.2,
-            rng.randrange(2**31)
-        ):
-            count, cost = k.total(a, l, *arrays(ins))
-            if count >= 0 and cost < best:
-                best = cost
-                routes = decode(a, l)
-    return routes, dict(
-        seconds=time.perf_counter() - start,
-        attempts=attempts,
-        cost=best / 10 if routes is not None else None,
-    )
-```
+Le recuit utilise les mêmes mouvements et le même évaluateur temporel. Une hausse de durée $\Delta>0$ peut être acceptée avec $\exp(-\Delta/\theta)$ ; la température décroît géométriquement avec le temps consommé. L’archive réalisable reste distincte de l’état courant.
 
-**Lecture du code.** Chaque essai commence avec des tableaux vides. `repair_fast` est utilisé uniquement pour construire cette première solution ; le meilleur coût réalisable est copié. Les recherches suivantes utilisent des mouvements sur des tournées complètes, sans retirer des clients dans une réserve à réparer.
+### 4.2. Évaluer effectivement la durée
 
-### 4.2. Recherche locale itérée et recuit directs
-
-L'ILS copie la courante, cherche jusqu'à quatre perturbations réalisables puis applique une recherche locale bornée. Elle accepte la candidate si $D(S')\le1{,}005D(S^*)$, où $S^*$ est le record. Toute amélioration stricte met à jour une copie de l'archive. Après cent cycles sans record, elle repart de cette archive.
-
-Le recuit propose relocate, swap, inversion 2-opt ou échange de fins 2-opt*. Après contrôle de faisabilité, avec $\Delta=D(S')-D(S)$ et $T>0$ :
-
-$$P(\mathrm{acceptation})=1\text{ si }\Delta\le0,\qquad P=\exp(-\Delta/T)\text{ sinon.}$$
-
-Une archive indépendante protège le record. Avec un budget local b et le temps consommé $\tau$, le refroidissement est $T(\tau)=T_0(0{,}005)^{\min(1,\tau/b)}$. Les modes de température et de voisinage ont été comparés, sans supposer qu'un refroidissement plus froid améliore toujours les résultats.
-
-![Figure 4 — Mouvements directs](figures/figure_04.png)
-
-**Lecture.** Les mouvements changent ordre ou affectation. Les tournées touchées sont réévaluées ; une baisse géométrique ne compense jamais une surcharge ou un retard.
-
-**`walk` :** reçoit les tableaux et paramètres, propose les mouvements et renvoie le meilleur état ainsi que des compteurs. Le passage ci-dessous est extrait du vrai corps de fonction.
+`route_eval` reçoit une tournée, les matrices, demandes, services et fenêtres ; il renvoie la faisabilité, la durée et la charge. La ligne `max` compte l’attente ; la dernière addition compte le retour au dépôt. Les unités internes sont des dixièmes ; les sorties affichées sont divisées par dix.
 
 ```python
-        delta = ca - costs[a] + (cb - costs[b] if b != a else 0.0)
-        valid += 1
-        # Une dégradation peut aider à sortir d’un optimum local, mais jamais au prix de la faisabilité.
-        take = mode == 0 or delta <= 1e-9
-        if not take and mode == 1:
-            take = np.random.random() < math.exp(
-                -min(745.0, delta / max(temperature, 1e-12))
-            )
+@njit(cache=True)
+def route_eval(seq, length, travel, distance, demand, service, early, late, capacity, horizon):
+    """Renvoie faisabilité, durée de la tournée et charge, en unités internes.
+
+    distance conserve la signature commune des mouvements ; elle n'entre pas
+    dans le coût. Le retour au dépôt et toutes les attentes sont comptabilisés.
+    """
+    clock = load = 0.0
+    previous = 0
+    for pos in range(length):
+        client = seq[pos]
+        load += demand[client]
+        clock = max(clock + travel[previous, client], early[client])
+        if clock > late[client] + 1e-8 or load > capacity + 1e-8:
+            return False, 0.0, load
+        clock += service[client]
+        previous = client
+    if length:
+        clock += travel[previous, 0]
+    return clock <= horizon + 1e-8, clock, load
 ```
 
-**Lecture.** Le coût marginal est calculé après les contrôles. Un gain est accepté ; une hausse est tirée selon Metropolis. Les compteurs distinguent les refus par capacité, horaires, structure et acceptation probabiliste. Ils concernent les propositions directes, pas tous les candidats internes de recherche locale.
+### 4.3. Hybridation avec un moteur externe
 
-### 4.3. Optimiser des groupes de tournées
+Le profil hybride transmet le résultat de notre ILS au HGS de PyVRP 0.12.2, sans lire de référence et sans modifier les contraintes. Le HGS maintient une population de solutions, sélectionne des parents par tournois, effectue un croisement SREX et applique une recherche locale comprenant notamment SwapStar. Des états de travail pénalisés peuvent être explorés ; seules des solutions finales réalisables sont conservées.
 
-Le diagnostic v1 montrait des mouvements rarement réalisables et une difficulté sur R1_10_1. La révision optimise des groupes de tournées géographiquement voisines. Elle conserve les demandes, capacités, services, fenêtres, distances et temps originaux. Les dépôts de chaque groupe représentent le même dépôt physique. La flotte disponible tient compte des tournées laissées à l'extérieur.
+Le coût du véhicule est configuré avec `unit_distance_cost=0`, `unit_duration_cost=1` et `start_late=0`. Ce dernier paramètre fixe le départ à zéro : décaler le départ pour masquer l’attente ne correspondrait pas au modèle. Le coût retourné est confronté à la somme des durées recalculées par notre contrôleur indépendant.
 
-L'ILS adapte la taille cible aux longueurs des tournées : pour m tournées utilisées, $G=\max(120,\min(360,8\lceil n/m\rceil))$. Le groupe est une sélection de tournées entières, non une garantie de cardinalité exacte. Sur les petites instances, la recherche reste directe. Le recuit emploie la configuration sélectionnée sur le développement.
+Le partage évalué est 5 s d’ILS puis 5 s de HGS. Ce réglage constitue une base expérimentale pour l’objectif durée ; une configuration performante en distance n’est pas automatiquement validée en durée.
 
-Un groupe contient au plus douze tournées. La sous-recherche dispose de 0,2 seconde par appel et peut utiliser jusqu'à trois véhicules supplémentaires, sous la flotte globale restante. Ces limites règlent le voisinage et le travail de recherche ; elles n'autorisent aucune violation du problème initial. La vérification globale contrôle à nouveau le nombre total de véhicules.
+![Figure 3 — La recherche se partage dix secondes ; construction et préparation externe s’ajoutent au temps de calcul total.](figures/figure_03.png)
 
-![Figure 5 — Recherche dans des groupes de tournées](figures/figure_05.png)
+### 4.4. Modifications et vérifications
 
-**Lecture.** Une sous-recherche modifie toutes les tournées choisies avec des solutions complètes. Les clients sont ensuite remappés vers leurs identifiants originaux. Le contrôleur vérifie la solution globale ; elle est remplacée seulement si la distance diminue. Aucun appel de réparation n'est utilisé pendant cette phase.
-
-**`solve` :** reçoit instance, budget, graine et départ éventuel. Il garde une archive, lance les recherches de groupes sous le budget global puis retourne une solution vérifiée. L'extrait montre la réintégration et l'acceptation réelle.
-
-```python
-        proposal = [
-            route for index, route in enumerate(routes) if index not in selected_set
-        ]
-        proposal.extend(
-            [[mapping[client] for client in route] for route in result["routes"]]
-        )
-        # Un sous-problème valide ne suffit pas : la solution complète est contrôlée après réintégration.
-        candidate = verify(proposal, ins)
-        if not candidate["valid"]:
-            raise AssertionError(candidate["errors"])
-        distance = candidate["distance"] / 10
-        # L’archive globale ne remplace son résultat que par une amélioration de distance.
-        if distance < best - 1e-8:
-            routes, best = proposal, distance
-            improvements += 1
-```
-
-### 4.4. Un mouvement complet sur un petit exemple
-
-```text
-[[1, 2], [3, 4]] -> [[1, 3], [4, 2]]
-Distance avant : 45.1 ; après : 26.0
-```
-
-![Figure 6 — Un mouvement exécuté sur un petit cas](figures/figure_06.png)
-
-## 4.5. Hybridation retenue et attribution du moteur
-
-Notre ILS produit une solution initiale de qualité, puis le HGS de PyVRP explore plusieurs solutions au sein d’une population, avec croisement et recherche locale. La solution ILS est transmise au moteur externe sans modifier demandes, capacité, fenêtres, distances, temps ni flotte. L’adaptateur refuse toute conversion qui arrondirait une donnée non entière.
-
-Les recherches se partagent le budget à parts égales. À 1 000 clients : 60 s d’ILS puis 60 s de HGS. La construction et la préparation externe sont comptées en plus dans le temps réel. La graine du HGS vaut celle du pipeline + 10 000. Aucune BKS n’est transmise à un moteur.
-
-Le moteur génétique utilise des pénalités pour explorer des états de travail éventuellement irréalisables. Ces états ne sont pas des solutions livrées. Notre contrôleur indépendant exige une couverture unique, les capacités, les débuts de service dans les fenêtres, la borne de flotte et le retour au dépôt avant de publier un résultat. La fin du HGS doit aussi conserver au moins la qualité de la solution ILS qui lui a été transmise.
-
-L’intégration améliore surtout la diversification des affectations de clients. C’est une interprétation du fonctionnement : les mesures ci-dessous démontrent le gain de la combinaison, pas l’effet isolé de chaque mécanisme interne de PyVRP.
-
-![Intégration et séparation des responsabilités](../livraison/ils_v7_figures/pipeline.png)
-
-Le passage ci-dessous est extrait de notre fichier `algo/hybrid_reference.py`, et non présenté comme une implémentation propre du HGS.
-
-
-#### 4.5.1. Fonctionnement du composant génétique utilisé
-
-Une solution est une liste ordonnée de tournées. Notre intégration transmet au HGS le meilleur résultat de l’ILS et complète son initialisation par des solutions aléatoires. Le moteur conserve des sous-populations réalisables et irréalisables : ces dernières servent à la recherche, mais seules des solutions complètes et réalisables peuvent être publiées.
-
-À chaque itération, deux parents sont sélectionnés par tournois binaires, avec un contrôle de diversité entre eux. Leur sélection combine qualité et diversité de la population. Le croisement **SREX** (*Selective Route Exchange*) échange des tournées entre les parents. Le descendant peut être incomplet ; la recherche du moteur traite les clients manquants et améliore l’ordre et l’affectation des visites. Les opérateurs activés comprennent des déplacements et échanges de clients ou de chaînes courtes, des échanges de fins de tournées et `SwapStar`.
-
-Pour une solution complète de travail, l’évaluation pénalisée combine la distance et les violations :
-
-$$\widetilde D(S)=D(S)+\lambda_Q E_Q(S)+\lambda_T W(S).$$
-
-$E_Q$ somme les excès de capacité des tournées. $W$ mesure le décalage temporel, ou *time warp*, utilisé dans l’exploration pénalisée : il ne s’agit pas d’une autorisation de retard dans la solution finale. Les poids sont ajustés selon la fréquence de respect de chaque dimension de contrainte. Une recherche supplémentaire avec pénalités renforcées peut rendre un descendant réalisable. L’archive indépendante garde la meilleure solution réalisable et notre contrôleur recalcule ses contraintes sur les données originales.
-
-| Paramètre de PyVRP 0.12.2 | Valeur utilisée | Rôle |
+| Modification | Motif | Vérification |
 |---|---|---|
-| Taille minimale et seuil de réduction d’une sous-population | 25 et 65 | Maintenir un ensemble de solutions et sélectionner les survivants |
-| Parents | Tournois de deux candidats | Favoriser qualité et diversité |
-| Voisinage local | 40 voisins par défaut | Limiter le nombre de mouvements évalués ; 60 et 80 sont testés séparément |
-| Cible de faisabilité par dimension | 0,43, tolérance 0,05 | Adapter les pénalités toutes les 50 observations |
-| Recherche de remise en faisabilité | Probabilité 0,8, renforcement ×12 | Traiter un descendant irréalisable |
-| Renouvellement de la population sans nouveau record | Seuil de 20 000 itérations | Diversifier si ce seuil est atteint ; l’archive reste conservée |
+| Objectif PLNE sur les retours $R_k$ | Minimiser la durée cumulée | Concordance de dix optimums avec une énumération indépendante |
+| Évaluateur temporel des mouvements | Inclure attente, service et retour | Deux ordres de même trajet mais de durées 34/28 sont distingués |
+| Sélection initiale et archive en durée | Éviter une acceptation restée en distance | Coûts confrontés à `verify`, archive non dégradée |
+| HGS : coût durée et départ fixé | Aligner le moteur externe sur le modèle | Test d’une attente obligatoire que le départ ne peut masquer |
+| Nouvelles références temporelles | Éviter de renommer les gaps distance | Tournées de référence réévaluées, qualification explicite |
+| Nouvelle campagne et statistique descriptive | Mesurer l’effet réel de la méthode | Données individuelles, graines, sources figées et effectifs conservés |
 
-L’arrêt principal est le budget de temps attribué à la phase HGS. Le seuil d’itérations ne signifie pas qu’un renouvellement a effectivement eu lieu dans chaque essai court. La diversité provient des initialisations aléatoires, des croisements, du contrôle des parents et de la sélection des survivants.
+L’implémentation propre de l’ILS, les adaptateurs et la vérification sont dans le projet ; le moteur génétique externe appartient à PyVRP. Les commentaires du code expliquent les fonctions et les points sensibles.
 
-Cette description correspond au [code source de PyVRP 0.12.2](https://github.com/PyVRP/PyVRP/tree/v0.12.2/pyvrp), notamment `GeneticAlgorithm`, `Population`, `PenaltyManager` et SREX. Ces mécanismes appartiennent au moteur externe. Notre code réalise leur intégration avec l’ILS, le partage du temps, les contrôles et les expériences.
+## 5. Protocole et références des benchmarks en durée
 
-L’extrait suivant présente le code d’intégration développé dans le projet.
+Nous utilisons les 56 Solomon à 100 clients et les 300 Gehring–Homberger de 200, 400, 600, 800 et 1 000 clients : **356 instances**. Les matrices de temps conservent la convention des fichiers DIMACS : arcs euclidiens tronqués à une décimale, horaires et services à la même échelle. Les durées sont exprimées en unités du benchmark, pas en minutes réelles démontrées.
 
+La campagne de couverture comporte **472 pipelines hybrides** : une graine sur toutes les instances, une seconde à 100/1 000 clients. Le lot de stabilité compare ILS, recuit et hybride sur C101, R202 et R2_10_8, avec **20 graines par couple instance/méthode**, soit 180 résolutions. Six résolutions hybrides appartiennent déjà à la couverture : le total distinct est **646**, pas 652. Toutes sont exécutées pour l’objectif durée.
 
-```python
-    first = ils(
-        ins,
-        production_settings(
-            "ils", seconds=cfg.search_seconds * cfg.ils_fraction, seed=cfg.seed
-        ),
-        initial,
-    )
-    # Phase externe : même instance et même objectif, avec une graine distincte.
-    second = external(
-        ins,
-        cfg.search_seconds * (1 - cfg.ils_fraction),
-        cfg.seed + 10000,
-        first["routes"],
-    )
-    if second["status"] != "feasible":
-        raise RuntimeError("External phase failed; its failure must not be hidden")
-    # La solution finale doit rester réalisable et au moins aussi bonne que celle transmise.
-    checked = verify(second["routes"], ins)
-    if not checked["valid"] or second["cost"] > first["cost"] + 1e-7:
-        raise AssertionError("External phase must preserve its feasible incumbent")
-```
+Chaque méthode dispose de dix secondes de recherche. Construction et préparation externe sont comptées en plus ; la compilation est préchauffée séparément. Les essais sont répartis sur six processus à une affinité CPU enregistrée, avec les bibliothèques de calcul limitées à un thread. Graines, ordre, versions et sources exécutées sont figés dans le protocole.
 
-**Lecture.** La première phase est notre ILS. La seconde appelle explicitement la bibliothèque externe avec les tournées obtenues. Le contrôle final protège les contraintes et l’incumbent. Les deux phases et leurs temps restent visibles dans le résultat.
+Les trois cas répétés représentent un cas groupé, un cas aléatoire et une grande instance historiquement difficile. Ce choix ne rend pas le lot représentatif de toutes les situations. Les méthodes reçoivent la même construction pour une même instance et graine ; celle-ci est effectivement recalculée et facturée dans chaque résolution.
 
-## 4.6. Registre des améliorations et décisions
+### 5.1. Ce que signifie la référence
 
-Le développement a progressé par étapes : construire une solution réalisable, améliorer sa distance par ILS, tester les voisinages et les accélérations, puis intégrer un moteur génétique pour diversifier les affectations. Chaque modification a été évaluée sur un protocole identifié. Une modification correcte peut coûter davantage qu’elle ne rapporte ; nous distinguons donc les variantes retenues, les résultats négatifs et les expériences encore exploratoires.
+Les fichiers `.sol` DIMACS donnent des tournées de référence sélectionnées pour la **distance**. Nous recalculons leur durée, avec les mêmes services, fenêtres et départs à zéro. Ce plan est un **témoin réalisable**, dont l’optimalité en durée n’est pas établie. Son utilisation n’introduit pas de connaissance dans le solveur : il est lu après la résolution.
 
-| Modification | But et fonctionnement | Résultat observé | Décision |
-|---|---|---|---|
-| Groupes adaptatifs de tournées complètes et compilation Numba | Limiter le coût des mouvements et conserver les données originales | Base de l’ILS optimisée et de la première phase hybride | Retenu |
-| Relocate, swap, 2-opt, 2-opt* et chaînes courtes | Modifier ordre et affectation, puis contrôler les tournées | Opérateurs de notre recherche locale | Retenus |
-| Voisinage spatial et temporel, SWAP* dans notre ILS | Explorer des voisins et échanges plus riches | Pas de gain moyen confirmé au budget testé | Options expérimentales de l’ILS |
-| RVND avec échanges de blocs et perturbations variables | Changer plus fortement la structure des tournées | Développement : 11,64 % contre 6,61 % pour la référence du même lot | Non retenu par défaut |
-| Archive de tournées et partitionnement restreint | Recombiner des tournées réalisables par PLNE | Validation v5 : 10,355 % contre 10,127 % à 40 s ; pas de gain confirmé | Option, sans prétention d’optimalité globale |
-| Cache exact des préfixes | Réévaluer seulement le suffixe modifié | Accélération dépendante des cas ; le gain de qualité n’est pas confirmé | Option testée différentiellement |
-| Cache et groupes temporels combinés | Accélérer et choisir des groupes compatibles | Confirmation v6 : 6,164 % contre 6,065 % sur le même lot | Non retenu par défaut |
-| Coût guidé et pénalités sur une trajectoire propre | Sortir des minima locaux sans changer le problème final | Coût guidé : 10,011 % contre 9,692 % sur trois cas ; variantes pénalisées irrégulières | Expériences conservées, non retenues |
-| Construction puis HGS externe sans optimisation ILS | Ajouter une population génétique | Moyenne 6,624 % à 60 s ; un essai à 41,238 % | Initialisation insuffisante pour notre cible |
-| Notre ILS puis HGS externe | Donner un point de départ amélioré à la population | Comparaison appariée à 120 s : 4,253 % contre 9,036 % | Combinaison recommandée et disponible |
-| Couverture complète et contrôle indépendant | Vérifier la généralisation à toutes les tailles et publier chaque essai | Campagne finale de 472 pipelines sur 356 instances | Preuve expérimentale élargie ; aucun résultat défavorable retiré |
+L’écart au témoin est :
 
-Les valeurs de lignes différentes ne s’interprètent pas comme un classement à budget égal : les lots et durées changent. Les protocoles et résultats complets v5, v6 et v7 sont conservés dans leurs annexes. Les archives cumulant de nombreuses trajectoires ne remplacent pas les résolutions de la campagne finale.
+$$E=100\frac{T_{\mathrm{obtenu}}-T_{\mathrm{témoin}}}{T_{\mathrm{témoin}}}.$$
 
-Les essais SWAP* de cette ligne concernent notre variante d’ILS. Le moteur externe PyVRP possède sa propre implémentation `SwapStar`, déjà activée dans la phase HGS retenue ; il s’agit de deux composants distincts.
+Un écart négatif signifie que la solution est plus courte en durée que ce témoin ; cela ne signifie pas qu’un optimum a été battu. Nous ne présentons pas cet indicateur comme un gap à une BKS temporelle. Les anciens pourcentages calculés en distance ne qualifient pas l’objectif actuel.
 
-Pour poursuivre ce suivi, le journal `docs/JOURNAL_EVOLUTION_ALGORITHME.md` associe à chaque changement son objectif, les paramètres modifiés, le lot, les graines, le budget, les mesures et la décision. Toute nouvelle modification de l’algorithme doit être accompagnée d’une nouvelle entrée et d’une expérience distincte ; une campagne figée n’est pas réécrite.
+### 5.2. Borne inférieure et véritable gap
 
+Pour les petits cas, une preuve d’optimalité permet un véritable gap $100(T/T^*-1)$. Pour les grandes instances, nous utilisons aussi une borne simple :
 
-## 5. Protocole final et définition des statistiques
+$$L=\sum_i s_i+\operatorname{MST}(G,c)\le T^*.$$
 
-### 5.1. Couverture, répétitions et budget
+L’union des tournées rejoint le dépôt et tous les clients ; son temps de trajet est au moins celui d’un arbre couvrant minimal. L’attente est non négative et les services sont obligatoires. Ainsi $100(T/L-1)$ borne supérieurement le gap à l’optimum, mais peut être très pessimiste. Il ne s’agit pas d’une BKS. Les trois notions — optimum prouvé, borne inférieure et plan témoin — restent séparées dans les tableaux.
 
-Les données et références proviennent de la révision figée `7474b068a8effa7f39448b241314b615c9271525` du dépôt PyVRP/Instances. Le format est lu par le projet ; VRPLIB désigne notamment une bibliothèque et des formats, tandis que Solomon et Gehring–Homberger sont les jeux d’instances. Il existe 56 cas Solomon à 100 clients et 60 cas par taille Gehring–Homberger de 200 à 1 000 clients, soit 356 cas distincts.
+## 6. Résultats et statistique descriptive
 
-Les budgets ci-dessous sont fixés avant la campagne complète. Les six processus utilisent chacun un cœur et un seul thread. Les fonctions Numba sont préchauffées avant les mesures. Les temps réels comprennent les deux recherches, la construction et la préparation externe ; ils dépendent du matériel et ne sont pas des garanties de latence sur un autre ordinateur.
+### 6.1. Couverture, qualité temporelle et temps de calcul
 
-| clients | instances | graines | recherche_totale_s | ILS_s | HGS_s |
-| --- | --- | --- | --- | --- | --- |
-| 100 | 56 | 2101 et 2102 | 10,000 | 5,000 | 5,000 |
-| 200 | 60 | 2101 | 16,000 | 8,000 | 8,000 |
-| 400 | 60 | 2101 | 32,000 | 16,000 | 16,000 |
-| 600 | 60 | 2101 | 48,000 | 24,000 | 24,000 |
-| 800 | 60 | 2101 | 64,000 | 32,000 | 32,000 |
-| 1000 | 60 | 2101 et 2102 | 120,000 | 60,000 | 60,000 |
+Les 646 résolutions comprennent 646 solutions réalisables et 0 échecs. Le tableau de couverture donne le même poids à chaque instance après moyenne de ses graines disponibles. L’écart moyen au plan témoin vaut **-17.169 %** et le gain moyen depuis la construction **13.522 %**. Ces deux indicateurs ont des références différentes.
 
-Une répétition résout de nouveau la même instance avec une autre graine. Les 116 instances à 100 et 1 000 clients ont deux graines ; les tailles intermédiaires ont une graine de couverture. Nous ne calculons pas d’écart-type entre graines lorsqu’il n’existe qu’une observation.
+|   Clients |   Instances |   Essais |   Réalisables | Durée (u.t.)   | Écart témoin (%)   | Gain initial (%)   | Calcul (s)   |
+|----------:|------------:|---------:|--------------:|:---------------|:-------------------|:-------------------|:-------------|
+|       100 |          56 |      112 |           112 | 4579,108       | -17,916            | 13,706             | 10,044       |
+|       200 |          60 |       60 |            60 | 11330,003      | -25,192            | 18,709             | 10,143       |
+|       400 |          60 |       60 |            60 | 25359,123      | -20,323            | 16,795             | 10,558       |
+|       600 |          60 |       60 |            60 | 48790,418      | -17,716            | 14,811             | 11,336       |
+|       800 |          60 |       60 |            60 | 80274,655      | -13,451            | 11,137             | 12,611       |
+|      1000 |          60 |      120 |           120 | 119817,274     | -8,467             | 5,988              | 14,279       |
 
-Le nombre de clients décrit la taille d’un problème ; le nombre d’instances décrit des jeux de données différents ; le nombre d’essais décrit les résolutions avec leurs graines. Ainsi, une instance à 1 000 clients ne signifie pas 1 000 essais. Un pipeline final contient deux phases de recherche, et compte ici pour un essai complet.
+Les moyennes favorables ne suppriment pas les cas difficiles. Voici les six instances dont la durée moyenne dépasse le plus celle du plan témoin ; elles restent dans tous les tableaux de leur périmètre.
 
-Les 24 pipelines historiques réutilisés correspondent aux mêmes instances, paramètres, graines et deux phases de 60 s. Leurs composants de recherche ont les mêmes empreintes ; l’origine des fichiers et leur temps complet sont vérifiés. Ils ne sont pas comptés comme de nouveaux calculs. La campagne apporte 448 nouveaux pipelines. Les sorties sont conservées, même en cas d’échec.
+| instance   |    n | mean_duration   | reference_duration   | mean_delta_reference_pct   | mean_calculation_s   |
+|:-----------|-----:|:----------------|:---------------------|:---------------------------|:---------------------|
+| C1_10_6    | 1000 | 167151,950      | 133754,700           | 24,969                     | 14,510               |
+| C1_8_1     |  800 | 118110,800      | 97704,100            | 20,886                     | 12,607               |
+| C2_10_7    | 1000 | 128157,000      | 106940,000           | 19,840                     | 14,004               |
+| C2_10_2    | 1000 | 126639,150      | 109395,800           | 15,762                     | 14,420               |
+| C1_6_1     |  600 | 78992,900       | 68564,200            | 15,210                     | 11,290               |
+| C2_10_1    | 1000 | 122295,950      | 106856,600           | 14,449                     | 13,862               |
 
-### 5.2. Gap et moyenne générale
+Le pire essai individuel est C1_10_6, graine 4102 : **+26.767 %** au témoin. Il ne doit pas être confondu avec une moyenne d’instance.
 
-Pour une distance vérifiée D et la référence compatible B de la même instance :
+Ces écarts positifs montrent une marge d’amélioration au budget de dix secondes. Ils ne sont ni cachés par la moyenne générale ni transformés en zéros. Le témoin reste une solution réalisable et non un optimum démontré en durée.
 
-$$g=100\frac{D-B}{B}.$$
+![Figure 4 — Durées avant/après à dix secondes de recherche. Les moyennes par taille ne sont pas une preuve de complexité asymptotique.](figures/figure_04.png)
 
-Les distances suivent la convention DIMACS : chaque arc euclidien est tronqué à une décimale, par calcul entier `floor(10 × distance)` en interne. La même convention, les mêmes fenêtres, demandes et borne de flotte sont requises pour une comparaison. Une BKS est une meilleure solution connue, pas nécessairement un optimum prouvé. Dans notre objectif de distance seule, la flotte est bornée mais n’a pas de priorité lexicographique.
+![Figure 5 — Décomposition des durées finales : trajets, attentes et services ; ces derniers sont constants pour une instance.](figures/figure_05.png)
 
-**Exemple pédagogique.** Une distance 1 040 face à une référence 1 000 donne un gap de 4 %. Deux instances à 0 % et 8 % donnent une moyenne de 4 %, bien que l’une dépasse 6 %. Cet exemple explique la formule ; il ne constitue pas une mesure de la campagne.
+### 6.2. Population, variables et données tabulaires
 
-Pour une couverture entièrement réalisable, soit I le nombre d’instances et r_i le nombre de résultats réalisables pour l’instance i. Nous publions le gap moyen de cette instance puis une moyenne donnant le même poids à chaque instance :
+Une ligne d’essai représente une instance, une graine, une méthode et un budget. Le nom de l’instance et la méthode sont qualitatifs ; le nombre de clients est discret ; durée, attente et temps de calcul sont quantitatifs ; la faisabilité est booléenne. Une graine sert à identifier une exécution, pas à expliquer causalement sa performance.
 
-$$\bar g_i=\frac{1}{r_i}\sum_{s=1}^{r_i}g_{i,s},\qquad \bar g_{instances}=\frac{1}{I}\sum_{i=1}^{I}\bar g_i.$$
+Les cases manquantes des indicateurs de qualité d’un échec ne valent jamais zéro. La colonne d’erreur est normalement vide pour une réussite. Nous contrôlons les colonnes indispensables sur les essais réalisables avant de calculer les statistiques.
 
-Nous affichons aussi la moyenne de tous les essais :
+| instance | seed | method | n | valid | duration | reference_duration | total_s |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| C101 | 4101 | hybrid | 100 | True | 9827,300 | 9827,300 | 10,035 |
+| C101 | 4101 | ils | 100 | True | 9827,300 | 9827,300 | 10,028 |
+| C101 | 4101 | sa | 100 | True | 9961,000 | 9827,300 | 10,030 |
+| C101 | 4102 | hybrid | 100 | True | 9827,300 | 9827,300 | 10,035 |
+| C101 | 4102 | ils | 100 | True | 9827,300 | 9827,300 | 10,028 |
 
-$$\bar g_{essais}=\frac{\sum_i\sum_s g_{i,s}}{\sum_i r_i}.$$
+| type |
+| --- |
+| object |
+| int64 |
+| object |
+| int64 |
+| bool |
+| float64 |
+| float64 |
+| float64 |
 
-Ces deux pondérations diffèrent ici, car certaines instances ont deux graines et d’autres une seule. La première évite de donner deux fois plus de poids à une instance répétée. La moyenne équilibrée par taille constitue encore une autre pondération et est identifiée séparément.
+| manquants |
+| --- |
+| 0 |
+| 0 |
+| 0 |
+| 0 |
+| 0 |
+| 0 |
+| 0 |
+| 0 |
 
-Les échecs restent dans le dénominateur du taux de faisabilité ; ils n’ont pas de gap de distance, et ne valent jamais zéro. En présence d’un échec, une moyenne sur les seuls résultats réalisables est conditionnelle et ne prouve pas la réussite sur tout le catalogue. Les tableaux précisent cette couverture.
+| mean_duration | mean_waiting | mean_calculation_s |
+| --- | --- | --- |
+| 356,000 | 356,000 | 356,000 |
+| 48850,333 | 6115,652 | 11,512 |
+| 42863,943 | 12202,627 | 1,538 |
+| 1744,850 | 0,000 | 10,035 |
+| 9827,300 | 36,675 | 10,143 |
+| 37739,650 | 495,700 | 11,110 |
+| 79917,875 | 5144,525 | 12,607 |
+| 167151,950 | 70033,650 | 15,226 |
 
-Les écarts-types et boîtes à moustaches entre instances décrivent la difficulté du catalogue. Ils ne sont pas des intervalles de confiance sur de futures graines. Deux graines ne suffisent pas pour une conclusion statistique forte sur chaque cas ; une seule ne permet pas de mesurer la variance entre répétitions.
+### 6.3. Position, dispersion et quantiles
 
+Pour N valeurs observées, la moyenne est $\bar x=N^{-1}\sum x_i$. La médiane partage la série ordonnée en deux moitiés ; elle est moins sensible que la moyenne aux valeurs élevées. Le mode est une valeur la plus fréquente ; pour une série continue sans répétition, il peut ne pas y avoir de mode distinct utile.
 
-## 6. Résultats complets et interprétation
+Nous employons la variance descriptive $v=N^{-1}\sum(x_i-\bar x)^2$ et l’écart-type $\sigma=\sqrt v$, avec `ddof=0`. La variance corrigée divisée par N−1 répondrait à une autre convention et n’est pas mélangée ici. L’étendue vaut maximum moins minimum ; l’IQR vaut $Q_3-Q_1$. Les quantiles sont calculés par interpolation linéaire Pandas, convention annoncée pour rendre les résultats reproductibles.
 
-### 6.1. Les deux périmètres étudiés
+Les tableaux suivants portent sur les **vingt répétitions d’une même instance et méthode**. Les colonnes détaillées, y compris les quantiles 2,5 %, 10 %, 30 %, 70 %, 90 % et 97,5 %, sont conservées en CSV.
 
-| périmètre | instances | essais | réalisables | échecs | gap_instances_pct | gap_essais_pct |
-| --- | --- | --- | --- | --- | --- | --- |
-| Catalogue complet : poids égal par instance | 356 | 472 | 472 | 0 | 2,078 | 2,045 |
-| 100 et 1 000 clients, deux graines | 116 | 232 | 232 | 0 | 1,946 | 1,946 |
-| Catalogue complet, seule graine commune 2101 | 356 | 356 | 356 | 0 | 2,083 | 2,083 |
+| instance   | method          |   n | mean      | median    | std      | minimum   | q0.25     | q0.75     | maximum    | iqr      |
+|:-----------|:----------------|----:|:----------|:----------|:---------|:----------|:----------|:----------|:-----------|:---------|
+| C101       | ILS durée + HGS |  20 | 9827,300  | 9827,300  | 0,000    | 9827,300  | 9827,300  | 9827,300  | 9827,300   | 0,000    |
+| C101       | ILS durée       |  20 | 9854,040  | 9827,300  | 53,480   | 9827,300  | 9827,300  | 9827,300  | 9961,000   | 0,000    |
+| C101       | Recuit durée    |  20 | 9960,965  | 9915,800  | 140,925  | 9827,300  | 9827,300  | 10073,600 | 10195,900  | 246,300  |
+| R202       | ILS durée + HGS |  20 | 2377,305  | 2376,750  | 10,907   | 2361,400  | 2367,875  | 2386,900  | 2399,800   | 19,025   |
+| R202       | ILS durée       |  20 | 2651,955  | 2659,650  | 138,383  | 2407,500  | 2605,375  | 2739,850  | 2865,600   | 134,475  |
+| R202       | Recuit durée    |  20 | 2488,380  | 2476,100  | 51,308   | 2409,000  | 2474,500  | 2488,925  | 2697,700   | 14,425   |
+| R2_10_8    | ILS durée + HGS |  20 | 87594,075 | 85859,000 | 5803,493 | 80273,000 | 83718,000 | 89652,825 | 100546,600 | 5934,825 |
+| R2_10_8    | ILS durée       |  20 | 93806,260 | 93459,750 | 1806,187 | 90535,300 | 92558,050 | 95147,150 | 98220,100  | 2589,100 |
+| R2_10_8    | Recuit durée    |  20 | 88610,995 | 88195,800 | 2647,555 | 82803,900 | 86916,400 | 90490,425 | 95106,800  | 3574,025 |
 
-Le bilan principal porte sur les **356 instances représentées sur 356**. Sa moyenne est **2.078 %**, et non une moyenne calculée seulement sur les cas sous 5 ou 6 %. La moyenne brute des 472 essais réalisables est 2.045 %. La vérification avec la seule graine commune 2101 donne 2.083 %, sans surreprésentation des cas répétés.
+Sur C101, les vingt résultats hybrides ont une moyenne de 9827.300 et une médiane de 9827.300 u.t., avec un écart-type de 0.000. Cette stabilité observée ne garantit pas tous les essais futurs. Sur R2_10_8, la moyenne vaut 87594.075 contre une médiane de 85859.000 u.t. ; l’histogramme permet de lire l’influence des durées les plus élevées.
 
-Le sous-ensemble 100/1 000 clients a une moyenne de **1.946 %**. Il contient les 56 Solomon et les 60 grandes instances, sans sélection de familles. Les deux périmètres se recouvrent : leurs effectifs ne s’additionnent pas pour compter des instances distinctes.
-
-Le changement de moyenne par rapport au bilan antérieur à 4,253 % ne constitue pas, à lui seul, une nouvelle amélioration algorithmique : le lot est élargi et contient des difficultés différentes. Le gain attribuable à la combinaison est étudié séparément dans la comparaison appariée de la section 6.3.
-
-### 6.2. Décomposition par taille
-
-| clients | instances | attempts | valid | failures | gap_moyen_pct | pire_gap_pct | essais_sous_5 | essais_sous_6 | temps_moyen_s |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| 100 | 56 | 112 | 112 | 0 | 0,086 | 1,463 | 112 | 112 | 10,038 |
-| 200 | 60 | 60 | 60 | 0 | 0,411 | 2,562 | 60 | 60 | 16,131 |
-| 400 | 60 | 60 | 60 | 0 | 1,527 | 3,960 | 60 | 60 | 32,572 |
-| 600 | 60 | 60 | 60 | 0 | 2,858 | 6,515 | 55 | 58 | 49,379 |
-| 800 | 60 | 60 | 60 | 0 | 3,770 | 7,359 | 40 | 50 | 66,717 |
-| 1000 | 60 | 120 | 120 | 0 | 3,681 | 11,021 | 92 | 106 | 124,530 |
-
-Les tailles n’ont pas toutes le même budget. Ce tableau décrit le compromis retenu, pas un test à temps identique entre tailles. Les petites instances ne doivent pas masquer les cas difficiles à 1 000 clients : leur moyenne et leur pire essai sont toujours lus séparément.
-
+| valeur |
+| --- |
+| 20 |
+| 87594.075 |
+| 85859.0 |
+| aucun mode distinct |
+| 33680525.590875 |
+| 5803.492534 |
+| 80273.0 |
+| 100546.6 |
+| 20273.6 |
+| 5934.825 |
+| 80666.4425 |
+| 81912.38 |
+| 83718.0 |
+| 83807.21 |
+| 85859.0 |
+| 87989.6 |
+| 89652.825 |
+| 97712.5 |
+| 99279.9175 |
 
 ```text
-Vérification : 472 pipelines, 356 instances ; gap moyen par instance 2.078 %
+variance N : 33680525.59087499 écart-type : 5803.492533886383
 ```
 
-![Figure 7 — Gap moyen par taille sur toutes les instances ; les seuils ne servent pas à filtrer les résultats.](figures/figure_07.png)
+| durée |
+| --- |
+| 80666,443 |
+| 81912,380 |
+| 83807,210 |
+| 87989,600 |
+| 97712,500 |
+| 99279,917 |
 
-![Figure 8 — Distribution des moyennes par instance ; valeurs extrêmes conservées.](figures/figure_08.png)
+![Figure 6 — Chaque boîte porte sur 20 graines à budget identique. Une boîte réduite à un trait correspond à des valeurs identiques.](figures/figure_06.png)
 
-![Figure 9 — Moyenne par famille et taille ; les différences reflètent la structure des instances.](figures/figure_09.png)
+![Figure 7 — Histogrammes de durées du profil hybride, 20 répétitions par cas ; les classes décrivent les fréquences observées.](figures/figure_07.png)
 
-**Lecture des graphiques.** La boîte représente les quartiles et la médiane ; le marqueur de moyenne et les valeurs extrêmes complètent la lecture. Une moyenne faible peut coexister avec un cas très défavorable. Les familles C regroupent les clients en amas, R les répartissent plus aléatoirement et RC combinent ces structures ; les catégories 1/2 correspondent à des configurations de fenêtres et d’horizon différentes.
+La boîte contient les observations entre Q1 et Q3 et son trait central est la médiane ; le marqueur représente la moyenne. Les moustaches atteignent les dernières observations dans les bornes Q1−1,5 IQR et Q3+1,5 IQR. Les autres points sont potentiellement atypiques : ils ne sont pas supprimés.
 
-La dispersion dépend de l’instance et, sur les tailles répétées, de la graine et de l’arrêt au temps. Nous ne prétendons pas que le seul nombre de clients explique le gap. La carte par familles rend visibles les difficultés que la moyenne générale résume imparfaitement.
+Une moyenne supérieure à la médiane peut signaler l’influence de grandes valeurs, mais l’interprétation doit être confrontée à l’histogramme. Une série constante n’a pas une dispersion normale non dégénérée. Avec vingt valeurs et des contraintes produisant des plateaux, nous ne supposons pas automatiquement une loi normale et n’appliquons pas les probabilités d’une gaussienne sans justification.
 
+Les graphiques globaux suivants représentent les moyennes de **356 instances différentes**. Ils décrivent l’hétérogénéité du catalogue et ne remplacent pas l’étude entre graines d’un même cas.
 
-![Figure 10 — Proportion cumulée d’instances atteignant chaque gap moyen ; tous les points sont inclus.](figures/figure_10.png)
+![Figure 8 — Boîtes par taille : une moyenne par instance ; la ligne zéro correspond au plan témoin, pas à un optimum temporel.](figures/figure_08.png)
 
-![Figure 11 — Temps réels et gaps individuels ; compilation exclue, construction et préparation incluses.](figures/figure_11.png)
+![Figure 9 — Distribution des écarts moyens d’instance au témoin. Les valeurs défavorables et négatives sont conservées.](figures/figure_09.png)
 
-### 6.3. Quel gain provient de l’hybridation ?
+### 6.4. Covariance, corrélation et moindres carrés
 
-Le catalogue complet mesure la couverture et la qualité finale. Pour attribuer un gain à la combinaison, nous utilisons une comparaison appariée séparée : douze instances à 1 000 clients, deux graines et une première phase ILS de 60 s commune. Chaque même résultat est ensuite poursuivi pendant 60 s par notre ILS ou par le HGS externe. Le temps de la première phase est facturé dans les deux branches, bien que le calcul ait été réutilisé.
+Pour éviter de confondre l’effet du budget et de la taille, cette étude utilise une observation par instance à 1 000 clients, la graine 4101 et dix secondes de recherche : 60 couples. X est la durée de construction et Y la durée finale du profil hybride.
 
-| instance | ILS_60_puis_ILS_60_pct | ILS_60_puis_HGS_60_pct |
-| --- | --- | --- |
-| C1_10_3 | 3,188 | 2,453 |
-| C1_10_4 | 4,756 | 3,126 |
-| C2_10_3 | 10,754 | 1,381 |
-| C2_10_4 | 12,715 | 2,469 |
-| R1_10_3 | 5,802 | 5,499 |
-| R1_10_4 | 5,062 | 3,798 |
-| R2_10_3 | 10,286 | 5,694 |
-| R2_10_4 | 16,137 | 7,950 |
-| RC1_10_3 | 4,526 | 4,067 |
-| RC1_10_4 | 4,043 | 3,328 |
-| RC2_10_3 | 14,715 | 4,484 |
-| RC2_10_4 | 16,447 | 6,792 |
+$$\operatorname{Cov}(X,Y)=N^{-1}\sum_i(x_i-\bar x)(y_i-\bar y),\quad r=\frac{\operatorname{Cov}(X,Y)}{\sigma_X\sigma_Y}.$$
 
-La moyenne passe de **9.036 %** pour ILS puis ILS à **4.253 %** pour ILS puis HGS, soit **4.782 points**. La combinaison gagne dans **23/24** paires et régresse dans 1. Le temps réel moyen est 124.39 s contre 124.63 s. La réduction relative du gap vaut 52.9 % ; elle ne doit pas être confondue avec une réduction de la distance de ce même pourcentage.
+La droite $\widehat y=ax+b$ minimise $\sum_i(y_i-ax_i-b)^2$, avec $a=\operatorname{Cov}(X,Y)/v_X$ et $b=\bar y-a\bar x$. La pente mesure l’association observée des durées ; l’interception ne s’interprète pas comme une durée réelle à extrapoler hors des données.
 
-L’intervalle exploratoire à 95 % par rééchantillonnage des douze instances est [2.424 ; 7.222] points. Ces cas étaient déjà étudiés et le budget de 120 s a été choisi après le diagnostic à 60 s : il s’agit d’une expérience de suivi, pas d’un test entièrement aveugle. Deux graines restent limitées.
+Les calculs donnent **r = 0.9131**, **a = 1.0512**, **b = -13752.4000** et **R² = 0.8338**. Ils décrivent ce lot, sans démontrer un effet causal du moteur ni une garantie prédictive sur une instance nouvelle.
 
-La référence est elle aussi constituée de deux phases ; elle ne correspond pas à une ILS continue de 120 s. Les améliorations ne sont pas toutes attribuables au seul croisement : population, recherche locale et efficacité de l’implémentation externe interviennent ensemble. Une ablation interne du HGS n’a pas été exécutée.
+```text
+Covariance 284197949.8013 Pearson 0.9131048308422159 a 1.0512282348000792 b -13752.399983180032 R² 0.8337604321073924
+SCT 21499478574.316 SCR 17925414546.205322 SCE 3574064028.110669
+```
 
+![Figure 10 — Moindres carrés sur 60 instances, même taille, graine et budget. Une difficulté commune peut expliquer l’association.](figures/figure_10.png)
 
-![Figure 12 — Comparaison appariée des continuations à 120 s de recherche totale ; mêmes douze instances et deux graines.](figures/figure_12.png)
+La décomposition SCT = SCR + SCE sépare la variabilité totale, la part associée à la droite ajustée et les résidus. Avec une interception, $R^2=1-\mathrm{SCE}/\mathrm{SCT}=r^2$ en régression linéaire simple. Un R² élevé ne signifie pas que la méthode a causé cette proportion d’amélioration.
 
-### 6.4. Deux résolutions expliquées : un cas structuré et un cas difficile
+### 6.5. Convergence et comparaison des méthodes
 
-Nous fixons C101 et R2_10_4 avec la graine 2101 avant de lire les graphiques. Il ne s’agit pas de choisir la meilleure graine. Le premier illustre une résolution structurée à 100 clients ; le second conserve un cas difficile à 1 000 clients. Les cartes montrent toutes les tournées ; les Gantt montrent uniquement les quatre premières pour rester lisibles. Le contrôleur, lui, vérifie la solution complète.
-| instance | clients | vehicles | distance | bks | gap |
-| --- | --- | --- | --- | --- | --- |
-| C101 | 100 | 10 | 827,300 | 827,300 | 0,000 |
-| R2_10_4 | 1000 | 22 | 19255,900 | 17811,400 | 8,110 |
+Nous alignons les traces sur le temps après construction. Chaque trace est une fonction en escalier du meilleur coût connu ; après l’arrêt d’un essai, sa dernière valeur est conservée jusqu’à l’horizon commun. La fin de la courbe moyenne est vérifiée contre la moyenne des durées finales du même lot. La zone représente ± un écart-type descriptif entre graines, et non un intervalle de confiance.
 
-Contrôles synthétiques des deux mêmes solutions :
+![Figure 11 — Convergence moyenne et dispersion de 20 graines par méthode/cas. Le temps de construction reste compté dans les tableaux de calcul total.](figures/figure_11.png)
 
-| instance | max_load | capacity | latest_return | depot_closing | fleet_limit |
-| --- | --- | --- | --- | --- | --- |
-| C101 | 200,000 | 200,000 | 1234,600 | 1236,000 | 25 |
-| R2_10_4 | 999,000 | 1000,000 | 6877,300 | 7697,000 | 250 |
+| instance   | method          |   runs |   feasible | duration   | std      | mean_calculation_s   | delta   |
+|:-----------|:----------------|-------:|-----------:|:-----------|:---------|:---------------------|:--------|
+| C101       | ILS durée + HGS |     20 |         20 | 9827,300   | 0,000    | 10,040               | 0,000   |
+| C101       | ILS durée       |     20 |         20 | 9854,040   | 53,480   | 10,026               | 0,272   |
+| C101       | Recuit durée    |     20 |         20 | 9960,965   | 140,925  | 10,026               | 1,360   |
+| R202       | ILS durée + HGS |     20 |         20 | 2377,305   | 10,907   | 10,047               | -62,067 |
+| R202       | ILS durée       |     20 |         20 | 2651,955   | 138,383  | 10,030               | -57,684 |
+| R202       | Recuit durée    |     20 |         20 | 2488,380   | 51,308   | 10,031               | -60,295 |
+| R2_10_8    | ILS durée + HGS |     20 |         20 | 87594,075  | 5803,493 | 15,541               | -23,303 |
+| R2_10_8    | ILS durée       |     20 |         20 | 93806,260  | 1806,187 | 14,828               | -17,864 |
+| R2_10_8    | Recuit durée    |     20 |         20 | 88610,995  | 2647,555 | 14,803               | -22,413 |
 
-La charge maximale doit être au plus la capacité et le dernier retour au plus la fermeture du dépôt. Le respect de ces deux indicateurs ne remplace pas le contrôle de chaque fenêtre ni de la couverture. Les horaires détaillés de tous les clients sont enregistrés dans les JSON.
+Sur ce lot de vingt graines par cas, l’hybride présente la durée moyenne la plus faible pour les trois cas. Les distributions se recouvrent, notamment sur la grande instance : cette observation descriptive ne constitue pas un test de significativité ni une preuve de supériorité sur tout le catalogue.
 
+Ces moyennes et dispersions comparent des méthodes à effort de recherche égal. Nous ne retenons pas seulement le meilleur essai ; un mécanisme plus complexe peut régresser sur un cas. Les trois cas ont été choisis pour leur contraste et ne permettent pas une conclusion universelle de supériorité.
 
-![Figure 13 — C101, graine 2101 : toutes les tournées et horaires des quatre premières ; résultat réellement exécuté.](figures/figure_13.png)
+## 7. Reproduction, limites et conclusion
 
-![Figure 14 — R2_10_4, graine 2101 : toutes les tournées et horaires des quatre premières ; résultat réellement exécuté.](figures/figure_14.png)
+Le changement porte sur le modèle, le coût des mouvements, l’acceptation, l’archive, le HGS et les mesures. Une simple substitution du mot « distance » par « temps » aurait laissé le solveur optimiser le mauvais critère. Les cas de test distinguent explicitement ces deux objectifs.
 
-**Distance et durée.** Sur chaque tournée, durée = trajets + attente + services, avec départ fixé à zéro. Le tableau suivant est recalculé par le vérificateur. La durée n’est pas utilisée à la place de la distance dans la formule du gap.
-| instance | distance | duration | travel | waiting | service |
-| --- | --- | --- | --- | --- | --- |
-| C101 | 827,300 | 9827,300 | 827,300 | 0,000 | 9000,000 |
-| R2_10_4 | 19255,900 | 129430,200 | 19255,900 | 100174,300 | 10000,000 |
+La campagne montre le comportement observé en durée sur les 356 instances et la stabilité sur trois cas répétés. Les limites restent : temps de trajet statiques, tailles plafonnées à 1 000 clients, budget de dix secondes, peu de graines sur la couverture globale et absence d’optimum temporel officiel pour les grandes instances. La borne MST peut être faible. Les services constants peuvent réduire les pourcentages relatifs sans prouver que les trajets et attentes sont proches de leurs meilleurs niveaux : leur décomposition doit accompagner les résultats.
 
-### 6.5. Les dix cas les plus défavorables
-
-| instance | n | attempts | mean_gap | worst_gap | mean_total_s |
-| --- | --- | --- | --- | --- | --- |
-| R2_10_8 | 1000 | 2 | 9,878 | 11,021 | 125,798 |
-| R2_10_7 | 1000 | 2 | 8,130 | 8,757 | 125,695 |
-| R2_10_4 | 1000 | 2 | 7,950 | 8,110 | 125,657 |
-| RC2_10_4 | 1000 | 2 | 6,792 | 7,362 | 125,635 |
-| R2_8_8 | 800 | 1 | 7,359 | 7,359 | 67,592 |
-| R2_8_7 | 800 | 1 | 7,121 | 7,121 | 67,164 |
-| R2_10_2 | 1000 | 2 | 5,711 | 7,012 | 125,128 |
-| C2_8_4 | 800 | 1 | 6,889 | 6,889 | 67,136 |
-| R2_8_4 | 800 | 1 | 6,872 | 6,872 | 67,614 |
-| R2_10_6 | 1000 | 2 | 6,689 | 6,816 | 125,337 |
-
-Ces lignes restent dans toutes les moyennes de leur périmètre. Une bonne moyenne générale ne résout pas automatiquement chaque famille. Le détail de l’ensemble des 356 instances, les graines, les distances, les flottes, les références et les temps est fourni dans `RESULTATS_CATALOGUE_V8.html` et les CSV associés.
-
-
-## 7. Reproduction, contrôles et traçabilité
-
-Le code d’intégration se trouve dans `algo/hybrid_reference.py`, l’adaptateur entier dans `algo/external_reference.py`, notre ILS dans `algo/optimized.py` et `algo/iterated.py`, ses mouvements dans `algo/direct.py` et `algo/kernels.py`, et le contrôleur indépendant dans `algo/verify.py`. Les modules de recherche ne lisent jamais de fichier de référence. Les données d’entrée sont immuables.
-
-Le protocole `results/catalog_v8/protocol.json` fige les budgets, graines, ordre aléatoire des tâches, versions de sources et référence des données. Le sous-dossier `source/` conserve le code effectivement exécuté. Les JSON `runs/` contiennent les solutions et mesures individuelles. `scripts/analyze_catalog_v8.py` revérifie les empreintes, les fichiers de référence, les tournées et les calculs ; il refuse une campagne incomplète pour la génération finale.
-
-La reprise conserve les essais terminés et refuse de changer le protocole. Les 24 réutilisations ont une origine et une empreinte vérifiées ; elles ne sont ni des calculs neufs ni des recherches gratuites. Les erreurs techniques des essais préparatoires v7 restent archivées avec leurs messages. Aucun essai défavorable n’est transformé en valeur nulle.
+Les fichiers `results/time_objective/catalogue/runs/` contiennent les solutions, temps et traces. Le protocole et les sources effectivement exécutées sont conservés. `scripts/analyze_duration.py` recalcule les contraintes, les références et les statistiques ; `scripts/valider_duree.py` contrôle la remise. Le notebook recalcule les analyses et exemples, sans relancer les 646 résolutions.
 
 ```powershell
-python -m pip install -r requirements-reference-v7.txt
-python cli.py R2_10_3 --method ils_hgs --seconds 120 --seed 2101
+python -m pip install -r requirements.txt
+python cli.py C101 --method ils_hgs --seconds 10 --seed 4101
 python -m streamlit run web/app.py
-python scripts/analyze_catalog_v8.py
-python scripts/valider_rendu.py
+python scripts/analyze_duration.py
+python scripts/valider_duree.py
+python -m pytest tests -q --junitxml=livraison/TESTS.xml
 ```
 
-L’interface propose le profil **ILS + HGS (PyVRP)**. Le budget affiché est celui des deux recherches ; la construction et la préparation externe s’ajoutent au temps réel. Le profil ILS seul reste accessible comme référence. Les nouvelles campagnes locales restent séparées des résultats publiés. Les courbes du HGS ne disposent ici que de leurs points de début et de fin ; aucun historique interne n’est inventé.
-
-Les tests couvrent les contraintes, les unités, l’immuabilité, les caches différentiels, les passages temporairement irréalisables des variantes, l’attribution externe, l’intégration CLI/web et les statistiques. Le reçu de validation final contient le nombre réel de tests et les empreintes des livrables. Les anciens reçus concernent leurs éditions historiques ; `livraison/VALIDATION.json` indique le justificatif courant.
-
-## 8. Limites et conclusion
-
-Le résultat de la campagne de référence est **2.078 %** de gap moyen par instance sur le catalogue de 356 cas, et **1.946 %** sur le lot de 116 cas à 100/1 000 clients. Ces valeurs dépendent du protocole, des budgets et des références figées. Les grandes instances ont leur propre bilan ; les pires cas restent visibles et ne sont pas masqués par les petites instances.
-
-La comparaison appariée démontre un gain de la combinaison sur le lot étudié, avec une contribution externe explicitement attribuée. Elle ne démontre ni l’optimalité globale ni l’efficacité isolée de chaque opérateur du HGS. Une seule graine sur les tailles intermédiaires et deux sur les tailles extrêmes limitent l’analyse de la variabilité. Les mêmes cas ont parfois guidé des choix précédents : un jeu entièrement nouveau resterait utile.
-
-Les principaux progrès sont l’initialisation par notre ILS, la diversification apportée par le HGS externe, le contrôle indépendant et l’élargissement de la preuve expérimentale. Les autres variantes restent documentées avec leurs échecs et leurs coûts. Les suites possibles sont davantage de répétitions, des ablations internes, un meilleur traitement des cas les plus difficiles et des évaluations à durée totale strictement identique entre méthodes. Le trafic variable, plus de 1 000 clients et l’optimisation de la durée constituent des limites explicites.
-
-## 9. Réduire les pires écarts : réglage du temps et reprises ciblées
-
-### 9.1. Diagnostic et protocole
-
-La campagne de référence v8 reste figée : son pire essai vaut 11,021 %. Dix essais, sur sept instances, dépassent ou atteignent 7 %. Les familles R2 sont particulièrement représentées. Nous avons donc évalué le partage du temps, le nombre de voisins, les redémarrages et la recombinaison de tournées. Les BKS servent à l’évaluation et à cette sélection postérieure des cas difficiles ; elles ne sont jamais transmises aux moteurs.
-
-Sur trois cas de développement et la graine 3101, quatre variantes disposent chacune de 120 s de recherche. La variante est sélectionnée d’après son pire gap, puis sa moyenne. Toutes enregistrent la convergence interne du HGS ; la référence est réexécutée avec la même instrumentation.
-
-| variant | runs | valid | mean_gap | worst_gap | mean_total_s | under7 |
-| --- | --- | --- | --- | --- | --- | --- |
-| neighbors60 | 3 | 3 | 6,090 | 7,926 | 126,480 | 2 |
-| neighbors80 | 3 | 3 | 6,812 | 8,735 | 126,030 | 2 |
-| split20 | 3 | 3 | 5,379 | 6,717 | 126,018 | 3 |
-| split60 | 3 | 3 | 6,748 | 7,153 | 126,049 | 1 |
-
-Le partage 20/100 est retenu pour une confirmation sur les sept cas, avec deux nouvelles graines, 3102 et 3103. Il reste une variante contrôlée sur des cas difficiles : il ne remplace pas rétroactivement les résultats du catalogue complet.
-
-### 9.2. Confirmation à budget inchangé
-
-| variant | runs | valid | mean_gap | worst_gap | mean_total_s | under7 |
-| --- | --- | --- | --- | --- | --- | --- |
-| split20 | 14 | 14 | 4,642 | 6,638 | 125,238 | 14 |
-| split60 | 14 | 14 | 6,326 | 8,805 | 124,888 | 8 |
-
-La moyenne sur ces quatorze essais passe de 6.326 % à 4.642 % ; les pires valeurs sont 8.805 % et 6.638 %. Le réglage 20/100 est sous 7 % dans 14/14 essais. Deux graines par cas restent limitées et les sept instances avaient été sélectionnées d’après leurs difficultés antérieures. Il n’en résulte aucune garantie sur des graines ou instances futures.
-
-Les deux cas à 800 clients disposent ici de 120 s, comme leur référence réexécutée ; ils n’avaient que 64 s dans le catalogue initial. La comparaison interne est à budget égal, mais elle ne doit pas être confondue avec une amélioration à coût inchangé face au catalogue pour ces deux cas.
-
-### 9.3. Recherche longue, départs multiples et partitionnement
-
-Une autre expérience porte sur trois cas difficiles : une recherche de 360 s, ou trois recherches de 120 s. Chaque pipeline consacre au plus 20 s à notre ILS puis le reste au HGS. Les trois départs utilisent les graines 3301, 3302 et 3303 ; la recherche longue utilise 3301. Les tournées réalisables de toutes les phases sont ensuite proposées au partitionnement restreint, avec au plus 5 s supplémentaires dans les deux stratégies.
-
-| instance | strategy | before_pool | gap_pct | pool_gain_pp | total_s |
-| --- | --- | --- | --- | --- | --- |
-| R2_10_7 | long | 1,980 | 1,980 | 0,000 | 365,316 |
-| R2_10_7 | multistart | 4,209 | 4,209 | 0,000 | 374,704 |
-| R2_10_8 | long | 3,286 | 3,286 | 0,000 | 365,981 |
-| R2_10_8 | multistart | 4,569 | 4,569 | 0,000 | 379,341 |
-| RC2_10_4 | long | 2,843 | 2,843 | 0,000 | 367,367 |
-| RC2_10_4 | multistart | 4,135 | 4,135 | 0,000 | 379,700 |
-
-Sur ce lot, le critère du pire gap favorise la stratégie `long`. Le partitionnement n’apporte aucun gain sur ces six essais au budget testé.
-
-`before_pool` est le meilleur gap avant partitionnement ; `gap_pct` est celui obtenu après, et `pool_gain_pp` mesure son gain marginal en points. Toutes les constructions, préparations et recombinaisons sont facturées. Le budget nominal est comparable, mais les trois constructions peuvent augmenter le temps réel. Cette expérience de développement ne prouve pas une supériorité générale des redémarrages. Une borne ou une optimalité du partitionnement ne concerne que son pool de tournées, jamais le CVRPTW complet.
-
-### 9.4. Reprise des dix anciens essais défavorables
-
-Chacun des dix essais initialement à au moins 7 % est repris depuis sa propre solution, avec 180 s de HGS supplémentaires, 40 voisins et une nouvelle graine dérivée de la graine initiale. Nous ne remplaçons pas une mauvaise graine par une autre graine favorable : chaque ancien essai possède une reprise identifiée. Son calcul initial et sa reprise sont intégralement comptés.
-
-| instance | seed | before | after | previous_total_s | additional_s | total_s |
-| --- | --- | --- | --- | --- | --- | --- |
-| R2_10_2 | 2101 | 7,012 | 1,727 | 125,678 | 180,267 | 305,945 |
-| R2_10_4 | 2101 | 8,110 | 4,408 | 125,501 | 180,411 | 305,912 |
-| R2_10_4 | 2102 | 7,790 | 2,349 | 125,814 | 180,245 | 306,059 |
-| R2_10_7 | 2101 | 8,757 | 2,580 | 126,254 | 180,541 | 306,796 |
-| R2_10_7 | 2102 | 7,502 | 3,461 | 125,136 | 180,399 | 305,536 |
-| R2_10_8 | 2101 | 8,735 | 3,995 | 125,906 | 180,428 | 306,335 |
-| R2_10_8 | 2102 | 11,021 | 2,425 | 125,690 | 180,245 | 305,935 |
-| R2_8_7 | 2101 | 7,121 | 2,101 | 67,164 | 180,215 | 247,378 |
-| R2_8_8 | 2101 | 7,359 | 2,235 | 67,592 | 180,319 | 247,911 |
-| RC2_10_4 | 2102 | 7,362 | 2,040 | 125,524 | 180,399 | 305,922 |
-
-Le cas R2_10_8, graine 2102, passe de **11,021 % à 2.425 %**. Le pire résultat parmi les dix reprises vaut **4.408 %**. La somme des durées supplémentaires mesurées est 1803.47 s, réparties sur six processus lors de l’expérience ; ce cumul n’est pas une durée murale séquentielle observée.
-
-### 9.5. Archive consolidée et limites d’interprétation
-
-Les 462 autres résultats restent inchangés. Après les dix reprises, les 472 solutions de l’archive couvrent toujours les 356 instances : le pire gap est **6.889 %**, et 472/472 essais sont sous 7 %. La moyenne donnant le même poids à chaque instance est **1.988 %** ; sur les 60 instances à 1 000 clients, elle est **3.320 %**.
-
-Il s’agit d’une **archive après reprises ciblées, à budgets différents**, et non d’une nouvelle campagne uniforme de 120 s. Les références v8 à 2,078 % de moyenne et 11,021 % au pire restent accessibles. La baisse du pire gap est réelle et vérifiée, mais son coût supplémentaire doit accompagner le résultat. Les résultats de confirmation du réglage 20/100 constituent une preuve distincte de cette reprise d’archive.
-
-Le profil optionnel `ils_hgs_refined` expose le partage court-ILS/long-HGS. Le script `refine_worst_v9.py` reproduit les reprises expérimentales. Les sources, protocoles, traces et toutes les régressions sont conservés dans `results/worst_v9/`. Le HGS reste celui de PyVRP, attribué à ses auteurs. Le journal d’évolution répertorie cette phase et les décisions prises.
-
-Pour une nouvelle résolution : `python cli.py R2_10_8 --method ils_hgs_refined --seconds 120 --seed 3102`. Le profil web correspondant est **ILS court + HGS (v9)**. Pour reprendre une solution précise : `python scripts/resume_solution_v9.py results/catalog_v8/runs/R2_10_8_2102.json --seconds 180 --neighbors 40 --seed 22102`. Le second exemple ajoute du temps à une solution existante ; il ne représente pas une résolution neuve de 180 s.
-
-
-![Figure 15 — Validation 20/100 : sept cas, deux nouvelles graines, même budget de 120 s.](figures/figure_15.png)
-
-![Figure 16 — Les dix reprises ciblées : chaque temps initial et supplémentaire est compté.](figures/figure_16.png)
-
-![Figure 17 — Convergence enregistrée pendant la seule reprise de R2_10_8, graine initiale 2102.](figures/figure_17.png)
+L’objectif de la CLI est la durée par défaut. Les routines historiques en distance restent explicites pour les contrôles de non-régression ; leurs anciens résultats ne sont pas utilisés comme des benchmarks temporels.
 
 ## Références
 
-- Kool et al., *Hybrid Genetic Search for the Vehicle Routing Problem with Time Windows: a High-Performance Implementation* : https://wouterkool.github.io/pdf/paper-kool-hgs-vrptw.pdf
-- PyVRP 0.12.2, moteur externe effectivement utilisé et licence MIT : https://github.com/PyVRP/PyVRP/tree/v0.12.2 ; https://github.com/PyVRP/PyVRP/blob/v0.12.2/LICENSE.md
-- Données et références figées : https://github.com/PyVRP/Instances/tree/7474b068a8effa7f39448b241314b615c9271525/VRPTW
-- VRPLIB, bibliothèque et formats : https://github.com/PyVRP/VRPLIB
-- Vidal et al., informations de séquences et fenêtres : https://www.cirrelt.ca/documentstravail/cirrelt-2012-23.pdf
-
-Les publications justifient les familles de méthodes ; leurs résultats numériques ne sont jamais attribués à notre projet. Les figures, tableaux et conclusions expérimentales du présent document proviennent des calculs et vérifications conservés dans notre dépôt.
+- Sujet CESI, *Algorithmique et optimisation*, énoncé : minimisation de la durée totale d’une tournée ; extension annoncée au trafic horaire.
+- Support CESI, *Corbeille d’exercices — Statistiques descriptives*, exercices 1–8 : indicateurs, quantiles, covariance/Pearson, moindres carrés, R² et représentations.
+- [PyVRP, code source version 0.12.2](https://github.com/PyVRP/PyVRP/tree/v0.12.2) : moteur HGS externe, durée, fenêtres et paramètres de véhicules.
+- [Documentation PyVRP : temps et durées](https://pyvrp.org/notebooks/duration_constraints.html) ; les propriétés utilisées sont également vérifiées dans la version 0.12.2 installée.
+- [Règles officielles DIMACS VRPTW](https://dimacs.rutgers.edu/programs/implementation-challenges/vehicle-routing/implementation-challenge-vehicle-routing/vrp-with-time-windows) : objectif de référence en distance, flotte maximale et convention des arcs.
+- [Données PyVRP/Instances](https://github.com/PyVRP/Instances), révision figée dans `data/manifest.json`.

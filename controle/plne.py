@@ -11,21 +11,23 @@ from scipy.sparse import coo_matrix
 from algo.verify import verify
 
 
-def solve_plne(ins,seconds=10.):
+def solve_plne(ins,seconds=10.,objective='duration'):
+    if objective not in ('distance','duration'):raise ValueError('Choose distance or duration')
     if not math.isfinite(seconds) or seconds<=0:raise ValueError('Positive time limit required')
     if ins.n>30:raise ValueError('The explicit PLNE is reserved for at most 30 clients')
     started=time.perf_counter();n=ins.n;K=min(ins.vehicles,n);o=0;r=n+1
     C=list(range(1,n+1));vehicles=range(K)
     A=[(o,j) for j in C]+[(i,j) for i in C for j in C if i!=j]+[(i,r) for i in C]
+    metric=objective
     index={};lower=[];upper=[];integrality=[];objective=[]
     def variable(key,lo=0.,hi=math.inf,integer=0,cost=0.):
         index[key]=len(lower);lower.append(lo);upper.append(hi);integrality.append(integer);objective.append(cost)
     for k in vehicles:
         variable(('u',k),hi=1,integer=1)
-        variable(('R',k),hi=ins.horizon)
+        variable(('R',k),hi=ins.horizon,cost=int(metric=='duration'))
         for i in C:variable(('y',i,k),hi=1,integer=1)
         for i,j in A:
-            variable(('x',i,j,k),hi=1,integer=1,cost=float(ins.distance[i,0 if j==r else j]))
+            variable(('x',i,j,k),hi=1,integer=1,cost=float(ins.distance[i,0 if j==r else j]) if metric=='distance' else 0.)
             variable(('f',i,j,k),hi=0 if j==r else n)
     for i in C:variable(('t',i),lo=float(ins.early[i]),hi=float(ins.late[i]))
     if not n:return dict(status='optimal',routes=[],cost=0.,lower_bound=0.,runtime_s=time.perf_counter()-started)
@@ -79,6 +81,6 @@ def solve_plne(ins,seconds=10.):
             routes.append(route)
         checked=verify(routes,ins)
         if not checked['valid']:raise AssertionError(checked)
-        record.update(routes=routes,cost=checked['distance']/10,metrics=checked)
+        record.update(routes=routes,cost=checked[metric]/10,metrics=checked,objective=metric)
         assert abs(record['cost']-result.fun/10)<1e-5
     return record

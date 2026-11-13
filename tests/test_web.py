@@ -156,7 +156,7 @@ def test_streamlit_pages():
     for label in at.sidebar.radio[0].options[1:]:
         at.sidebar.radio[0].set_value(label).run()
         assert not at.exception, [e.message for e in at.exception]
-    option = next(x for x in at.selectbox[0].options if x.startswith('Optimisation v2'))
-    at.selectbox[0].set_value(option).run()
+    at.sidebar.radio[0].set_value('Simulation').run()
+    at.selectbox[0].select('C101').run()
     assert not at.exception
-    assert any('360' in m.value for m in at.metric)
+    assert any(m.label=='Durée cumulée (u.t.)' for m in at.metric)

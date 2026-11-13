@@ -2,7 +2,7 @@
 import numpy as np
 import pytest
 from algo.data import load
-from algo.solver import Settings, solve, construct, warmup, encode, decode, arrays
+from algo.optimized import Settings, solve, construct, warmup, encode, decode, arrays
 from algo.direct import walk
 from algo.verify import verify
 

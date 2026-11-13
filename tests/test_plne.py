@@ -12,7 +12,7 @@ def test_actual_plne_matches_enumeration_and_handles_zero_arcs(zero):
     if zero:d[:]=0
     ins=Instance('test',np.zeros((4,2)),np.array([0,1,1,1]),np.zeros(4),np.zeros(4),np.full(4,100.),d,3.,3,100.)
     result=solve_plne(ins,5)
-    oracle=exact(ins,Objective.DISTANCE)
+    oracle=exact(ins,Objective.DURATION)
     assert result['status']=='optimal' and verify(result['routes'],ins)['valid']
     assert result['cost']==pytest.approx(oracle['score']/10)
 

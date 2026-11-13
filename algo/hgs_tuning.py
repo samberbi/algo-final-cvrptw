@@ -11,7 +11,7 @@ import numpy as np
 from .verify import verify
 
 
-def solve(ins, seconds=100.0, seed=0, initial=None, neighbor_count=40):
+def solve(ins, seconds=100.0, seed=0, initial=None, neighbor_count=40, objective="distance"):
     """Lance le HGS externe avec un voisinage configurable et une trace observée.
     Exige une solution initiale complète et réalisable ; conserve au moins sa qualité.
     Les statistiques proviennent des itérations exécutées, pas d’une interpolation.
@@ -20,6 +20,8 @@ def solve(ins, seconds=100.0, seed=0, initial=None, neighbor_count=40):
     from pyvrp.search import NeighbourhoodParams
     from pyvrp.stop import MaxRuntime
 
+    if objective not in ("distance", "duration"):
+        raise ValueError("Choose distance or duration")
     if not math.isfinite(seconds) or seconds <= 0:
         raise ValueError("Positive finite search time required")
     if type(seed) is not int or not 0 <= seed < 2**32:
@@ -67,8 +69,10 @@ def solve(ins, seconds=100.0, seed=0, initial=None, neighbor_count=40):
                 tw_early=0,
                 tw_late=int(ins.horizon),
                 fixed_cost=0,
-                unit_distance_cost=1,
-                unit_duration_cost=0,
+                unit_distance_cost=int(objective == "distance"),
+                unit_duration_cost=int(objective == "duration"),
+                # Fixer le départ à zéro empêche de masquer les attentes au dépôt.
+                start_late=0 if objective == "duration" else None,
             )
         ],
         [ins.distance.astype(np.int64)],
@@ -106,10 +110,13 @@ def solve(ins, seconds=100.0, seed=0, initial=None, neighbor_count=40):
     routes = [list(map(int, r.visits())) for r in output.best.routes()]
     checked = verify(routes, ins)
     parent = verify(initial, ins)
-    if not checked["valid"] or checked["distance"] > parent["distance"] + 1e-6:
+    if not checked["valid"] or checked[objective] > parent[objective] + 1e-6:
         raise AssertionError("Invalid or worse returned archive")
+    if objective == "duration":
+        assert all(r.start_time() == 0 for r in output.best.routes())
+        assert abs(sum(r.duration() for r in output.best.routes()) - checked['duration']) < 1e-7
     clock = 0.0
-    best = parent["distance"] / 10
+    best = parent[objective] / 10
     trace = [dict(elapsed_s=setup, best=best, phase="external-start")]
     # Les durées et coûts ci-dessous sont réellement enregistrés par le moteur à chaque itération.
     for duration, datum in zip(output.stats.runtimes, output.stats.feas_stats):
@@ -121,14 +128,15 @@ def solve(ins, seconds=100.0, seed=0, initial=None, neighbor_count=40):
         )
     runtime = time.perf_counter() - started
     trace.append(
-        dict(elapsed_s=runtime, best=checked["distance"] / 10, phase="external-end")
+        dict(elapsed_s=runtime, best=checked[objective] / 10, phase="external-end")
     )
     return dict(
         status="feasible",
         engine="external-pyvrp-" + importlib.metadata.version("pyvrp"),
         attribution="External HGS implemented by PyVRP; our adapter and independent verification",
         routes=routes,
-        cost=checked["distance"] / 10,
+        cost=checked[objective] / 10,
+        objective=objective,
         metrics=checked,
         vehicles=checked["vehicles"],
         runtime_s=runtime,

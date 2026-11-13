@@ -4,7 +4,8 @@ from pathlib import Path
 from dataclasses import asdict
 import argparse, json, time
 from algo.data import load
-from algo.solver import solve, Settings, warmup, production_settings
+from algo.optimized import solve, Settings, warmup
+from algo.profiles import production_settings
 from algo.verify import verify
 
 
@@ -12,7 +13,7 @@ def main():
     """Lit les options, charge l’instance, préchauffe et lance le profil choisi.
     Vérifie ensuite la solution et écrit les résultats ; la BKS sert uniquement au bilan."""
     p = argparse.ArgumentParser(
-        description="CVRPTW : distance DIMACS, capacité et fenêtres strictes"
+        description="CVRPTW : durée totale des tournées, capacité et fenêtres strictes"
     )
     p.add_argument(
         "instance", help="Nom fourni, par exemple R202 ou R1_10_1, ou chemin .vrp"
@@ -38,7 +39,7 @@ def main():
         ],
         default="ils",
     )
-    p.add_argument("--objective", choices=["distance"], default="distance")
+    p.add_argument("--objective", choices=["duration", "distance"], default="duration")
     p.add_argument(
         "--intensify",
         action="store_true",
@@ -55,8 +56,18 @@ def main():
     if not path.is_file():
         path = root / "data/instances" / (a.instance + ".vrp")
     ins = load(path)
-    startup = warmup()
-    if a.method == "ils_hgs_refined":
+    if a.objective == 'duration':
+        from algo.duration import solve as duration_solve, Settings as DurationSettings, warmup as duration_warmup
+        if a.method not in ('ils','sa','ils_hgs','ils_hgs_refined'):
+            p.error('Cette variante historique ne possède pas de version en durée')
+        warming=time.perf_counter();duration_warmup();startup=time.perf_counter()-warming
+        method='hybrid' if a.method in ('ils_hgs','ils_hgs_refined') else a.method
+        result=duration_solve(ins,DurationSettings(seconds=a.seconds,seed=a.seed,method=method))
+    else:
+        startup = warmup()
+    if a.objective == 'duration':
+        pass
+    elif a.method == "ils_hgs_refined":
         from algo.refined_hybrid import (
             Settings as RefinedSettings,
             solve as refined_solve,

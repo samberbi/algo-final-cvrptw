@@ -27,6 +27,9 @@ PROFILES = {
     'ILS-SP (expérimental)': {'method': 'ils_sp'},
     'ILS v6 (expérimental)': {'method': 'ils_v6'},
     'ILS cache (expérimental)': {'method': 'ils_cached'},
+    'ILS durée': {'method': 'duration_ils'},
+    'Recuit durée': {'method': 'duration_sa'},
+    'ILS durée + HGS': {'method': 'duration_hybrid'},
 }
 
 
@@ -83,6 +86,9 @@ def make_protocol(instances, seeds, seconds, profiles, polish_seconds=0, name='E
         raise ValueError('Graines distinctes, entières, entre 0 et 2147483647')
     if not profiles or not set(profiles) <= PROFILES.keys() or len(profiles) != len(set(profiles)):
         raise ValueError('Configuration inconnue ou dupliquée')
+    time_profiles=[PROFILES[p]['method'].startswith('duration_') for p in profiles]
+    if any(time_profiles) and not all(time_profiles):
+        raise ValueError('Ne pas mélanger objectifs durée et distance dans une campagne')
     if not math.isfinite(seconds) or not .05 <= seconds <= 3600:
         raise ValueError('Budget de recherche entre 0,05 et 3 600 secondes')
     if not math.isfinite(polish_seconds) or not 0 <= polish_seconds <= 3600:
@@ -96,7 +102,7 @@ def make_protocol(instances, seeds, seconds, profiles, polish_seconds=0, name='E
                 (a, b, c) for a in instances for b in seeds for c in profiles)]
     return dict(name=str(name).strip()[:100] or 'Expérience', created_at=now(), instances=instances,
                 seeds=seeds, profiles=profiles, seconds=float(seconds), polish_seconds=float(polish_seconds),
-                objective='distance', convention='DIMACS: floor(10 * euclidean) per edge',
+                objective='duration' if all(time_profiles) else 'distance', convention='DIMACS: floor(10 * euclidean) per edge',
                 jobs=jobs, total=count, nominal_search_seconds=count * (seconds + polish_seconds),
                 source_sha256={str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in sources},
                 manifest_sha256=hashlib.sha256((ROOT / 'data/manifest.json').read_bytes()).hexdigest())
@@ -172,6 +178,8 @@ def frame(items):
         rows.append(dict(run=job['id'], instance=job['instance'], n=item['n'], profile=job['profile'], seed=job['seed'],
                          status=result['status'], valid=item.get('valid', False), distance=result.get('cost'),
                          reference_distance=item['reference_distance'], gap_pct=item.get('gap_pct'),
+                         objective=item.get('objective','distance'),duration=result.get('duration'),
+                         reference_duration=item.get('reference_duration'),delta_reference_pct=item.get('delta_reference_pct'),
                          vehicles=result.get('vehicles'), runtime_s=result.get('runtime_s'),
                          budget_s=item['budget_s'], reason=result.get('reason', '')))
     return pd.DataFrame(rows)
@@ -180,6 +188,8 @@ def frame(items):
 def statistics(df):
     if df.empty:
         return pd.DataFrame()
+    if 'objective' in df and df.objective.eq('duration').any():
+        raise ValueError('Les écarts à un plan témoin en durée ne sont pas des gaps BKS distance')
     data = df.copy()
     data['feasible'] = data['valid'].astype(bool)
     data['under5'] = data['feasible'] & data['gap_pct'].lt(5)

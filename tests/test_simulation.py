@@ -55,21 +55,21 @@ def test_window_check_is_about_start_even_when_service_ends_after_closing():
     assert clients.fenetre_respectee.all()
 
 
-def test_all_published_runs_supply_complete_constraint_evidence():
+def test_saved_feasibility_fixtures_supply_complete_constraint_evidence():
     from pathlib import Path
     import json
     from algo.data import load
     from web.constraint_views import audit_frames
     root = Path(__file__).resolve().parents[1]
-    files = sorted((root / 'results/optimization_v2/validation/runs').glob('*.json'))
+    files = json.loads((root / 'tests/fixtures/solutions_feasibility.json').read_text())
     assert len(files) == 360
     instances = {}
     for path in files:
-        item = json.loads(path.read_text())
-        name = item['job']['instance']
+        item = path
+        name = item['instance']
         if name not in instances:
             instances[name] = load(root / 'data/instances' / (name + '.vrp'))
-        data = timeline(instances[name], item['result']['routes'])
+        data = timeline(instances[name], item['routes'])
         assert all({'early', 'late', 'arrival', 'start', 'finish', 'demand'} <= stop.keys()
                    for vehicle in data['vehicles'] for stop in vehicle['stops']), path.name
         clients, vehicles = audit_frames(data)
@@ -98,18 +98,17 @@ def test_javascript_playback_controls_and_schedule_boundaries():
 
 
 @pytest.mark.parametrize('source,instance',[
-    ('Optimisation v5','R1_10_3'),
-    ('Optimisation v2','R1_10_3'),
-    ('Optimisation v6','R1_10_6'),
-    ('Archive consolidée v6','R2_10_4'),
+    ('Catalogue en durée','R1_10_3'),
+    ('Catalogue en durée','R1_10_6'),
+    ('Catalogue en durée','R2_10_4'),
+    ('Catalogue en durée','R2_10_8'),
 ])
 def test_simulation_page_accepts_a_large_saved_solution(source,instance):
     from streamlit.testing.v1 import AppTest
     at = AppTest.from_file('web/app.py', default_timeout=30).run()
     assert not at.exception
     assert at.sidebar.radio[0].value == 'Simulation'
-    if source not in at.radio[0].options:
-        pytest.skip('Campaign not available in this checkout')
+    assert source in at.radio[0].options
     at.radio[0].set_value(source).run()
     at.selectbox[0].select(instance).run()
     assert not at.exception

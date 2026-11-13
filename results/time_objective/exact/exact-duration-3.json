@@ -1,0 +1,147 @@
+{
+  "instance": "exact-duration-3",
+  "n": 3,
+  "optimum": 86.2,
+  "solver": {
+    "status": "optimal",
+    "solver_status": 0,
+    "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+    "runtime_s": 0.056932699983008206,
+    "variables": 61,
+    "constraints": 85,
+    "routes": [
+      [
+        2,
+        3
+      ],
+      [
+        1
+      ]
+    ],
+    "cost": 86.2,
+    "lower_bound": 86.19999999999986,
+    "mip_gap": 0.0,
+    "metrics": {
+      "valid": true,
+      "errors": [],
+      "vehicles": 2,
+      "duration": 862.0,
+      "distance": 584.0,
+      "travel": 584.0,
+      "waiting": 228.0,
+      "makespan": 536.0,
+      "routes": [
+        {
+          "duration": 326.0,
+          "travel": 212.0,
+          "distance": 212.0,
+          "waiting": 74.0,
+          "load": 2.0,
+          "schedule": [
+            {
+              "client": 2,
+              "arrival": 83.0,
+              "start": 150.0,
+              "finish": 180.0
+            },
+            {
+              "client": 3,
+              "arrival": 203.0,
+              "start": 210.0,
+              "finish": 220.0
+            }
+          ]
+        },
+        {
+          "duration": 536.0,
+          "travel": 372.0,
+          "distance": 372.0,
+          "waiting": 154.0,
+          "load": 2.0,
+          "schedule": [
+            {
+              "client": 1,
+              "arrival": 186.0,
+              "start": 340.0,
+              "finish": 350.0
+            }
+          ]
+        }
+      ]
+    },
+    "objective": "duration"
+  },
+  "data": {
+    "xy": [
+      [
+        10.577709237973764,
+        21.11259512620746
+      ],
+      [
+        8.074948603251888,
+        2.6780857252475947
+      ],
+      [
+        18.31616784798025,
+        18.006169139064397
+      ],
+      [
+        20.439194906257274,
+        17.07639447609832
+      ]
+    ],
+    "demand": [
+      0.0,
+      2.0,
+      1.0,
+      1.0
+    ],
+    "service": [
+      0.0,
+      10.0,
+      30.0,
+      10.0
+    ],
+    "early": [
+      0.0,
+      340.0,
+      150.0,
+      210.0
+    ],
+    "late": [
+      2500.0,
+      2500.0,
+      2500.0,
+      2500.0
+    ],
+    "travel": [
+      [
+        0.0,
+        186.0,
+        83.0,
+        106.0
+      ],
+      [
+        186.0,
+        0.0,
+        184.0,
+        189.0
+      ],
+      [
+        83.0,
+        184.0,
+        0.0,
+        23.0
+      ],
+      [
+        106.0,
+        189.0,
+        23.0,
+        0.0
+      ]
+    ]
+  },
+  "capacity": 3.0,
+  "vehicles": 2,
+  "horizon": 2500.0
+}

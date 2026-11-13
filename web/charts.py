@@ -34,11 +34,12 @@ def gap_bars(summary):
 def convergence(result, reference):
     trace = pd.DataFrame(result.get('trace', []))
     fig = go.Figure()
+    duration=result.get('objective')=='duration'
     if not trace.empty:
-        fig.add_scatter(x=trace['elapsed_s'], y=trace['best'], mode='lines+markers', name='Meilleure distance',
+        fig.add_scatter(x=trace['elapsed_s'], y=trace['best'], mode='lines+markers', name='Meilleure durée' if duration else 'Meilleure distance',
                         line=dict(color='#0f766e', shape='hv'))
-    fig.add_hline(y=reference, line_dash='dash', line_color='#b45309', annotation_text='BKS')
-    return finish(fig, 'Convergence enregistrée du run', 'Temps de recherche (s)', 'Distance')
+    fig.add_hline(y=reference, line_dash='dash', line_color='#b45309', annotation_text='Plan témoin réévalué en durée' if duration else 'BKS distance')
+    return finish(fig, 'Convergence enregistrée du run', 'Temps de calcul écoulé (s)', 'Durée cumulée (u.t.)' if duration else 'Distance')
 
 
 def routes_map(ins, routes):

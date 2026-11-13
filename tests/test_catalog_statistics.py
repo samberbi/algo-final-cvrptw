@@ -1,7 +1,7 @@
 """Statistics must retain failed attempts and distinguish unequal repetition counts."""
 import pandas as pd
 import pytest
-from scripts.analyze_catalog_v8 import summary
+from scripts.statistics_common import summary
 
 
 def test_instance_mean_does_not_overweight_repeated_easy_cases():

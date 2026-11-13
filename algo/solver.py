@@ -1,4 +1,8 @@
-"""Public API: feasible ILS and direct-move simulated annealing."""
+"""API publique : minimisation de la durée cumulée des tournées."""
+from .duration import Settings,solve,construct,warmup
+from .iterated import arrays,encode,decode
 
-from .optimized import Settings, solve, construct, warmup, arrays, encode, decode
-from .profiles import production_settings
+
+def production_settings(method='hybrid',**overrides):
+    """Configure le moteur en durée ; les variantes distance restent explicites."""
+    return Settings(method=method,**overrides)

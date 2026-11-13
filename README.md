@@ -1,33 +1,27 @@
-# CVRPTW — Livrable final
+# CVRPTW — Minimisation de la durée totale
 
-Le projet résout un problème de tournées capacitaires avec fenêtres temporelles strictes. La méthode associe notre construction et notre recherche locale itérée (ILS) au HGS externe de **PyVRP 0.12.2**, cité dans le livrable. Le benchmark minimise la distance selon les conventions DIMACS ; la flotte reste une borne supérieure.
+**Version de remise — 13 novembre 2026.** L’objectif est la somme des durées des tournées : trajets + attentes + services, départs fixés à zéro et retour au dépôt compris. La capacité, les fenêtres et la flotte maximale restent strictes. Le temps de calcul du programme est une mesure séparée.
 
-## Documents à lire
+## Ouvrir le livrable
 
-1. [Rapport final PDF](livraison/RAPPORT_CVRPTW.pdf) : modèle mathématique, méthode, explications du code, graphiques, statistiques et limites.
-2. [Notebook Jupyter](notebooks/Livrable_Final_CVRPTW.ipynb) : version exécutée, avec exemples et calculs. [Version HTML](notebooks/Livrable_Final_CVRPTW.html) sans installation.
-3. [Rapport Word](livraison/RAPPORT_CVRPTW.docx) pour annotation.
-4. [Journal des améliorations](docs/JOURNAL_EVOLUTION_ALGORITHME.md) : changements, comparaisons et décisions.
+- [Rapport PDF](livraison/RAPPORT_CVRPTW.pdf), [Word pour annotation](livraison/RAPPORT_CVRPTW.docx).
+- [Notebook exécuté](notebooks/Livrable_Final_CVRPTW.ipynb), [HTML](notebooks/Livrable_Final_CVRPTW.html), [Markdown illustré](LIVRABLE_FINAL.md).
+- [Formulation mathématique](docs/MODELE_DUREE.md), [évolution de l’algorithme](docs/JOURNAL_EVOLUTION_ALGORITHME.md).
+- [Tous les résultats en durée](livraison/RESULTATS_DUREE.html), [CSV des 646 essais](livraison/RESULTATS_DUREE.csv), [356 instances](livraison/INSTANCES_DUREE.csv), [statistiques descriptives](livraison/STATISTIQUES_DESCRIPTIVES_DUREE.csv).
 
-Le PDF, le Word, le notebook et les deux fichiers Markdown sont des formats du même livrable, pas des études différentes.
+## Résultats mesurés et références
 
-## Résultats et comparaison à la BKS
+La campagne couvre les **356 instances** Solomon et Gehring–Homberger de 100 à 1 000 clients. Elle contient **646 résolutions nouvelles et réalisables** : 472 pour la couverture et 180 pour la comparaison à vingt graines de trois méthodes sur trois cas, avec six essais communs aux deux périmètres. Chaque résolution dispose de dix secondes de recherche ; la construction et la préparation s’ajoutent au temps réel.
 
-| Campagne | Périmètre | Gap moyen par instance | Maximum | Interprétation |
-|---|---|---:|---:|---|
-| Référence | 356 instances, 472 pipelines | 2,078 % | 11,021 % | Budgets fixés par taille, tous les essais conservés |
-| Archive après reprises | Les mêmes 472 solutions, dont dix reprises | 1,988 % | 6,889 % | 180 s supplémentaires par essai repris, budgets variables |
-| Confirmation 20/100 | Sept cas, deux nouvelles graines | 4,642 % | 6,638 % | Lot distinct à 120 s de recherche, 14/14 sous 7 % |
+Sur le lot de couverture, le gain moyen par instance depuis la construction est **13,52 %**. L’écart moyen au plan témoin réévalué en durée est **−17,17 %**. Certains cas restent défavorables : le pire écart moyen d’instance au témoin atteint **+24,97 %** au budget étudié. Tous les cas restent publiés.
 
-Le gap est `100 × (distance obtenue / distance BKS − 1)`. La moyenne par instance donne le même poids à chaque instance après moyenne de ses répétitions. Une BKS n’est pas nécessairement un optimum prouvé. Les valeurs de référence sont lues après la résolution, jamais fournies au moteur.
+Les fichiers `.sol` fournis ont été sélectionnés pour la distance. Leurs tournées sont réévaluées en durée, mais leur optimalité temporelle n’est pas établie : **l’écart au témoin n’est pas un gap à une BKS temps**. Un écart négatif est possible. Le rapport distingue ce témoin d’une borne inférieure MST et des véritables optimums prouvés sur dix petits cas de contrôle. Aucun ancien pourcentage en distance n’est présenté comme une qualité en temps.
 
-- [Tous les résultats de référence](livraison/RESULTATS_CATALOGUE_V8.html), [CSV des essais](livraison/RESULTATS_CATALOGUE_V8.csv), [CSV par instance](livraison/INSTANCES_CATALOGUE_V8.csv).
-- [Archive après reprises et temps cumulés](livraison/ARCHIVE_APRES_REPRISES_V9.html), [CSV](livraison/ARCHIVE_APRES_REPRISES_V9.csv).
-- Les protocoles, graines, sources figées et solutions individuelles sont dans `results/`. Les données et leur provenance sont dans `data/manifest.json`.
+Les durées sont exprimées en unités de temps du benchmark (u.t.), les temps de calcul en secondes. Les services sont constants pour une instance ; leur décomposition avec les trajets et attentes accompagne les pourcentages.
 
-Les expériences portent sur 100 à 1 000 clients, en distance statique. Le trafic dépendant de l’heure et le passage à plusieurs milliers de clients ne sont pas démontrés. Les graines restent peu nombreuses aux tailles intermédiaires.
+## Installer et lancer
 
-## Installer et exécuter
+Le pire essai individuel est C1_10_6, graine 4102 : **+26,77 % au témoin**. Ce chiffre se distingue du pire écart moyen par instance. Les cas défavorables sont visibles dans le rapport et les fichiers complets.
 
 Depuis ce dossier, avec Python 3.12 :
 
@@ -35,19 +29,21 @@ Depuis ce dossier, avec Python 3.12 :
 py -3.12 -m venv .venv
 .\.venv\Scripts\Activate.ps1
 python -m pip install -r requirements.txt
-python cli.py C101 --method ils_hgs_refined --seconds 10 --seed 3102
-python scripts/valider_rendu.py
+python cli.py C101 --method ils_hgs --seconds 10 --seed 4101
+python -m streamlit run web/app.py
+python scripts/analyze_duration.py
+python scripts/valider_duree.py
 python -m pytest tests -q --junitxml=livraison/TESTS.xml
 ```
 
-À 120 secondes, le profil `ils_hgs_refined` utilise 20 s d’ILS puis 100 s de HGS. Construction et préparation s’ajoutent au temps réel ; la compilation est mesurée séparément. Le profil `ils_hgs` conserve le partage historique à parts égales. `ils` et `sa` permettent les comparaisons avec nos méthodes seules. Aucune qualité de résultat n’est garantie pour une nouvelle exécution.
+La CLI et l’API publique `algo.solver` minimisent la durée par défaut. `--method ils`, `sa` et `ils_hgs` permettent de comparer notre ILS, notre recuit et l’hybride. Notre code construit et améliore les tournées ; le **HGS externe appartient à PyVRP 0.12.2** et reste attribué à ses auteurs. Le profil hybride utilise cinq secondes d’ILS puis cinq secondes de HGS à ce budget. Les références sont consultées après résolution et ne sont pas transmises au moteur.
 
-Pour réexécuter le notebook dans VS Code, sélectionner l’interpréteur `.venv` puis exécuter toutes les cellules. Cela recalcule analyses et exemples à partir des résultats fournis ; cela ne relance pas les 472 pipelines. La CLI lance une résolution neuve. Les scripts `benchmark_*.py` sont réservés aux campagnes longues : utiliser un nouveau dossier et conserver les résultats fournis.
+Le notebook recalcule les contrôles, exemples et statistiques à partir des fichiers fournis ; il ne relance pas les 646 résolutions. Pour l’exécuter dans VS Code, sélectionner l’interpréteur `.venv`. Une nouvelle campagne complète est possible avec `scripts/benchmark_duration.py --label nouveau_lot`, sans écraser les mesures existantes.
 
-L’interface de démonstration est facultative : `python -m streamlit run web/app.py`. Elle permet de lancer des essais et de visualiser tournées, horaires et statistiques. Les variantes non retenues sont conservées dans le code pour reproduire les comparaisons, et ne sont pas toutes activées dans le profil recommandé.
+## Vérification et limites
 
-## Vérification
+Le reçu courant est [VALIDATION_DUREE.json](livraison/VALIDATION_DUREE.json), complété par `livraison/TESTS.xml` et `MANIFESTE_SHA256.json`. Les données `.vrp/.sol`, les solutions, graines, durées, erreurs éventuelles, protocoles et sources effectivement exécutées sont conservés dans `data/` et `results/time_objective/`.
 
-`scripts/valider_rendu.py` recalcule contraintes et gaps à partir des données originales, contrôle les protocoles et les sources figées, distingue les budgets des campagnes, et vérifie les empreintes des fichiers remis. Les résultats du contrôle sont dans `livraison/VALIDATION_REMISE.json` ; le rapport de tests est `livraison/TESTS.xml`.
+Les tests comprennent aussi des contrôles explicites des routines historiques de distance ; cela ne les transforme pas en benchmarks temporels. Les solutions anciennes utilisées uniquement comme fixtures vérifient couverture, capacité et horaires. Les anciennes campagnes et leurs documents ne font pas partie de cette remise en durée.
 
-Node.js est utilisé par un test de lecture de la simulation web. Son absence entraîne un test ignoré, signalé dans le bilan. Les documents exportés se lisent sans Python. Les dépendances et références scientifiques restent attribuées à leurs auteurs.
+Le trafic dépendant de l’heure et les tailles supérieures à 1 000 clients ne sont pas démontrés. La couverture globale possède une ou deux graines selon la taille ; vingt répétitions sont réservées aux trois cas de stabilité. Une corrélation n’établit pas une causalité, et les histogrammes ne prouvent pas automatiquement une loi normale. Node.js est utilisé par un test de lecture de la simulation ; son absence est signalée comme test ignoré.

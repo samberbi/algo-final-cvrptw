@@ -5,7 +5,7 @@ import numpy as np
 import pytest
 from algo.model import Instance
 from algo.verify import verify
-from algo.solver import Settings,solve,arrays,encode,decode,warmup
+from algo.optimized import Settings,solve,arrays,encode,decode,warmup
 from algo import kernels
 from algo.data import load,reference
 
