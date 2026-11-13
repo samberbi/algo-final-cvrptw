@@ -1,0 +1,33 @@
+{
+  "cases": [
+    "C1_10_6",
+    "R1_10_5",
+    "RC2_10_5"
+  ],
+  "seeds": [
+    9301,
+    9302,
+    9303,
+    9304
+  ],
+  "workers": [
+    1,
+    2,
+    4
+  ],
+  "repetitions": 2,
+  "restarts_per_task": 4,
+  "safety_wall_s": 60,
+  "work": "Four independent starts per instance; same seeds and work on every worker count",
+  "context": "spawn",
+  "permitted_cpu_ids": [
+    0,
+    2,
+    4,
+    6
+  ],
+  "threads_per_process_environment": 1,
+  "cpu_measure": "Windows GetProcessTimes user+kernel, retained process handles; parent process_time",
+  "task_quality": "best feasible duration among the same four starts",
+  "warm_measure": "per-instance tables exclude pool startup; batch tables include complete worker startup and shutdown"
+}

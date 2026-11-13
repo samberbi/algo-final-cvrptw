@@ -11,7 +11,11 @@ $$A=(\{o\}\times C)\cup\{(i,j)\in C\times C:i\ne j\}\cup(C\times\{r\}).$$
 
 Les véhicules peuvent aller du départ à un client, entre deux clients distincts, puis d'un client au retour. Aucune boucle sur un même sommet n'est autorisée. Aucun arc n'entre dans o et aucun arc ne quitte r.
 
+**Des fenêtres par objet aux fenêtres par client.** Les benchmarks fournissent une demande et une fenêtre par client, sans détail des objets. Nous interprétons donc un client comme une livraison agrégée effectuée en un seul passage. Si les objets $a\in O_i$ ont des demandes $q_a$ et doivent partager un même début de livraison chez i, l'agrégation serait $q_i=\sum_{a\in O_i}q_a$, $e_i=\max_{a\in O_i}e_a$ et $l_i=\min_{a\in O_i}l_a$. Une intersection vide rendrait cette livraison commune impossible. Des objets livrés à des horaires différents ou plusieurs visites au même client demanderaient un autre modèle ; nous ne prétendons pas traiter ce cas avec les données agrégées actuelles.
+
 **Paramètres.** Pour chaque client $i\in C$, soient $q_i,s_i,e_i,l_i\in\mathbb R_{\ge0}$ : sa demande est $q_i$, sa durée de service $s_i$ et sa fenêtre de début de service $[e_i,l_i]$. Soient $Q,H\in\mathbb R_{>0}$ la capacité commune et la fermeture du dépôt. Comme dans les données acceptées par `Instance`, nous supposons $0\le e_i\le l_i\le H$ pour tout $i\in C$. Pour chaque arc $(i,j)\in A$, soient $d_{ij},c_{ij}\in\mathbb R_{\ge0}$ sa distance et son temps de trajet. Les départs sont fixés au temps zéro. Dans les benchmarks du projet, temps de trajet et distances ont les mêmes valeurs numériques ; le modèle distingue néanmoins leurs rôles et leurs unités.
+
+**Pourquoi fixer le départ à zéro ?** Nous supposons que le temps mobilisé de chaque véhicule utilisé est compté depuis une même origine, l'ouverture du dépôt. Cette convention simplifie les horaires et aligne le PLNE, notre contrôleur et PyVRP ; ce n'est pas une obligation générale du CVRPTW ni une consigne explicite de l'énoncé. Si les départs $D_k$ devenaient des décisions libres, il faudrait minimiser $\sum_k(R_k-D_k)$ et adapter les contraintes de départ ainsi que l'évaluation de tous les témoins. Retarder le départ peut éviter une attente sur tournée : les pourcentages des deux conventions ne seraient donc pas interchangeables. Cette extension n'est pas implémentée dans les expériences présentées.
 
 **Variables de décision et domaines.**
 
@@ -96,14 +100,17 @@ Pour chaque paire de clients distincts et chaque véhicule, emprunter l'arc de i
 
 Les contraintes imposent des horaires réalisables ; minimiser la somme des retours sélectionne une durée minimale pour les tournées retenues. Une fois l'ordre fixé, `verify()` recalcule les horaires au plus tôt : arrivée = fin précédente + trajet ; début = maximum entre arrivée et ouverture ; fin = début + service.
 
-**C7 — Fixer le retour et respecter la fermeture du dépôt.**
+**C7 — Relier le retour à la tournée et respecter la fermeture du dépôt.**
 
-$$R_k\ge t_i+s_i+c_{ir}-M(1-x_{ir}^k),$$
-$$R_k\le t_i+s_i+c_{ir}+M(1-x_{ir}^k)
+$$R_k\ge t_i+s_i+c_{ir}-M(1-x_{ir}^k)
 \qquad\forall i\in C,\ \forall k\in\mathcal K,$$
 $$0\le R_k\le Hu_k\qquad\forall k\in\mathcal K.$$
 
-Pour chaque client et chaque véhicule, si i est le dernier client visité, les deux premières inégalités fixent le retour à la fin de son service plus le trajet vers le dépôt. Le retour doit être au plus H. Pour un véhicule inutilisé, R vaut zéro. Un retour exactement à H est autorisé.
+Si le véhicule k revient directement du client i, alors $x_{ir}^k=1$ : la première inégalité impose de terminer le service puis le trajet de retour avant $R_k$. La seconde impose la fermeture du dépôt et fixe $R_k=0$ pour un véhicule inutilisé. Un retour exactement à H est autorisé.
+
+**Pourquoi simplifier cette contrainte ?** Dans la version précédente, nous écrivions aussi $R_k\le t_i+s_i+c_{ir}+M(1-x_{ir}^k)$. Cette borne supérieure supplémentaire est redondante à l'optimum pour notre objectif $\min\sum_k R_k$ : la minimisation choisit déjà la plus petite valeur permise par la borne inférieure. Nous la retirons de la formulation en durée et du solveur exact correspondant. Cela conserve l'objectif optimal et les tournées réalisables, sans imposer une égalité à tous les horaires non optimaux. Le mode historique en distance conserve cette égalité explicite, car son objectif ne minimise pas les retours.
+
+**Exemple.** Si le dernier service commence à 50, dure 10 et est suivi de 5 unités de trajet, alors $R_k\ge65$ ; la minimisation donne 65. Si le dépôt ferme à 60, cette tournée est interdite. Supprimer tout C7 serait donc incorrect : $R_k$ ne serait plus relié au trajet de retour et pourrait artificiellement valoir zéro. Nous retirons donc uniquement la borne supérieure redondante ; le retour avant fermeture reste obligatoire. Les dix petits cas de contrôle conservent leur optimum après cette simplification.
 
 **C8 — Interdire les cycles de clients isolés du dépôt.**
 

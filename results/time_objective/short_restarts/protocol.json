@@ -1,0 +1,59 @@
+{
+  "objective": "sum_route_duration",
+  "departures": 0,
+  "jobs": [
+    [
+      "C2_10_7",
+      4101,
+      5
+    ],
+    [
+      "C2_10_2",
+      4102,
+      10
+    ],
+    [
+      "C2_10_7",
+      4101,
+      10
+    ],
+    [
+      "C2_10_7",
+      4102,
+      5
+    ],
+    [
+      "C2_10_7",
+      4102,
+      10
+    ],
+    [
+      "C2_10_2",
+      4101,
+      10
+    ],
+    [
+      "C2_10_2",
+      4101,
+      5
+    ],
+    [
+      "C2_10_2",
+      4102,
+      5
+    ]
+  ],
+  "workers": 1,
+  "cpu_affinity": [
+    0
+  ],
+  "construction_limit_s": 10,
+  "restarts": 4,
+  "neighbors": 80,
+  "external_hgs_seconds": [
+    5,
+    10
+  ],
+  "selection": "Four previously observed slow instance-seed cases; exploratory tuning",
+  "time": "Fresh full pipeline measured continuously, warmup and data loading excluded, final verification included"
+}

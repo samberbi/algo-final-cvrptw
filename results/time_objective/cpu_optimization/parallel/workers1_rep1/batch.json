@@ -1,0 +1,74 @@
+{
+  "workers": 1,
+  "repetition": 1,
+  "startup_wall_s": 1.6620226999511942,
+  "total_wall_s": 40.14696859999094,
+  "total_cpu_s": 37.375,
+  "workers_lifetime_cpu_s": 36.90625,
+  "parent_cpu_s": 0.46875,
+  "cases": [
+    {
+      "instance": "R1_10_5",
+      "workers": 1,
+      "repetition": 1,
+      "same_start_seeds": [
+        9301,
+        9302,
+        9303,
+        9304
+      ],
+      "wall_s": 10.268934600055218,
+      "cpu_total_s": 9.96875,
+      "parent_cpu_s": 0.0625,
+      "workers_cpu_s": 9.90625,
+      "best_duration": 132876.5,
+      "delta_reference_pct": -8.463555300821701,
+      "all_feasible": true
+    },
+    {
+      "instance": "RC2_10_5",
+      "workers": 1,
+      "repetition": 1,
+      "same_start_seeds": [
+        9301,
+        9302,
+        9303,
+        9304
+      ],
+      "wall_s": 15.868787300074473,
+      "cpu_total_s": 14.65625,
+      "parent_cpu_s": 0.0625,
+      "workers_cpu_s": 14.59375,
+      "best_duration": 92264.4,
+      "delta_reference_pct": -43.40492745000015,
+      "all_feasible": true
+    },
+    {
+      "instance": "C1_10_6",
+      "workers": 1,
+      "repetition": 1,
+      "same_start_seeds": [
+        9301,
+        9302,
+        9303,
+        9304
+      ],
+      "wall_s": 11.95432450005319,
+      "cpu_total_s": 11.0625,
+      "parent_cpu_s": 0.078125,
+      "workers_cpu_s": 10.984375,
+      "best_duration": 139109.1,
+      "delta_reference_pct": 4.003149048220367,
+      "all_feasible": true
+    }
+  ],
+  "initializers": [
+    {
+      "pid": 11760,
+      "cpu": 0,
+      "init_wall_s": 0.38957440003287047,
+      "init_cpu_s": 0.328125
+    }
+  ],
+  "cpu_scope": "Exact Windows user+kernel lifetime of every worker + parent CPU; includes worker startup/warmup/shutdown"
+}

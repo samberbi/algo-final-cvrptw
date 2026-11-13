@@ -55,7 +55,11 @@ def solve_plne(ins,seconds=10.,objective='duration'):
                 if i!=j:constraint([(('t',j),1),(('t',i),-1),(('x',i,j,k),-M)],l=float(ins.service[i]+ins.travel[i,j])-M)
             ret=float(ins.service[i]+ins.travel[i,0])
             constraint([(('R',k),1),(('t',i),-1),(('x',i,r,k),-M)],l=ret-M)
-            constraint([(('R',k),1),(('t',i),-1),(('x',i,r,k),M)],h=ret+M)
+            # En durée, minimiser la somme des R rend cette borne supérieure
+            # redondante à l'optimum. La borne inférieure et R <= H*u restent.
+            # Le mode historique distance garde l'égalité explicite du retour.
+            if metric == 'distance':
+                constraint([(('R',k),1),(('t',i),-1),(('x',i,r,k),M)],h=ret+M)
             constraint([(('f',a,b,k),1) for a,b in A if b==i]+
                        [(('f',a,b,k),-1) for a,b in A if a==i]+[(('y',i,k),-1)],0,0)
         constraint([(('f',0,j,k),1) for j in C]+[(('y',i,k),-1) for i in C],0,0)

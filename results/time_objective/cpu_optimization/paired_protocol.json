@@ -1,0 +1,78 @@
+{
+  "objective": "sum_route_duration",
+  "departures": 0,
+  "cases": [
+    "C103",
+    "C1_10_6",
+    "R1_10_5",
+    "RC2_10_5"
+  ],
+  "seeds": [
+    8301,
+    8302,
+    8303
+  ],
+  "methods": [
+    "before",
+    "cached_neighbors"
+  ],
+  "restarts": 4,
+  "safety_wall_limit_s": 60,
+  "work": "Same four restarts, constructors, neighbourhoods and route pool; no time cutoff reached",
+  "cpu_measure": "time.process_time: all threads of this single solver process",
+  "wall_measure": "time.perf_counter",
+  "warmup_excluded": true,
+  "cpu_affinity": [
+    0
+  ],
+  "jobs": [
+    [
+      "R1_10_5",
+      8301
+    ],
+    [
+      "RC2_10_5",
+      8301
+    ],
+    [
+      "R1_10_5",
+      8303
+    ],
+    [
+      "C103",
+      8302
+    ],
+    [
+      "C1_10_6",
+      8302
+    ],
+    [
+      "R1_10_5",
+      8302
+    ],
+    [
+      "C1_10_6",
+      8301
+    ],
+    [
+      "RC2_10_5",
+      8302
+    ],
+    [
+      "C1_10_6",
+      8303
+    ],
+    [
+      "RC2_10_5",
+      8303
+    ],
+    [
+      "C103",
+      8301
+    ],
+    [
+      "C103",
+      8303
+    ]
+  ]
+}

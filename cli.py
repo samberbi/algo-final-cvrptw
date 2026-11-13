@@ -36,6 +36,7 @@ def main():
             "ils_cached",
             "ils_hgs",
             "ils_hgs_refined",
+            "duration_refined",
         ],
         default="ils",
     )
@@ -52,17 +53,23 @@ def main():
         p.error("La graine doit être entre 0 et 2147483647")
     if a.intensify and a.objective != "distance":
         p.error("Intensification réservée à la distance")
+    if a.method == 'duration_refined' and a.objective != 'duration':
+        p.error('duration_refined minimise uniquement la durée totale')
     path = Path(a.instance)
     if not path.is_file():
         path = root / "data/instances" / (a.instance + ".vrp")
     ins = load(path)
     if a.objective == 'duration':
         from algo.duration import solve as duration_solve, Settings as DurationSettings, warmup as duration_warmup
-        if a.method not in ('ils','sa','ils_hgs','ils_hgs_refined'):
+        if a.method not in ('ils','sa','ils_hgs','ils_hgs_refined','duration_refined'):
             p.error('Cette variante historique ne possède pas de version en durée')
         warming=time.perf_counter();duration_warmup();startup=time.perf_counter()-warming
-        method='hybrid' if a.method in ('ils_hgs','ils_hgs_refined') else a.method
-        result=duration_solve(ins,DurationSettings(seconds=a.seconds,seed=a.seed,method=method))
+        if a.method == 'duration_refined':
+            from algo.duration_refine import solve as refined_duration_solve
+            result=refined_duration_solve(ins,seed=a.seed,seconds=a.seconds)
+        else:
+            method='hybrid' if a.method in ('ils_hgs','ils_hgs_refined') else a.method
+            result=duration_solve(ins,DurationSettings(seconds=a.seconds,seed=a.seed,method=method))
     else:
         startup = warmup()
     if a.objective == 'duration':

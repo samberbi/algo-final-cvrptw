@@ -10,5 +10,18 @@
 | HGS : coût durée et départ fixé | Aligner le moteur externe sur le modèle | Test d’une attente obligatoire que le départ ne peut masquer |
 | Nouvelles références temporelles | Éviter de renommer les gaps distance | Tournées de référence réévaluées, qualification explicite |
 | Nouvelle campagne et statistique descriptive | Mesurer l’effet réel de la méthode | Données individuelles, graines, sources figées et effectifs conservés |
+| Simplification de C7 pour l'objectif durée | Retirer uniquement une borne supérieure redondante | Dix optimums exacts conservés ; fermeture du dépôt maintenue |
+| Audit exhaustif des écarts temporels | Contrôler le seuil par essai et par instance | 646 solutions et 356 témoins revalidés ; dépassements listés en section 6.7 |
+| Constructions alternatives et intensification locale | Réduire les mauvaises durées de départ | Essais exploratoires séparés, solutions revalidées et régressions conservées |
+| Carte, horaires et temps d'exécution | Relier représentation, objectif et coût de calcul | Figures issues des mêmes résultats enregistrés et commentées individuellement |
 
 L’implémentation propre de l’ILS, les adaptateurs et la vérification sont dans le projet ; le moteur génétique externe appartient à PyVRP. Les commentaires du code expliquent les fonctions et les points sensibles.
+
+## Complément : optimisation ciblée en durée
+
+Le profil `duration_refined` ajoute plusieurs constructions, une recherche locale externe PyVRP à voisinages progressifs et un réservoir de tournées évalué en durée. Les essais encore défavorables reçoivent une continuation HGS identifiée, avec le temps précédent inclus. Les résultats individuels, les budgets et les limites sont détaillés dans [OPTIMISATION_DUREE_CIBLEE.md](OPTIMISATION_DUREE_CIBLEE.md). La campagne initiale reste inchangée.
+
+
+## Compléments expérimentaux et rédactionnels
+
+Les sections 6.10 et 6.11 ajoutent une [sensibilité contrôlée](SENSIBILITE_CONTROLEE_DUREE.md) du profil ILS–HGS et une [analyse des scénarios](ANALYSE_SCENARIOS_DUREE.md) sur le catalogue initial. Le contexte métier, la réduction TSP, les fenêtres par objet/client, le départ à zéro et les budgets sont explicités. Cette passe ne modifie pas les opérateurs, le profil par défaut ou les meilleures tournées conservées.

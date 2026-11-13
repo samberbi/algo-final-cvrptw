@@ -22,8 +22,11 @@ class RouteColumn:
 
 
 class RoutePool:
-    def __init__(self, instance):
+    def __init__(self, instance, objective='distance'):
+        if objective not in ('distance', 'duration'):
+            raise ValueError('Choose distance or duration')
         self.instance = instance
+        self.objective = objective
         self.columns = {}
         self.best_routes = None
         self.best_cost = math.inf
@@ -40,14 +43,14 @@ class RoutePool:
             )
         routes = [list(route) for route in routes if route]
         self.solutions_added += 1
-        if checked["distance"] < self.best_cost:
-            self.best_cost = checked["distance"]
+        if checked[self.objective] < self.best_cost:
+            self.best_cost = checked[self.objective]
             self.best_routes = [route[:] for route in routes]
         for route, metrics in zip(routes, checked["routes"]):
             key = frozenset(route)
             column = self.columns.get(key)
-            if column is None or metrics["distance"] < column.cost - 1e-8:
-                self.columns[key] = RouteColumn(tuple(route), metrics["distance"])
+            if column is None or metrics[self.objective] < column.cost - 1e-8:
+                self.columns[key] = RouteColumn(tuple(route), metrics[self.objective])
 
     def recombine(self, seconds=5.0, relative_gap=0.001):
         """Sélectionne des tournées du réservoir par partitionnement en nombres entiers.
@@ -90,17 +93,18 @@ class RoutePool:
             checked = verify(candidate, ins)
             if not checked["valid"]:
                 raise AssertionError(checked["errors"])
-            if checked["distance"] < self.best_cost - 1e-8:
+            if checked[self.objective] < self.best_cost - 1e-8:
                 routes = candidate
         checked = verify(routes, ins)
-        assert checked["valid"] and checked["distance"] <= self.best_cost + 1e-7
+        assert checked["valid"] and checked[self.objective] <= self.best_cost + 1e-7
         initial_cost = self.best_cost
         self.add_solution(routes)
         dual = getattr(result, "mip_dual_bound", None)
         return dict(
             status="feasible",
             routes=routes,
-            cost=checked["distance"] / 10,
+            cost=checked[self.objective] / 10,
+            objective=self.objective,
             initial_cost=initial_cost / 10,
             metrics=checked,
             vehicles=checked["vehicles"],

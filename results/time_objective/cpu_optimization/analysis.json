@@ -1,0 +1,65 @@
+{
+  "paired_runs": 24,
+  "pairs": 12,
+  "identical_costs": true,
+  "all_feasible": true,
+  "cpu_reduction_pct": 39.56521739130435,
+  "before_sort_calls": 22,
+  "after_sort_calls": 1,
+  "parallel_tasks": 72,
+  "portfolios": 18,
+  "parallel_worker_levels": [
+    1,
+    2,
+    4
+  ],
+  "parallel_summary": [
+    {
+      "workers": 1,
+      "portfolios": 6,
+      "wall_s": 12.8202271333624,
+      "cpu_s": 12.122395833333334,
+      "speedup": 1.0,
+      "cpu_increase_pct": 0.0
+    },
+    {
+      "workers": 2,
+      "portfolios": 6,
+      "wall_s": 6.834353183318551,
+      "cpu_s": 12.934895833333334,
+      "speedup": 1.8758508361338875,
+      "cpu_increase_pct": 6.702470461868959
+    },
+    {
+      "workers": 4,
+      "portfolios": 6,
+      "wall_s": 3.919392283326791,
+      "cpu_s": 14.088541666666666,
+      "speedup": 3.2709732036520096,
+      "cpu_increase_pct": 16.219119226638014
+    }
+  ],
+  "cold_summary": [
+    {
+      "workers": 1,
+      "batches": 2,
+      "startup_wall_s": 1.6839113499736413,
+      "total_wall_s": 40.5420957999886,
+      "total_cpu_s": 38.015625
+    },
+    {
+      "workers": 2,
+      "batches": 2,
+      "startup_wall_s": 1.7869002500083297,
+      "total_wall_s": 22.727809050003998,
+      "total_cpu_s": 42.0078125
+    },
+    {
+      "workers": 4,
+      "batches": 2,
+      "startup_wall_s": 1.9214083999977447,
+      "total_wall_s": 14.167096449935343,
+      "total_cpu_s": 49.296875
+    }
+  ]
+}

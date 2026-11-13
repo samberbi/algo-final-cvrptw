@@ -1,0 +1,92 @@
+{
+  "workers": 4,
+  "repetition": 2,
+  "startup_wall_s": 1.7894867999712005,
+  "total_wall_s": 13.983435099944472,
+  "total_cpu_s": 49.734375,
+  "workers_lifetime_cpu_s": 49.21875,
+  "parent_cpu_s": 0.515625,
+  "cases": [
+    {
+      "instance": "RC2_10_5",
+      "workers": 4,
+      "repetition": 2,
+      "same_start_seeds": [
+        9301,
+        9302,
+        9303,
+        9304
+      ],
+      "wall_s": 4.721904599922709,
+      "cpu_total_s": 17.375,
+      "parent_cpu_s": 0.078125,
+      "workers_cpu_s": 17.296875,
+      "best_duration": 92264.4,
+      "delta_reference_pct": -43.40492745000015,
+      "all_feasible": true
+    },
+    {
+      "instance": "C1_10_6",
+      "workers": 4,
+      "repetition": 2,
+      "same_start_seeds": [
+        9301,
+        9302,
+        9303,
+        9304
+      ],
+      "wall_s": 3.8232148999813944,
+      "cpu_total_s": 14.25,
+      "parent_cpu_s": 0.109375,
+      "workers_cpu_s": 14.140625,
+      "best_duration": 139109.1,
+      "delta_reference_pct": 4.003149048220367,
+      "all_feasible": true
+    },
+    {
+      "instance": "R1_10_5",
+      "workers": 4,
+      "repetition": 2,
+      "same_start_seeds": [
+        9301,
+        9302,
+        9303,
+        9304
+      ],
+      "wall_s": 3.1549939999822527,
+      "cpu_total_s": 11.4375,
+      "parent_cpu_s": 0.09375,
+      "workers_cpu_s": 11.34375,
+      "best_duration": 132876.5,
+      "delta_reference_pct": -8.463555300821701,
+      "all_feasible": true
+    }
+  ],
+  "initializers": [
+    {
+      "pid": 27084,
+      "cpu": 6,
+      "init_wall_s": 0.398194000008516,
+      "init_cpu_s": 0.34375
+    },
+    {
+      "pid": 2964,
+      "cpu": 2,
+      "init_wall_s": 0.3863108000950888,
+      "init_cpu_s": 0.34375
+    },
+    {
+      "pid": 29668,
+      "cpu": 0,
+      "init_wall_s": 0.40234879998024553,
+      "init_cpu_s": 0.34375
+    },
+    {
+      "pid": 31152,
+      "cpu": 4,
+      "init_wall_s": 0.3859613999957219,
+      "init_cpu_s": 0.390625
+    }
+  ],
+  "cpu_scope": "Exact Windows user+kernel lifetime of every worker + parent CPU; includes worker startup/warmup/shutdown"
+}

@@ -1,0 +1,1463 @@
+{
+  "instance": "R203",
+  "seed": 8302,
+  "configuration": "baseline",
+  "parameters": {
+    "tolerance": 0.005,
+    "neighbors": 40
+  },
+  "objective": "sum_route_duration",
+  "complete": true,
+  "valid": true,
+  "n": 100,
+  "duration": 2237.1,
+  "delta_reference_pct": -56.40456007015493,
+  "reference_duration": 5131.5,
+  "travel": 1218.2,
+  "waiting": 18.9,
+  "service": 1000.0,
+  "vehicles": 3,
+  "construction_s": 0.030201500048860908,
+  "own_ils_s": 2.0005035999929532,
+  "external_hgs_s": 2.0128467999165878,
+  "verification_s": 0.0005127000622451305,
+  "recomposed_total_s": 4.044064600020647,
+  "this_job_wall_s": 2.017727500060573,
+  "reused_initial": true,
+  "reused_prefix": true,
+  "initial_source": "results/time_objective/sensitivity_controlled/initials/R203_8302.json",
+  "prefix_source": "results/time_objective/sensitivity_controlled/prefixes/R203_8302_0.005.json",
+  "initial_sha256": "5bbbae600f58c66ccf248bab97782962f7a49b4dceb8ee3c7946a14566024568",
+  "prefix_sha256": "4f422488cf4225ba01e220cb269f5897568de106cb673cc86f85eb2e510bb48b",
+  "own_ils_duration": 2347.4,
+  "result": {
+    "status": "feasible",
+    "engine": "external-pyvrp-0.12.2",
+    "attribution": "External HGS implemented by PyVRP; our adapter and independent verification",
+    "routes": [
+      [
+        89,
+        5,
+        85,
+        98,
+        37,
+        92,
+        42,
+        57,
+        2,
+        73,
+        39,
+        15,
+        43,
+        14,
+        44,
+        38,
+        86,
+        16,
+        61,
+        99,
+        59,
+        95,
+        97,
+        87,
+        84,
+        8,
+        47,
+        49,
+        19,
+        7,
+        52,
+        10,
+        20,
+        66,
+        35,
+        3,
+        68,
+        50,
+        1,
+        70,
+        77,
+        80,
+        25,
+        58
+      ],
+      [
+        65,
+        71,
+        33,
+        32,
+        90,
+        31,
+        69,
+        27,
+        28,
+        12,
+        26,
+        21,
+        75,
+        23,
+        67,
+        72,
+        41,
+        22,
+        79,
+        78,
+        9,
+        51,
+        81,
+        34,
+        29,
+        24,
+        54,
+        55,
+        56,
+        4,
+        74,
+        13,
+        17,
+        91,
+        100,
+        93,
+        96
+      ],
+      [
+        18,
+        60,
+        45,
+        83,
+        82,
+        48,
+        46,
+        36,
+        62,
+        63,
+        64,
+        11,
+        30,
+        88,
+        76,
+        40,
+        94,
+        6,
+        53
+      ]
+    ],
+    "cost": 2237.1,
+    "objective": "duration",
+    "metrics": {
+      "valid": true,
+      "errors": [],
+      "vehicles": 3,
+      "duration": 22371.0,
+      "distance": 12182.0,
+      "travel": 12182.0,
+      "waiting": 189.0,
+      "makespan": 9268.0,
+      "routes": [
+        {
+          "duration": 9268.0,
+          "travel": 4846.0,
+          "distance": 4846.0,
+          "waiting": 22.0,
+          "load": 675.0,
+          "schedule": [
+            {
+              "client": 89,
+              "arrival": 90.0,
+              "start": 90.0,
+              "finish": 190.0
+            },
+            {
+              "client": 5,
+              "arrival": 310.0,
+              "start": 310.0,
+              "finish": 410.0
+            },
+            {
+              "client": 85,
+              "arrival": 490.0,
+              "start": 490.0,
+              "finish": 590.0
+            },
+            {
+              "client": 98,
+              "arrival": 621.0,
+              "start": 621.0,
+              "finish": 721.0
+            },
+            {
+              "client": 37,
+              "arrival": 735.0,
+              "start": 735.0,
+              "finish": 835.0
+            },
+            {
+              "client": 92,
+              "arrival": 863.0,
+              "start": 863.0,
+              "finish": 963.0
+            },
+            {
+              "client": 42,
+              "arrival": 1064.0,
+              "start": 1064.0,
+              "finish": 1164.0
+            },
+            {
+              "client": 57,
+              "arrival": 1244.0,
+              "start": 1244.0,
+              "finish": 1344.0
+            },
+            {
+              "client": 2,
+              "arrival": 1402.0,
+              "start": 1402.0,
+              "finish": 1502.0
+            },
+            {
+              "client": 73,
+              "arrival": 1592.0,
+              "start": 1592.0,
+              "finish": 1692.0
+            },
+            {
+              "client": 39,
+              "arrival": 1859.0,
+              "start": 1859.0,
+              "finish": 1959.0
+            },
+            {
+              "client": 15,
+              "arrival": 2267.0,
+              "start": 2267.0,
+              "finish": 2367.0
+            },
+            {
+              "client": 43,
+              "arrival": 2439.0,
+              "start": 2439.0,
+              "finish": 2539.0
+            },
+            {
+              "client": 14,
+              "arrival": 2645.0,
+              "start": 2645.0,
+              "finish": 2745.0
+            },
+            {
+              "client": 44,
+              "arrival": 2801.0,
+              "start": 2801.0,
+              "finish": 2901.0
+            },
+            {
+              "client": 38,
+              "arrival": 3009.0,
+              "start": 3020.0,
+              "finish": 3120.0
+            },
+            {
+              "client": 86,
+              "arrival": 3250.0,
+              "start": 3250.0,
+              "finish": 3350.0
+            },
+            {
+              "client": 16,
+              "arrival": 3413.0,
+              "start": 3413.0,
+              "finish": 3513.0
+            },
+            {
+              "client": 61,
+              "arrival": 3557.0,
+              "start": 3557.0,
+              "finish": 3657.0
+            },
+            {
+              "client": 99,
+              "arrival": 3739.0,
+              "start": 3739.0,
+              "finish": 3839.0
+            },
+            {
+              "client": 59,
+              "arrival": 3861.0,
+              "start": 3861.0,
+              "finish": 3961.0
+            },
+            {
+              "client": 95,
+              "arrival": 4001.0,
+              "start": 4001.0,
+              "finish": 4101.0
+            },
+            {
+              "client": 97,
+              "arrival": 4131.0,
+              "start": 4131.0,
+              "finish": 4231.0
+            },
+            {
+              "client": 87,
+              "arrival": 4273.0,
+              "start": 4273.0,
+              "finish": 4373.0
+            },
+            {
+              "client": 84,
+              "arrival": 4587.0,
+              "start": 4587.0,
+              "finish": 4687.0
+            },
+            {
+              "client": 8,
+              "arrival": 4807.0,
+              "start": 4807.0,
+              "finish": 4907.0
+            },
+            {
+              "client": 47,
+              "arrival": 5038.0,
+              "start": 5038.0,
+              "finish": 5138.0
+            },
+            {
+              "client": 49,
+              "arrival": 5259.0,
+              "start": 5259.0,
+              "finish": 5359.0
+            },
+            {
+              "client": 19,
+              "arrival": 5479.0,
+              "start": 5479.0,
+              "finish": 5579.0
+            },
+            {
+              "client": 7,
+              "arrival": 5690.0,
+              "start": 5690.0,
+              "finish": 5790.0
+            },
+            {
+              "client": 52,
+              "arrival": 5888.0,
+              "start": 5888.0,
+              "finish": 5988.0
+            },
+            {
+              "client": 10,
+              "arrival": 6160.0,
+              "start": 6160.0,
+              "finish": 6260.0
+            },
+            {
+              "client": 20,
+              "arrival": 6418.0,
+              "start": 6418.0,
+              "finish": 6518.0
+            },
+            {
+              "client": 66,
+              "arrival": 6607.0,
+              "start": 6607.0,
+              "finish": 6707.0
+            },
+            {
+              "client": 35,
+              "arrival": 6868.0,
+              "start": 6868.0,
+              "finish": 6968.0
+            },
+            {
+              "client": 3,
+              "arrival": 7183.0,
+              "start": 7183.0,
+              "finish": 7283.0
+            },
+            {
+              "client": 68,
+              "arrival": 7343.0,
+              "start": 7343.0,
+              "finish": 7443.0
+            },
+            {
+              "client": 50,
+              "arrival": 7563.0,
+              "start": 7563.0,
+              "finish": 7663.0
+            },
+            {
+              "client": 1,
+              "arrival": 7726.0,
+              "start": 7726.0,
+              "finish": 7826.0
+            },
+            {
+              "client": 70,
+              "arrival": 7906.0,
+              "start": 7906.0,
+              "finish": 8006.0
+            },
+            {
+              "client": 77,
+              "arrival": 8212.0,
+              "start": 8212.0,
+              "finish": 8312.0
+            },
+            {
+              "client": 80,
+              "arrival": 8379.0,
+              "start": 8390.0,
+              "finish": 8490.0
+            },
+            {
+              "client": 25,
+              "arrival": 8682.0,
+              "start": 8682.0,
+              "finish": 8782.0
+            },
+            {
+              "client": 58,
+              "arrival": 9078.0,
+              "start": 9078.0,
+              "finish": 9178.0
+            }
+          ]
+        },
+        {
+          "duration": 8589.0,
+          "travel": 4771.0,
+          "distance": 4771.0,
+          "waiting": 118.0,
+          "load": 537.0,
+          "schedule": [
+            {
+              "client": 65,
+              "arrival": 499.0,
+              "start": 499.0,
+              "finish": 599.0
+            },
+            {
+              "client": 71,
+              "arrival": 701.0,
+              "start": 701.0,
+              "finish": 801.0
+            },
+            {
+              "client": 33,
+              "arrival": 965.0,
+              "start": 965.0,
+              "finish": 1065.0
+            },
+            {
+              "client": 32,
+              "arrival": 1312.0,
+              "start": 1312.0,
+              "finish": 1412.0
+            },
+            {
+              "client": 90,
+              "arrival": 1456.0,
+              "start": 1456.0,
+              "finish": 1556.0
+            },
+            {
+              "client": 31,
+              "arrival": 1706.0,
+              "start": 1706.0,
+              "finish": 1806.0
+            },
+            {
+              "client": 69,
+              "arrival": 1884.0,
+              "start": 1884.0,
+              "finish": 1984.0
+            },
+            {
+              "client": 27,
+              "arrival": 2056.0,
+              "start": 2056.0,
+              "finish": 2156.0
+            },
+            {
+              "client": 28,
+              "arrival": 2223.0,
+              "start": 2223.0,
+              "finish": 2323.0
+            },
+            {
+              "client": 12,
+              "arrival": 2415.0,
+              "start": 2415.0,
+              "finish": 2515.0
+            },
+            {
+              "client": 26,
+              "arrival": 2585.0,
+              "start": 2585.0,
+              "finish": 2685.0
+            },
+            {
+              "client": 21,
+              "arrival": 2785.0,
+              "start": 2785.0,
+              "finish": 2885.0
+            },
+            {
+              "client": 75,
+              "arrival": 2983.0,
+              "start": 2983.0,
+              "finish": 3083.0
+            },
+            {
+              "client": 23,
+              "arrival": 3167.0,
+              "start": 3167.0,
+              "finish": 3267.0
+            },
+            {
+              "client": 67,
+              "arrival": 3387.0,
+              "start": 3387.0,
+              "finish": 3487.0
+            },
+            {
+              "client": 72,
+              "arrival": 3715.0,
+              "start": 3715.0,
+              "finish": 3815.0
+            },
+            {
+              "client": 41,
+              "arrival": 3917.0,
+              "start": 3960.0,
+              "finish": 4060.0
+            },
+            {
+              "client": 22,
+              "arrival": 4102.0,
+              "start": 4102.0,
+              "finish": 4202.0
+            },
+            {
+              "client": 79,
+              "arrival": 4600.0,
+              "start": 4600.0,
+              "finish": 4700.0
+            },
+            {
+              "client": 78,
+              "arrival": 4756.0,
+              "start": 4756.0,
+              "finish": 4856.0
+            },
+            {
+              "client": 9,
+              "arrival": 4956.0,
+              "start": 4956.0,
+              "finish": 5056.0
+            },
+            {
+              "client": 51,
+              "arrival": 5119.0,
+              "start": 5119.0,
+              "finish": 5219.0
+            },
+            {
+              "client": 81,
+              "arrival": 5291.0,
+              "start": 5291.0,
+              "finish": 5391.0
+            },
+            {
+              "client": 34,
+              "arrival": 5491.0,
+              "start": 5491.0,
+              "finish": 5591.0
+            },
+            {
+              "client": 29,
+              "arrival": 5721.0,
+              "start": 5721.0,
+              "finish": 5821.0
+            },
+            {
+              "client": 24,
+              "arrival": 5891.0,
+              "start": 5891.0,
+              "finish": 5991.0
+            },
+            {
+              "client": 54,
+              "arrival": 6091.0,
+              "start": 6091.0,
+              "finish": 6191.0
+            },
+            {
+              "client": 55,
+              "arrival": 6275.0,
+              "start": 6275.0,
+              "finish": 6375.0
+            },
+            {
+              "client": 56,
+              "arrival": 6523.0,
+              "start": 6523.0,
+              "finish": 6623.0
+            },
+            {
+              "client": 4,
+              "arrival": 6705.0,
+              "start": 6780.0,
+              "finish": 6880.0
+            },
+            {
+              "client": 74,
+              "arrival": 6994.0,
+              "start": 6994.0,
+              "finish": 7094.0
+            },
+            {
+              "client": 13,
+              "arrival": 7294.0,
+              "start": 7294.0,
+              "finish": 7394.0
+            },
+            {
+              "client": 17,
+              "arrival": 7648.0,
+              "start": 7648.0,
+              "finish": 7748.0
+            },
+            {
+              "client": 91,
+              "arrival": 7896.0,
+              "start": 7896.0,
+              "finish": 7996.0
+            },
+            {
+              "client": 100,
+              "arrival": 8027.0,
+              "start": 8027.0,
+              "finish": 8127.0
+            },
+            {
+              "client": 93,
+              "arrival": 8187.0,
+              "start": 8187.0,
+              "finish": 8287.0
+            },
+            {
+              "client": 96,
+              "arrival": 8337.0,
+              "start": 8337.0,
+              "finish": 8437.0
+            }
+          ]
+        },
+        {
+          "duration": 4514.0,
+          "travel": 2565.0,
+          "distance": 2565.0,
+          "waiting": 49.0,
+          "load": 246.0,
+          "schedule": [
+            {
+              "client": 18,
+              "arrival": 158.0,
+              "start": 158.0,
+              "finish": 258.0
+            },
+            {
+              "client": 60,
+              "arrival": 325.0,
+              "start": 325.0,
+              "finish": 425.0
+            },
+            {
+              "client": 45,
+              "arrival": 542.0,
+              "start": 542.0,
+              "finish": 642.0
+            },
+            {
+              "client": 83,
+              "arrival": 722.0,
+              "start": 722.0,
+              "finish": 822.0
+            },
+            {
+              "client": 82,
+              "arrival": 922.0,
+              "start": 922.0,
+              "finish": 1022.0
+            },
+            {
+              "client": 48,
+              "arrival": 1075.0,
+              "start": 1075.0,
+              "finish": 1175.0
+            },
+            {
+              "client": 46,
+              "arrival": 1292.0,
+              "start": 1292.0,
+              "finish": 1392.0
+            },
+            {
+              "client": 36,
+              "arrival": 1512.0,
+              "start": 1512.0,
+              "finish": 1612.0
+            },
+            {
+              "client": 62,
+              "arrival": 1832.0,
+              "start": 1832.0,
+              "finish": 1932.0
+            },
+            {
+              "client": 63,
+              "arrival": 2046.0,
+              "start": 2046.0,
+              "finish": 2146.0
+            },
+            {
+              "client": 64,
+              "arrival": 2290.0,
+              "start": 2290.0,
+              "finish": 2390.0
+            },
+            {
+              "client": 11,
+              "arrival": 2520.0,
+              "start": 2520.0,
+              "finish": 2620.0
+            },
+            {
+              "client": 30,
+              "arrival": 2826.0,
+              "start": 2826.0,
+              "finish": 2926.0
+            },
+            {
+              "client": 88,
+              "arrival": 3087.0,
+              "start": 3087.0,
+              "finish": 3187.0
+            },
+            {
+              "client": 76,
+              "arrival": 3437.0,
+              "start": 3437.0,
+              "finish": 3537.0
+            },
+            {
+              "client": 40,
+              "arrival": 3729.0,
+              "start": 3729.0,
+              "finish": 3829.0
+            },
+            {
+              "client": 94,
+              "arrival": 3970.0,
+              "start": 3970.0,
+              "finish": 4070.0
+            },
+            {
+              "client": 6,
+              "arrival": 4101.0,
+              "start": 4150.0,
+              "finish": 4250.0
+            },
+            {
+              "client": 53,
+              "arrival": 4370.0,
+              "start": 4370.0,
+              "finish": 4470.0
+            }
+          ]
+        }
+      ]
+    },
+    "vehicles": 3,
+    "runtime_s": 2.0128467999165878,
+    "setup_s": 0.003741299966350198,
+    "search_budget_s": 2.0,
+    "neighbor_count": 40,
+    "seed": 18302,
+    "trace": [
+      {
+        "elapsed_s": 0.003741299966350198,
+        "best": 2347.4,
+        "phase": "external-start"
+      },
+      {
+        "elapsed_s": 0.02982920000795275,
+        "best": 2347.4,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 0.06509609997738153,
+        "best": 2307.2,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 0.08747520006727427,
+        "best": 2307.2,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 0.0953144000377506,
+        "best": 2307.2,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 0.10611419996712357,
+        "best": 2307.2,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 0.12445930007379502,
+        "best": 2307.2,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 0.1276425999822095,
+        "best": 2307.2,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 0.14238470001146197,
+        "best": 2307.2,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 0.153525699977763,
+        "best": 2307.2,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 0.17630000005010515,
+        "best": 2307.2,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 0.2003472000360489,
+        "best": 2307.2,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 0.21406869997736067,
+        "best": 2307.2,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 0.2366708000190556,
+        "best": 2307.2,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 0.2580192000605166,
+        "best": 2307.2,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 0.268382600042969,
+        "best": 2307.2,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 0.2881325000198558,
+        "best": 2307.2,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 0.30176589998882264,
+        "best": 2271.8,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 0.30483050004113466,
+        "best": 2271.8,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 0.32361500000115484,
+        "best": 2271.8,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 0.33530070004053414,
+        "best": 2271.8,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 0.346441000001505,
+        "best": 2271.8,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 0.35383649996947497,
+        "best": 2259.3,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 0.36321460001636297,
+        "best": 2259.3,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 0.3790467999642715,
+        "best": 2259.3,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 0.3848613000009209,
+        "best": 2259.3,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 0.4063039000611752,
+        "best": 2259.3,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 0.4365775999613106,
+        "best": 2259.3,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 0.4563186999876052,
+        "best": 2259.3,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 0.4823898000176996,
+        "best": 2259.3,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 0.4982181000523269,
+        "best": 2250.1,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 0.5166203000117093,
+        "best": 2250.1,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 0.5338681000284851,
+        "best": 2250.1,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 0.5633230999810621,
+        "best": 2250.1,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 0.5930332000134513,
+        "best": 2250.1,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 0.6005453000543639,
+        "best": 2250.1,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 0.6309799000155181,
+        "best": 2250.1,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 0.665132199996151,
+        "best": 2250.1,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 0.678000699961558,
+        "best": 2250.1,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 0.7001629000296816,
+        "best": 2250.1,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 0.7155204999726266,
+        "best": 2250.1,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 0.7191599999787286,
+        "best": 2250.1,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 0.7497318000532687,
+        "best": 2250.1,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 0.7666030999971554,
+        "best": 2250.1,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 0.7699893000535667,
+        "best": 2250.1,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 0.7881430999841541,
+        "best": 2250.1,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 0.8031484000384808,
+        "best": 2250.1,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 0.8189146000659093,
+        "best": 2250.1,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 0.8448304999619722,
+        "best": 2250.1,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 0.8750972000416368,
+        "best": 2250.1,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 0.8977931999834254,
+        "best": 2250.1,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 0.9085038000484928,
+        "best": 2250.1,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 0.9328624999616295,
+        "best": 2250.1,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 0.9424330999609083,
+        "best": 2250.1,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 0.966654899995774,
+        "best": 2250.1,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 0.9814825999783352,
+        "best": 2250.1,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 0.9887188000138849,
+        "best": 2250.1,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 1.0072413000743836,
+        "best": 2250.1,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 1.0209104999667034,
+        "best": 2250.1,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 1.0312096000416204,
+        "best": 2250.1,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 1.0460509000113234,
+        "best": 2250.1,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 1.0742112000007182,
+        "best": 2250.1,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 1.07762990007177,
+        "best": 2250.1,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 1.0809645999688655,
+        "best": 2250.1,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 1.0840746000176296,
+        "best": 2250.1,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 1.1086155000375584,
+        "best": 2250.1,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 1.1214880000334233,
+        "best": 2250.1,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 1.1255046000005677,
+        "best": 2250.1,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 1.1389457000186667,
+        "best": 2250.1,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 1.1729599999962375,
+        "best": 2250.1,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 1.182387200067751,
+        "best": 2250.1,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 1.1959845999954268,
+        "best": 2250.1,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 1.2148000000743195,
+        "best": 2250.1,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 1.2308248999761418,
+        "best": 2250.1,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 1.2340589000377804,
+        "best": 2250.1,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 1.2373987999744713,
+        "best": 2250.1,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 1.2435362000251189,
+        "best": 2250.1,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 1.2519022000487894,
+        "best": 2250.1,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 1.2763969000661746,
+        "best": 2250.1,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 1.2800408999901265,
+        "best": 2250.1,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 1.2890285999746993,
+        "best": 2250.1,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 1.3099064000416547,
+        "best": 2250.1,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 1.3177698999643326,
+        "best": 2250.1,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 1.3281266000121832,
+        "best": 2250.1,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 1.3411586000584066,
+        "best": 2250.1,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 1.3524104000534862,
+        "best": 2250.1,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 1.3633260000497103,
+        "best": 2250.1,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 1.3670132000697777,
+        "best": 2250.1,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 1.3936670999974012,
+        "best": 2250.1,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 1.3992367000319064,
+        "best": 2250.1,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 1.412689600023441,
+        "best": 2250.1,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 1.433688999968581,
+        "best": 2250.1,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 1.4371329999994487,
+        "best": 2250.1,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 1.4562509000534192,
+        "best": 2250.1,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 1.4671100999694318,
+        "best": 2249.2,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 1.4874340000096709,
+        "best": 2249.2,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 1.4959668000228703,
+        "best": 2247.5,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 1.5071831999812275,
+        "best": 2247.5,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 1.5170874999603257,
+        "best": 2247.5,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 1.5366842000512406,
+        "best": 2247.5,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 1.5399512000149116,
+        "best": 2247.5,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 1.5612636000150815,
+        "best": 2247.5,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 1.5649189000250772,
+        "best": 2247.5,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 1.5821560999611393,
+        "best": 2247.5,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 1.6129043999826536,
+        "best": 2247.5,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 1.6168687000172213,
+        "best": 2247.5,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 1.651055600028485,
+        "best": 2247.5,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 1.6766386000672355,
+        "best": 2247.5,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 1.7111489999806508,
+        "best": 2247.5,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 1.7236242999788374,
+        "best": 2244.4,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 1.7324148999759927,
+        "best": 2244.4,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 1.7483745999634266,
+        "best": 2244.4,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 1.7559822000330314,
+        "best": 2244.4,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 1.773333300021477,
+        "best": 2244.4,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 1.799393599969335,
+        "best": 2244.4,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 1.8119055000133812,
+        "best": 2244.4,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 1.8316020000493154,
+        "best": 2244.4,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 1.8348561000311747,
+        "best": 2244.4,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 1.8454382000491023,
+        "best": 2244.4,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 1.852743100025691,
+        "best": 2244.4,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 1.8608345000538975,
+        "best": 2244.4,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 1.8678860999643803,
+        "best": 2244.4,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 1.8923681000014767,
+        "best": 2244.4,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 1.9088927999837324,
+        "best": 2244.4,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 1.919517599977553,
+        "best": 2244.4,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 1.940080799977295,
+        "best": 2237.1,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 1.9592097999993712,
+        "best": 2237.1,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 1.9628510000184178,
+        "best": 2237.1,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 1.97093589999713,
+        "best": 2237.1,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 1.98038980003912,
+        "best": 2237.1,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 1.9908990999683738,
+        "best": 2237.1,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 2.0115583000006154,
+        "best": 2237.1,
+        "phase": "external-observed"
+      },
+      {
+        "elapsed_s": 2.0128467999165878,
+        "best": 2237.1,
+        "phase": "external-end"
+      }
+    ],
+    "iterations": 131,
+    "collect_stats": true
+  },
+  "attribution": "Own regret construction and ILS; external PyVRP HGS including its local search; no route pool"
+}

@@ -10,6 +10,8 @@ import pandas as pd
 import nbformat
 from scripts.analyze_duration import analyze,BASE
 from algo.duration_kernels import route_eval
+from scripts.figure_explanations import EXPLANATIONS
+from matplotlib.patches import Patch
 
 FIG=ROOT/'livraison/duree_figures'
 COLORS={'ils':'#2563a6','sa':'#cc7b23','hybrid':'#128475'}
@@ -51,8 +53,8 @@ def figures(df,cases,sizes,repeated,info):
         for start,length,kind in parts:ax.barh(i,length,left=start,color=color[kind],height=.5)
     ax.set_yticks([0,1],['0 → 1 → 2 → 0 : durée 34','0 → 2 → 1 → 0 : durée 28'])
     ax.set_xlabel('Temps depuis le départ fixé à zéro (u.t.)')
-    for kind in color:ax.barh([],[],color=color[kind],label=kind)
-    ax.legend(ncols=3,loc='upper right');save(fig,'attentes')
+    ax.legend(handles=[Patch(facecolor=value,label=kind) for kind,value in color.items()],
+              ncols=3,loc='upper right');save(fig,'attentes')
     fig,ax=plt.subplots(figsize=(10,2));ax.axis('off')
     for i,text in enumerate(['Construction\nregret-2 : sélection en durée','Notre ILS en durée\n5 s de recherche','HGS externe PyVRP\n5 s ; départ fixé à 0','Contrôle indépendant\net mesures séparées']):
         ax.text(.12+i*.25,.5,text,ha='center',va='center',transform=ax.transAxes,
@@ -122,6 +124,9 @@ def main():
     def img(name,caption):
         cell=nbformat.v4.new_code_cell(f"display(Image(filename=str(ROOT/'livraison/duree_figures/{name}.png')))")
         cell.metadata['figure_captions']=[caption];nb.cells.append(cell)
+        explanation=nbformat.v4.new_markdown_cell(EXPLANATIONS[name])
+        explanation.metadata['explains_figure']=name
+        nb.cells.append(explanation)
     md('''# Livrable final — CVRPTW : minimisation de la durée totale
 
 **CESI — Algorithmique et optimisation — 13 novembre 2026**
@@ -313,18 +318,29 @@ L’objectif de la CLI est la durée par défaut. Les routines historiques en di
 - [Règles officielles DIMACS VRPTW](https://dimacs.rutgers.edu/programs/implementation-challenges/vehicle-routing/implementation-challenge-vehicle-routing/vrp-with-time-windows) : objectif de référence en distance, flotte maximale et convention des arcs.
 - [Données PyVRP/Instances](https://github.com/PyVRP/Instances), révision figée dans `data/manifest.json`.
 ''')
+    from scripts.revision_duree import augment
+    augment(nb,df,cases,sizes)
+    from scripts.add_algorithm_theory import add_to_notebook as add_theory
+    add_theory(nb)
+    sensitivity_protocol=ROOT/'results/time_objective/sensitivity_controlled/protocol.json'
+    if sensitivity_protocol.exists():
+        sensitivity_jobs=json.loads(sensitivity_protocol.read_text())['jobs']
+        if all((sensitivity_protocol.parent/'runs'/f'{name}_{seed}_{config}.json').exists()
+               for name,seed,config in sensitivity_jobs):
+            from scripts.reporting_completion import harmonize
+            harmonize(nb)
     target=ROOT/'notebooks/Livrable_Final_CVRPTW.ipynb';nbformat.write(nb,target)
     text_parts=[]
     import re
     for c in nb.cells:
-        if c.cell_type=='markdown':text_parts.append(c.source)
+        if c.cell_type=='markdown':text_parts.append(c.source.replace('(../livraison/','(livraison/'))
         elif c.metadata.get('figure_captions'):
             name=re.search(r"livraison/duree_figures/([^']+)",c.source).group(1)
             text_parts.append('!['+c.metadata['figure_captions'][0]+'](livraison/duree_figures/'+name+')')
     text='\n\n'.join(text_parts)
     (ROOT/'LIVRABLE_FINAL.md').write_text(text,encoding='utf-8')
-    journal='\n\n'.join(c.source for c in nb.cells if c.cell_type=='markdown' and '### 4.4.' in c.source)
-    (ROOT/'docs/JOURNAL_EVOLUTION_ALGORITHME.md').write_text('# Évolution vers l’objectif durée\n\n'+journal,encoding='utf-8')
+    from scripts.revision_duree import write_markdown
+    write_markdown(nb)
     df.to_csv(ROOT/'livraison/RESULTATS_DUREE.csv',index=False)
     cases.to_csv(ROOT/'livraison/INSTANCES_DUREE.csv',index=False)
     descriptive.to_csv(ROOT/'livraison/STATISTIQUES_DESCRIPTIVES_DUREE.csv',index=False)
@@ -337,6 +353,8 @@ L’objectif de la CLI est la durée par défaut. Les routines historiques en di
     page+='<h2>Tous les 646 essais, comparaisons comprises</h2><section>'+df.to_html(index=False,escape=True)+'</section>'
     page+='''<script>document.getElementById('filter').addEventListener('input',function(){const s=this.value.toLowerCase();document.querySelectorAll('tbody tr').forEach(r=>{r.style.display=r.textContent.toLowerCase().includes(s)?'':'none';});});</script></html>'''
     (ROOT/'livraison/RESULTATS_DUREE.html').write_text(page,encoding='utf-8')
+    from scripts.prepare_soutenance import main as prepare_soutenance
+    prepare_soutenance()
     print('Duration notebook built from executed data:',info['runs'],'runs')
 
 
