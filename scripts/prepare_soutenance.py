@@ -130,6 +130,9 @@ l'annexe servent à contrôler le fonctionnement, sans garantir la même qualit�
     cell = nbformat.v4.new_markdown_cell(COMMANDS)
     cell.metadata['soutenance_commands'] = True
     nb.cells.append(cell)
+    if (ROOT/'results/dabia2013/VALIDATION.json').exists():
+        from scripts.report_dabia import augment
+        augment(nb)
     nbformat.write(nb, target)
     write_markdown(nb)
     report = ROOT/'LIVRABLE_FINAL.md'

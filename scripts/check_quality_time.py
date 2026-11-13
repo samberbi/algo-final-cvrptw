@@ -94,7 +94,8 @@ def main():
             record = future.result()
             (folder/f"{record['instance']}_{record['seed']}.json").write_text(json.dumps(record, indent=2))
             rows.append(record)
-            print({k:v for k,v in record.items() if k not in ['routes', 'stages']}, flush=True)
+            from scripts.test_instances import show_quality_result
+            show_quality_result(record)
     (folder/'summary.json').write_text(json.dumps(rows, indent=2))
 
 

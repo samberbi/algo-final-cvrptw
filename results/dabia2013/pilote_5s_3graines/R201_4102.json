@@ -1,0 +1,400 @@
+{
+  "measurement": {
+    "instance": "R201",
+    "seed": 4102,
+    "n": 25,
+    "valid": true,
+    "requested_s": 5.0,
+    "duration": 7932.168490728331,
+    "reference_duration": 7932.168490728331,
+    "gap_duration_bks_pct": 0.0,
+    "gain_construction_pct": 17.49957781547592,
+    "initial_duration": 9614.700483576791,
+    "vehicles": 5,
+    "reference_vehicles": 5,
+    "solver_wall_s": 5.001662699971348,
+    "total_wall_s": 5.042019300046377,
+    "total_cpu_s": 5.03125,
+    "travel": 5339.368555830801,
+    "waiting": 92.79993489752997,
+    "service": 2500.0,
+    "reference_claims_proven": true,
+    "reference_certificate_note": "Re-priced on 2026-09-24 from 7932.168490728329 to 7932.168490728331 by mamut-routing-lib td checker, contract td-fold/2 (lib >= 0.12.0) (exact vertex ready-time transforms and slope-one arc interpolation). Routes unchanged. The proof was obtained under the pre-0.12 fold (td-fold/1); dual_bound is the prover's value under that arithmetic. Re-certification under td-fold/2 is pending.",
+    "proof_status": "BKS compatible; any optimality stamp must be interpreted with its upstream arithmetic note",
+    "checker": "mamut-routing-lib 0.12.0 td-fold/2"
+  },
+  "result": {
+    "status": "feasible",
+    "objective": "Duration",
+    "routes": [
+      [
+        19,
+        11,
+        16,
+        7,
+        18,
+        8,
+        6,
+        22,
+        9,
+        3
+      ],
+      [
+        1,
+        4,
+        25,
+        24
+      ],
+      [
+        5,
+        14,
+        15,
+        23,
+        2,
+        21,
+        12
+      ],
+      [
+        10,
+        20,
+        13
+      ],
+      [
+        17
+      ]
+    ],
+    "cost": 7932.168490728331,
+    "initial_cost": 9614.700483576791,
+    "runtime_s": 5.001662699971348,
+    "cpu_s": 4.984375,
+    "budget_s": 5.0,
+    "overrun_s": 0.0016626999713480473,
+    "trace": [
+      {
+        "elapsed_s": 0.021669400040991604,
+        "best": 9614.700483576791,
+        "phase": "construction"
+      },
+      {
+        "elapsed_s": 0.02373979997355491,
+        "best": 9574.949862653382,
+        "phase": "two_opt"
+      },
+      {
+        "elapsed_s": 0.030821499996818602,
+        "best": 9531.447391818892,
+        "phase": "relocate"
+      },
+      {
+        "elapsed_s": 0.0324794000480324,
+        "best": 9289.683109417896,
+        "phase": "two_opt_star"
+      },
+      {
+        "elapsed_s": 0.03583229996729642,
+        "best": 9287.14072303629,
+        "phase": "relocate"
+      },
+      {
+        "elapsed_s": 0.04058689996600151,
+        "best": 9219.639285284971,
+        "phase": "relocate"
+      },
+      {
+        "elapsed_s": 0.05404550000093877,
+        "best": 9159.853097351617,
+        "phase": "two_opt_star"
+      },
+      {
+        "elapsed_s": 0.06242570001631975,
+        "best": 9102.70337891717,
+        "phase": "two_opt"
+      },
+      {
+        "elapsed_s": 0.06890509999357164,
+        "best": 8638.052857590745,
+        "phase": "two_opt"
+      },
+      {
+        "elapsed_s": 0.07388819998595864,
+        "best": 8591.954302112186,
+        "phase": "swap"
+      },
+      {
+        "elapsed_s": 0.09561259998008609,
+        "best": 8528.669124428778,
+        "phase": "relocate"
+      },
+      {
+        "elapsed_s": 0.0975494000595063,
+        "best": 8394.597207668183,
+        "phase": "two_opt"
+      },
+      {
+        "elapsed_s": 0.13882230001036078,
+        "best": 8228.481805780124,
+        "phase": "two_opt_star"
+      },
+      {
+        "elapsed_s": 0.14894069998990744,
+        "best": 8117.14735328087,
+        "phase": "two_opt"
+      },
+      {
+        "elapsed_s": 0.8847860000096262,
+        "best": 7990.448077432089,
+        "phase": "two_opt_star"
+      },
+      {
+        "elapsed_s": 1.0622271000174806,
+        "best": 7932.168490728331,
+        "phase": "two_opt"
+      }
+    ],
+    "route_evaluations": [
+      {
+        "route": [
+          19,
+          11,
+          16,
+          7,
+          18,
+          8,
+          6,
+          22,
+          9,
+          3
+        ],
+        "feasible": true,
+        "duration": 2907.7979129058945,
+        "departure_time": 2596.001819494641
+      },
+      {
+        "route": [
+          1,
+          4,
+          25,
+          24
+        ],
+        "feasible": true,
+        "duration": 1381.970961687066,
+        "departure_time": 7453.029225813403
+      },
+      {
+        "route": [
+          5,
+          14,
+          15,
+          23,
+          2,
+          21,
+          12
+        ],
+        "feasible": true,
+        "duration": 2082.8567656264368,
+        "departure_time": 1248.143811875007
+      },
+      {
+        "route": [
+          10,
+          20,
+          13
+        ],
+        "feasible": true,
+        "duration": 927.5422805075086,
+        "departure_time": 6167.600304799391
+      },
+      {
+        "route": [
+          17
+        ],
+        "feasible": true,
+        "duration": 632.0005700014244,
+        "departure_time": 8000.0
+      }
+    ],
+    "proposals": 137842,
+    "cycles": 52,
+    "accepted": 328,
+    "operators": {
+      "relocate": 162,
+      "swap": 26,
+      "two_opt": 37,
+      "two_opt_star": 103
+    },
+    "evaluation_calls": 52543,
+    "cache": {
+      "hits": 680597,
+      "misses": 52543,
+      "maxsize": 60000,
+      "currsize": 52543
+    },
+    "attribution": "Own insertion, ILS and four move generators; external MAMUT 0.12.0 temporal evaluator/checker",
+    "checker_contract": "td-fold/2",
+    "departures": "optimized, not fixed at zero"
+  },
+  "independent_simulation": {
+    "valid": true,
+    "errors": [],
+    "routes": [
+      {
+        "departure": 2596.001819494641,
+        "returned": 5503.7997324005355,
+        "duration": 2907.7979129058945,
+        "travel": 1820.298194156599,
+        "waiting": 87.49971874929543,
+        "service": 1000.0,
+        "load": 124.0
+      },
+      {
+        "departure": 7453.029225813403,
+        "returned": 8835.00018750047,
+        "duration": 1381.970961687066,
+        "travel": 981.9709616870659,
+        "waiting": 0.0,
+        "service": 400.0,
+        "load": 38.0
+      },
+      {
+        "departure": 1248.143811875007,
+        "returned": 3331.000577501444,
+        "duration": 2082.8567656264368,
+        "travel": 1382.8567656264368,
+        "waiting": 0.0,
+        "service": 700.0,
+        "load": 120.0
+      },
+      {
+        "departure": 6167.600304799391,
+        "returned": 7095.1425853068995,
+        "duration": 927.5422805075086,
+        "travel": 622.2420643592741,
+        "waiting": 5.30021614823454,
+        "service": 300.0,
+        "load": 48.0
+      },
+      {
+        "departure": 8000.0,
+        "returned": 8632.000570001424,
+        "duration": 632.0005700014244,
+        "travel": 532.0005700014244,
+        "waiting": 0.0,
+        "service": 100.0,
+        "load": 2.0
+      }
+    ],
+    "duration": 7932.168490728331,
+    "travel": 5339.368555830801,
+    "waiting": 92.79993489752997,
+    "service": 2500.0
+  },
+  "reference_check": {
+    "status": "valid",
+    "routing_cost": 7932.168490728331,
+    "num_routes": 5,
+    "error_message": "",
+    "route_evaluations": [
+      {
+        "route": [
+          1,
+          4,
+          25,
+          24
+        ],
+        "feasible": true,
+        "duration": 1381.970961687066,
+        "departure_time": 7453.029225813403
+      },
+      {
+        "route": [
+          5,
+          14,
+          15,
+          23,
+          2,
+          21,
+          12
+        ],
+        "feasible": true,
+        "duration": 2082.8567656264368,
+        "departure_time": 1248.143811875007
+      },
+      {
+        "route": [
+          10,
+          20,
+          13
+        ],
+        "feasible": true,
+        "duration": 927.5422805075086,
+        "departure_time": 6167.600304799391
+      },
+      {
+        "route": [
+          17
+        ],
+        "feasible": true,
+        "duration": 632.0005700014244,
+        "departure_time": 8000.0
+      },
+      {
+        "route": [
+          19,
+          11,
+          16,
+          7,
+          18,
+          8,
+          6,
+          22,
+          9,
+          3
+        ],
+        "feasible": true,
+        "duration": 2907.7979129058945,
+        "departure_time": 2596.001819494641
+      }
+    ]
+  },
+  "reference_metadata": {
+    "authors": "Florian Rascoussier (0nyr)",
+    "source": "Lera-Romero et al. 2020 (linear edge costs) published solutions",
+    "validated_by": "mamut-routing-lib td Duration checker",
+    "date": "2026-07-02",
+    "route_durations": [
+      1381.970961687066,
+      2082.8567656264368,
+      927.5422805075086,
+      632.0005700014244,
+      2907.7979129058945
+    ],
+    "route_departure_times": [
+      7453.029225813403,
+      1248.143811875007,
+      6167.600304799391,
+      8000.0,
+      2596.001819494641
+    ],
+    "published_duration_sum": 7932.168490728331,
+    "optimality": {
+      "proven": true,
+      "prover": "kayros 1.5.1 lera branch-price-and-cut (HiGHS backend; campaign build commit df05a37, behavior-identical to release v1.5.1)",
+      "certificate": "Optimal under checker-exact route costs and standard LP/pricing tolerances. Certified by four independent solves (cold and warm starts x asymmetric and symmetric labeling modes) agreeing on the value, each with an audited exact-pricing phase and zero checker-infeasible priced columns.",
+      "date": "2026-08-06",
+      "arithmetic": "checker-exact route costs (IEEE-754 doubles, canonical route order); the proven optimum equals compute_solution_cost of the stored routes bit-exactly",
+      "proven_optimum": 7932.168490728331,
+      "dual_bound": 7932.168490728329,
+      "wall_time_s": 2.0,
+      "time_limit_s": 1800.0,
+      "checker": "mamut-routing-lib td Duration checker",
+      "campaign": "2026-08-06 full TD re-certification on Grid'5000 abaca (job 6830467 + memory retry 6830998)",
+      "note": "Re-priced on 2026-09-24 from 7932.168490728329 to 7932.168490728331 by mamut-routing-lib td checker, contract td-fold/2 (lib >= 0.12.0) (exact vertex ready-time transforms and slope-one arc interpolation). Routes unchanged. The proof was obtained under the pre-0.12 fold (td-fold/1); dual_bound is the prover's value under that arithmetic. Re-certification under td-fold/2 is pending."
+    },
+    "repriced": {
+      "previous_cost": 7932.168490728329,
+      "checker": "mamut-routing-lib td checker, contract td-fold/2 (lib >= 0.12.0)",
+      "contract": "td-fold/2",
+      "date": "2026-09-24"
+    }
+  }
+}

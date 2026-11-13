@@ -1,0 +1,318 @@
+{
+  "measurement": {
+    "instance": "C201",
+    "seed": 4101,
+    "n": 25,
+    "valid": true,
+    "requested_s": 5.0,
+    "duration": 25606.020742283705,
+    "reference_duration": 25606.020742283705,
+    "gap_duration_bks_pct": 0.0,
+    "gain_construction_pct": 0.0,
+    "initial_duration": 25606.020742283705,
+    "vehicles": 5,
+    "reference_vehicles": 5,
+    "solver_wall_s": 5.012474300106987,
+    "total_wall_s": 5.030225200112909,
+    "total_cpu_s": 4.984375,
+    "travel": 3106.0207422837066,
+    "waiting": 0.0,
+    "service": 22500.0,
+    "reference_claims_proven": true,
+    "reference_certificate_note": "",
+    "proof_status": "BKS compatible; any optimality stamp must be interpreted with its upstream arithmetic note",
+    "checker": "mamut-routing-lib 0.12.0 td-fold/2"
+  },
+  "result": {
+    "status": "feasible",
+    "objective": "Duration",
+    "routes": [
+      [
+        20,
+        22,
+        24
+      ],
+      [
+        5,
+        2,
+        1
+      ],
+      [
+        6
+      ],
+      [
+        7,
+        3,
+        4
+      ],
+      [
+        23,
+        18,
+        19,
+        16,
+        14,
+        12,
+        15,
+        17,
+        13,
+        25,
+        9,
+        11,
+        10,
+        8,
+        21
+      ]
+    ],
+    "cost": 25606.020742283705,
+    "initial_cost": 25606.020742283705,
+    "runtime_s": 5.012474300106987,
+    "cpu_s": 4.96875,
+    "budget_s": 5.0,
+    "overrun_s": 0.012474300106987357,
+    "trace": [
+      {
+        "elapsed_s": 0.020998600055463612,
+        "best": 25606.020742283705,
+        "phase": "construction"
+      }
+    ],
+    "route_evaluations": [
+      {
+        "route": [
+          20,
+          22,
+          24
+        ],
+        "feasible": true,
+        "duration": 2956.951768709232,
+        "departure_time": 14.28595918297377
+      },
+      {
+        "route": [
+          5,
+          2,
+          1
+        ],
+        "feasible": true,
+        "duration": 3195.4753700703714,
+        "departure_time": 1051.9525229927913
+      },
+      {
+        "route": [
+          6
+        ],
+        "feasible": true,
+        "duration": 1320.0,
+        "departure_time": 4802.0
+      },
+      {
+        "route": [
+          7,
+          3,
+          4
+        ],
+        "feasible": true,
+        "duration": 3347.100296551567,
+        "departure_time": 10354.900183449632
+      },
+      {
+        "route": [
+          23,
+          18,
+          19,
+          16,
+          14,
+          12,
+          15,
+          17,
+          13,
+          25,
+          9,
+          11,
+          10,
+          8,
+          21
+        ],
+        "feasible": true,
+        "duration": 14786.493306952536,
+        "departure_time": 17678.706748727484
+      }
+    ],
+    "proposals": 192275,
+    "cycles": 75,
+    "accepted": 520,
+    "operators": {
+      "relocate": 218,
+      "swap": 68,
+      "two_opt": 1,
+      "two_opt_star": 233
+    },
+    "evaluation_calls": 49621,
+    "cache": {
+      "hits": 858440,
+      "misses": 49621,
+      "maxsize": 60000,
+      "currsize": 49621
+    },
+    "attribution": "Own insertion, ILS and four move generators; external MAMUT 0.12.0 temporal evaluator/checker",
+    "checker_contract": "td-fold/2",
+    "departures": "optimized, not fixed at zero"
+  },
+  "independent_simulation": {
+    "valid": true,
+    "errors": [],
+    "routes": [
+      {
+        "departure": 14.28595918297377,
+        "returned": 2971.237727892206,
+        "duration": 2956.951768709232,
+        "travel": 256.95176870923217,
+        "waiting": 0.0,
+        "service": 2700.0,
+        "load": 40.0
+      },
+      {
+        "departure": 1051.9525229927913,
+        "returned": 4247.427893063163,
+        "duration": 3195.4753700703714,
+        "travel": 495.47537007037135,
+        "waiting": 0.0,
+        "service": 2700.0,
+        "load": 50.0
+      },
+      {
+        "departure": 4802.0,
+        "returned": 6122.0,
+        "duration": 1320.0,
+        "travel": 420.0,
+        "waiting": 0.0,
+        "service": 900.0,
+        "load": 20.0
+      },
+      {
+        "departure": 10354.900183449632,
+        "returned": 13702.0004800012,
+        "duration": 3347.100296551567,
+        "travel": 647.1002965515672,
+        "waiting": 0.0,
+        "service": 2700.0,
+        "load": 40.0
+      },
+      {
+        "departure": 17678.706748727484,
+        "returned": 32465.20005568002,
+        "duration": 14786.493306952536,
+        "travel": 1286.493306952536,
+        "waiting": 0.0,
+        "service": 13500.0,
+        "load": 310.0
+      }
+    ],
+    "duration": 25606.020742283705,
+    "travel": 3106.0207422837066,
+    "waiting": 0.0,
+    "service": 22500.0
+  },
+  "reference_check": {
+    "status": "valid",
+    "routing_cost": 25606.020742283705,
+    "num_routes": 5,
+    "error_message": "",
+    "route_evaluations": [
+      {
+        "route": [
+          5,
+          2,
+          1
+        ],
+        "feasible": true,
+        "duration": 3195.4753700703714,
+        "departure_time": 1051.9525229927913
+      },
+      {
+        "route": [
+          6
+        ],
+        "feasible": true,
+        "duration": 1320.0,
+        "departure_time": 4802.0
+      },
+      {
+        "route": [
+          7,
+          3,
+          4
+        ],
+        "feasible": true,
+        "duration": 3347.100296551567,
+        "departure_time": 10354.900183449632
+      },
+      {
+        "route": [
+          20,
+          22,
+          24
+        ],
+        "feasible": true,
+        "duration": 2956.951768709232,
+        "departure_time": 14.28595918297377
+      },
+      {
+        "route": [
+          23,
+          18,
+          19,
+          16,
+          14,
+          12,
+          15,
+          17,
+          13,
+          25,
+          9,
+          11,
+          10,
+          8,
+          21
+        ],
+        "feasible": true,
+        "duration": 14786.493306952536,
+        "departure_time": 17678.706748727484
+      }
+    ]
+  },
+  "reference_metadata": {
+    "authors": "Florian Rascoussier (0nyr)",
+    "source": "Lera-Romero et al. 2020 (linear edge costs) published solutions",
+    "validated_by": "mamut-routing-lib td Duration checker",
+    "date": "2026-07-02",
+    "route_durations": [
+      3195.4753700703714,
+      1320.0,
+      3347.100296551567,
+      2956.951768709232,
+      14786.493306952536
+    ],
+    "route_departure_times": [
+      1051.9525229927913,
+      4802.0,
+      10354.900183449632,
+      14.28595918297377,
+      17678.706748727484
+    ],
+    "published_duration_sum": 25606.020742283712,
+    "optimality": {
+      "proven": true,
+      "prover": "kayros 1.5.1 lera branch-price-and-cut (HiGHS backend; campaign build commit df05a37, behavior-identical to release v1.5.1)",
+      "certificate": "Optimal under checker-exact route costs and standard LP/pricing tolerances. Certified by four independent solves (cold and warm starts x asymmetric and symmetric labeling modes) agreeing on the value, each with an audited exact-pricing phase and zero checker-infeasible priced columns.",
+      "date": "2026-08-06",
+      "arithmetic": "checker-exact route costs (IEEE-754 doubles, canonical route order); the proven optimum equals compute_solution_cost of the stored routes bit-exactly",
+      "proven_optimum": 25606.020742283705,
+      "dual_bound": 25606.020742283705,
+      "wall_time_s": 0.13,
+      "time_limit_s": 1800.0,
+      "checker": "mamut-routing-lib td Duration checker",
+      "campaign": "2026-08-06 full TD re-certification on Grid'5000 abaca (job 6830467 + memory retry 6830998)"
+    }
+  }
+}

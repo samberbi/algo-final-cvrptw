@@ -1,0 +1,177 @@
+{
+  "arguments": {
+    "instances": [
+      "C101",
+      "C201",
+      "R101",
+      "R201",
+      "RC101",
+      "RC201"
+    ],
+    "seeds": [
+      4101
+    ],
+    "seconds": 5.0,
+    "workers": 3,
+    "label": "pilote_5s"
+  },
+  "jobs": [
+    [
+      "C101",
+      4101,
+      5.0
+    ],
+    [
+      "C201",
+      4101,
+      5.0
+    ],
+    [
+      "R101",
+      4101,
+      5.0
+    ],
+    [
+      "R201",
+      4101,
+      5.0
+    ],
+    [
+      "RC101",
+      4101,
+      5.0
+    ],
+    [
+      "RC201",
+      4101,
+      5.0
+    ]
+  ],
+  "effective_label": "pilote_5s",
+  "sources": {
+    "algo/dabia.py": "632fc9d8a698ef726d8612b5443dbddfee3c314d9e0bd9f9587d204cdfead4d6",
+    "scripts/benchmark_dabia.py": "3bc2db430a86117b48807749faaf29f3ace9dd6348e72ac5e0bff6e73f509b9c"
+  },
+  "data_manifest": {
+    "repository": "https://github.com/ANR-MAMUT/MAMUT-routing",
+    "revision": "331ec306b7908e0c9a264d1fc1341a938340ab79",
+    "problem": "TDVRPTW",
+    "objective": "Duration",
+    "customers": 25,
+    "instances": [
+      "C101",
+      "C201",
+      "R101",
+      "R201",
+      "RC101",
+      "RC201"
+    ],
+    "departures": "Optimized per route by canonical checker; not fixed at zero",
+    "files": {
+      "C101.vrp.json": {
+        "url": "https://raw.githubusercontent.com/ANR-MAMUT/MAMUT-routing/331ec306b7908e0c9a264d1fc1341a938340ab79/benchmarks/TDVRPTW/Dabia2013/n=25/C101.vrp.json",
+        "sha256": "11ac064ff6d0593d712df664a9b3034e8c9270b108885a7ca2113236ee7e0040",
+        "bytes": 2501
+      },
+      "C101.atf.json": {
+        "url": "https://raw.githubusercontent.com/ANR-MAMUT/MAMUT-routing/331ec306b7908e0c9a264d1fc1341a938340ab79/benchmarks/TDVRPTW/Dabia2013/n=25/C101.atf.json",
+        "sha256": "d183cf7c02cfd6b05cb6047ac908017765a259ccf6054c167db89c35e3193e8b",
+        "bytes": 172568
+      },
+      "C101.bks.Duration.json": {
+        "url": "https://raw.githubusercontent.com/ANR-MAMUT/MAMUT-routing/331ec306b7908e0c9a264d1fc1341a938340ab79/benchmarks/TDVRPTW/Dabia2013/n=25/C101.bks.Duration.json",
+        "sha256": "a9ebdeddf64d8e892bf00191e117ca378ec51f55ea909fc716b694d15945efb7",
+        "bytes": 2490
+      },
+      "C201.vrp.json": {
+        "url": "https://raw.githubusercontent.com/ANR-MAMUT/MAMUT-routing/331ec306b7908e0c9a264d1fc1341a938340ab79/benchmarks/TDVRPTW/Dabia2013/n=25/C201.vrp.json",
+        "sha256": "9f33dbde3259a35f1050c7c5ce34009f229e6a8ffc4ae05ba363f49ee60a8438",
+        "bytes": 2543
+      },
+      "C201.atf.json": {
+        "url": "https://raw.githubusercontent.com/ANR-MAMUT/MAMUT-routing/331ec306b7908e0c9a264d1fc1341a938340ab79/benchmarks/TDVRPTW/Dabia2013/n=25/C201.atf.json",
+        "sha256": "5102181e66c2e359f0d8309549e61748943bd423171c8d31b8960e64d30c57a9",
+        "bytes": 180870
+      },
+      "C201.bks.Duration.json": {
+        "url": "https://raw.githubusercontent.com/ANR-MAMUT/MAMUT-routing/331ec306b7908e0c9a264d1fc1341a938340ab79/benchmarks/TDVRPTW/Dabia2013/n=25/C201.bks.Duration.json",
+        "sha256": "5cdbf56a62f46ce76ec557188f3d00bcc00c57226d12c9615907058863aa9f01",
+        "bytes": 1897
+      },
+      "R101.vrp.json": {
+        "url": "https://raw.githubusercontent.com/ANR-MAMUT/MAMUT-routing/331ec306b7908e0c9a264d1fc1341a938340ab79/benchmarks/TDVRPTW/Dabia2013/n=25/R101.vrp.json",
+        "sha256": "26de79256a98a6b1b1185085bca1e8b27655fedaed38dc158daf637450852bca",
+        "bytes": 2468
+      },
+      "R101.atf.json": {
+        "url": "https://raw.githubusercontent.com/ANR-MAMUT/MAMUT-routing/331ec306b7908e0c9a264d1fc1341a938340ab79/benchmarks/TDVRPTW/Dabia2013/n=25/R101.atf.json",
+        "sha256": "250d1dd810116807d66b139e0bd149f5d85c04610f6de73ec13061cc658e9bae",
+        "bytes": 174298
+      },
+      "R101.bks.Duration.json": {
+        "url": "https://raw.githubusercontent.com/ANR-MAMUT/MAMUT-routing/331ec306b7908e0c9a264d1fc1341a938340ab79/benchmarks/TDVRPTW/Dabia2013/n=25/R101.bks.Duration.json",
+        "sha256": "b9611ab528037dbc805a5785c22b04eb5a16672aa716bf04e7b6959b9a220ac4",
+        "bytes": 2081
+      },
+      "R201.vrp.json": {
+        "url": "https://raw.githubusercontent.com/ANR-MAMUT/MAMUT-routing/331ec306b7908e0c9a264d1fc1341a938340ab79/benchmarks/TDVRPTW/Dabia2013/n=25/R201.vrp.json",
+        "sha256": "5d5a142636934fd10cfaa00d117f065865887224417ff8d8de333e42ed1579d7",
+        "bytes": 2497
+      },
+      "R201.atf.json": {
+        "url": "https://raw.githubusercontent.com/ANR-MAMUT/MAMUT-routing/331ec306b7908e0c9a264d1fc1341a938340ab79/benchmarks/TDVRPTW/Dabia2013/n=25/R201.atf.json",
+        "sha256": "cb52c766fd21e3ddb5e68394aad5be4f137217d3d014ddd1c990a419fdb1917f",
+        "bytes": 173159
+      },
+      "R201.bks.Duration.json": {
+        "url": "https://raw.githubusercontent.com/ANR-MAMUT/MAMUT-routing/331ec306b7908e0c9a264d1fc1341a938340ab79/benchmarks/TDVRPTW/Dabia2013/n=25/R201.bks.Duration.json",
+        "sha256": "670a247229115f32d1d8e9fd42188689f517211355c4ff094d7de4b93dbc5a70",
+        "bytes": 2550
+      },
+      "RC101.vrp.json": {
+        "url": "https://raw.githubusercontent.com/ANR-MAMUT/MAMUT-routing/331ec306b7908e0c9a264d1fc1341a938340ab79/benchmarks/TDVRPTW/Dabia2013/n=25/RC101.vrp.json",
+        "sha256": "da4c2e35c3e170f4580f45278785daf67f09a40dff0e13d0ab909e5b8e2e2028",
+        "bytes": 2475
+      },
+      "RC101.atf.json": {
+        "url": "https://raw.githubusercontent.com/ANR-MAMUT/MAMUT-routing/331ec306b7908e0c9a264d1fc1341a938340ab79/benchmarks/TDVRPTW/Dabia2013/n=25/RC101.atf.json",
+        "sha256": "f7daca55467aea46e3778ab8c4ee52daa8a7b3bbe4e0f1ef0eab31af3ec559fb",
+        "bytes": 174038
+      },
+      "RC101.bks.Duration.json": {
+        "url": "https://raw.githubusercontent.com/ANR-MAMUT/MAMUT-routing/331ec306b7908e0c9a264d1fc1341a938340ab79/benchmarks/TDVRPTW/Dabia2013/n=25/RC101.bks.Duration.json",
+        "sha256": "6b19df7c1738ae9bf940d1fe1ff18cb8e7de02f1d1ceb4645ac8334fde1c594e",
+        "bytes": 1853
+      },
+      "RC201.vrp.json": {
+        "url": "https://raw.githubusercontent.com/ANR-MAMUT/MAMUT-routing/331ec306b7908e0c9a264d1fc1341a938340ab79/benchmarks/TDVRPTW/Dabia2013/n=25/RC201.vrp.json",
+        "sha256": "b03c92c352f9e666e937b6fcb44e53af67fb8c2ebc875493e0c8e10862e0b394",
+        "bytes": 2498
+      },
+      "RC201.atf.json": {
+        "url": "https://raw.githubusercontent.com/ANR-MAMUT/MAMUT-routing/331ec306b7908e0c9a264d1fc1341a938340ab79/benchmarks/TDVRPTW/Dabia2013/n=25/RC201.atf.json",
+        "sha256": "a4ef35962e3736011f8fcc7c4d172db468620074e776c2b6265b2d8b0a5d1a7d",
+        "bytes": 173313
+      },
+      "RC201.bks.Duration.json": {
+        "url": "https://raw.githubusercontent.com/ANR-MAMUT/MAMUT-routing/331ec306b7908e0c9a264d1fc1341a938340ab79/benchmarks/TDVRPTW/Dabia2013/n=25/RC201.bks.Duration.json",
+        "sha256": "28f41fdc7fa88069f4ca22aa2375a04ecc9c81827a2ada47a3bb55cff2d817b5",
+        "bytes": 2505
+      }
+    },
+    "checker": "mamut-routing-lib 0.12.0, td-fold/2",
+    "provenance": "Dabia et al. 2013; Lera-Romero et al. 2020; MAMUT curation",
+    "license": "Upstream curation MIT; original benchmark definitions remain third-party material"
+  },
+  "python": "3.12.8 (tags/v3.12.8:2dc476b, Dec  3 2024, 19:30:04) [MSC v.1942 64 bit (AMD64)]",
+  "platform": "Windows-10-10.0.19045-SP0",
+  "packages": {
+    "mamut-routing-lib": "0.12.0",
+    "pydantic": "2.12.5"
+  },
+  "objective": "Duration = sum of route (return - optimized departure), not sum of return times",
+  "reference": "Compatible upstream Duration BKS, not automatically a certified optimum",
+  "timing": "Total CPU/wall includes instance loading, construction, search and final simulation; excludes interpreter startup and BKS audit",
+  "attribution": "Own insertion/ILS/moves; MAMUT temporal evaluation and checking",
+  "selection": "Six family representatives at n=25, development pilot; not full benchmark"
+}

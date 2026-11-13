@@ -1,0 +1,37 @@
+{
+    "instance_name": "RC101",
+    "routes": [
+        [14, 47, 12, 11, 22, 49, 25, 48],
+        [16, 15, 9, 10, 13, 17],
+        [21, 23, 19, 18, 20, 24],
+        [31, 27, 28, 30, 34, 32],
+        [33, 29, 50, 26],
+        [39, 36, 38, 41, 40, 43, 37, 35],
+        [42, 44, 7, 3, 46, 4, 1],
+        [45, 5, 2, 6, 8]
+    ],
+    "cost": 13996.907519207904,
+    "metadata": {
+        "authors": "Florian Rascoussier (0nyr)",
+        "source": "Lera-Romero et al. 2020 (linear edge costs) published solutions",
+        "validated_by": "mamut-routing-lib td Duration checker",
+        "date": "2026-07-02",
+        "route_durations": [2103.1663207521456, 1708.666629999825, 1601.6671235002182, 1493.650038065311, 1748.604604286691, 2141.270301092222, 1963.9994264015193, 1235.8830751099717],
+        "route_departure_times": [49.33410749940371, 398.666750000025, 334.9999564997817, 237.77761499853722, 220.4576097775728, 93.2298061578963, 158.33332000000001, 182.91638729110323],
+        "published_duration_sum": 13996.907519207904,
+        "optimality": {
+            "proven": true,
+            "prover": "kayros 1.5.1 lera branch-price-and-cut (HiGHS backend; campaign build commit df05a37, behavior-identical to release v1.5.1)",
+            "certificate": "Optimal under checker-exact route costs and standard LP/pricing tolerances. Certified by four independent solves (cold and warm starts x asymmetric and symmetric labeling modes) agreeing on the value, each with an audited exact-pricing phase and zero checker-infeasible priced columns.",
+            "date": "2026-08-06",
+            "arithmetic": "checker-exact route costs (IEEE-754 doubles, canonical route order); the proven optimum equals compute_solution_cost of the stored routes bit-exactly",
+            "proven_optimum": 13996.907519207904,
+            "dual_bound": 13996.907519207902,
+            "wall_time_s": 3.52,
+            "time_limit_s": 1800.0,
+            "checker": "mamut-routing-lib td Duration checker",
+            "campaign": "2026-08-06 full TD re-certification on Grid'5000 abaca (job 6830467 + memory retry 6830998)"
+        }
+    },
+    "objective_function": "Duration"
+}

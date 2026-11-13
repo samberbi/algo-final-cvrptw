@@ -133,3 +133,22 @@ Chaque client affecté consomme une unité reçue du dépôt. Le dépôt en éme
 
 **Pourquoi le grand M est valide.** Les bornes $0\le t_i,t_j\le H$ impliquent $t_i+s_i+c_{ij}-t_j\le H+s_{\max}+c_{\max}$. Cette valeur désactive donc la propagation d'un arc non utilisé. Des bornes par arc peuvent renforcer le solveur exact sans modifier les solutions autorisées. Le modèle contient de l'ordre de $Kn^2$ variables d'arcs/flots et contraintes : l'exact sert ici aux petits cas.
 
+## Extension TDVRPTW : départs optimisés
+
+
+La formulation précédente reste celle des expériences statiques à 100–1 000
+clients et du PLNE exact pour petits cas. Le nouveau module `algo/dabia.py`
+traite séparément les six instances Dabia2013 à 25 clients décrites dans
+[EXTENSION_DABIA2013.md](EXTENSION_DABIA2013.md).
+
+Le départ $D_p$ n'est plus nul et le trajet dépend de l'heure :
+$\alpha_{ij}(t)=t+\tau_{ij}(t)$. La récurrence temporelle applique chaque
+fonction d'arrivée, puis $B_i=\max(A_i,e_i)$, puis le service $F_i=B_i+s_i$.
+L'objectif compatible est $\min\sum_p(R_p-D_p)$, pas $\min\sum_pR_p$.
+Le contrôleur externe MAMUT 0.12.0 optimise le départ de chaque ordre proposé.
+Capacité, visite unique, flotte et fenêtres restent obligatoires.
+
+Notre PLNE statique n'est pas présenté comme un PLNE exact de ce problème à
+fonctions temporelles. Les données et leurs unités natives ne sont pas
+converties à la convention DIMACS. Les coûts de BKS en durée sont contrôlés
+après recherche et les notes de recertification originales restent visibles.

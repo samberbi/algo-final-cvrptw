@@ -36,12 +36,22 @@ def main():
     assert tests.exists(), 'Exécuter pytest avec --junitxml=livraison/TESTS_SOUTENANCE.xml'
     suite = ET.parse(tests).getroot()
     assert not list(suite.iter('failure')) and not list(suite.iter('error'))
+    dabia = None
+    if (ROOT/'results/dabia2013/VALIDATION.json').exists():
+        executables = [ROOT/'.venv_dabia/Scripts/python.exe', ROOT/'.venv_dabia/bin/python']
+        executable = next((p for p in executables if p.is_file()), None)
+        if executable is None:
+            raise SystemExit('Extension Dabia : créer .venv_dabia et installer requirements-dabia.txt avant la validation complète')
+        subprocess.run([str(executable), str(ROOT/'scripts/validate_dabia.py')], cwd=ROOT, check=True)
+        dabia = json.loads((ROOT/'results/dabia2013/VALIDATION.json').read_text())
+        assert len([c for c in notebook.cells if c.metadata.get('dabia_extension')]) == 1
     receipt = dict(validated=True, instances=len(manifest['reference_instances']),
         tests=len(list(suite.iter('testcase'))), skipped=len(list(suite.iter('skipped'))),
         notebook_code_cells=len(code),
         scope='Current notebook, recorded solutions, immutable instance hashes and local test suite',
         limitation='No new uniform 356-instance optimization campaign; best archive uses mixed budgets',
-        canonical_notebook='notebooks/Livrable_Final_CVRPTW.ipynb')
+        canonical_notebook='notebooks/Livrable_Final_CVRPTW.ipynb',
+        dabia_extension=dabia)
     (ROOT/'livraison/VALIDATION_SOUTENANCE.json').write_text(json.dumps(receipt, indent=2), encoding='utf-8')
     print(json.dumps(receipt, indent=2))
 

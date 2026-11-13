@@ -77,3 +77,16 @@ Dans `algo/route_pool.py::RoutePool`, seules les tournées de solutions complèt
 Les constructions diversifient les points de départ ; la recherche locale exploite leurs améliorations accessibles ; le partitionnement combine leurs tournées ; le HGS poursuit l'exploration lorsqu'un effort supplémentaire est retenu. Notre contrôleur indépendant applique ensuite les mêmes règles à tous les profils. Le PLNE complet de la section précédente sert aux petites instances pour vérifier la formulation et prouver leurs optimums ; le partitionnement est plus réduit, car ses tournées sont déjà connues.
 
 L'objectif reste la durée totale à chaque sélection finale. Les mécanismes théoriques justifient les essais, mais les résultats de notre projet proviennent uniquement des exécutions conservées. La section 6.9 mesure les gains et les temps, distingue les tentatives sans progrès et décompose trajets, attentes et services. Une amélioration observée d'un profil combiné ne permet pas, sans ablation, d'attribuer tout le gain à un seul opérateur. Nous conservons la meilleure solution réalisable et le coût de toutes les tentatives, y compris lorsqu'elles ne progressent pas.
+
+## Profil temporel propre Dabia2013
+
+
+`algo/dabia.py` ne réutilise pas le HGS statique pour des fonctions temporelles.
+Notre insertion essaie des positions selon leur véritable variation de durée ;
+l'ILS explore relocate, swap, 2-opt et 2-opt*, applique des perturbations et des
+redémarrages, puis conserve une archive monotone. La bibliothèque externe MAMUT
+calcule le coût de chaque ordre avec son départ optimal et vérifie la solution
+finale. Le cache est local à l'instance, limité à 60 000 ordres de tournées.
+Le coût de référence n'est jamais une entrée de la recherche. Les 18 essais du
+pilote et les limites de leur interprétation sont détaillés dans
+[EXTENSION_DABIA2013.md](EXTENSION_DABIA2013.md).

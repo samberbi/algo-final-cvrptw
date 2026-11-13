@@ -1,0 +1,34 @@
+{
+    "instance_name": "C201",
+    "routes": [
+        [5, 2, 1],
+        [7, 3, 4],
+        [20, 22, 24, 27, 30, 29, 6, 32, 33, 31, 35, 37, 38, 39, 36, 34, 28, 26, 23, 18, 19, 16, 14, 12, 15, 17, 13, 25, 9, 11, 10, 8, 21],
+        [40, 44, 46, 45, 50, 47, 43, 42, 41, 48],
+        [49]
+    ],
+    "cost": 49683.84758988022,
+    "metadata": {
+        "authors": "Florian Rascoussier (0nyr)",
+        "source": "Lera-Romero et al. 2020 (linear edge costs) published solutions",
+        "validated_by": "mamut-routing-lib td Duration checker",
+        "date": "2026-07-02",
+        "route_durations": [3195.4753700703714, 3539.099624550463, 31693.323415081366, 9983.949924176526, 1271.999256001487],
+        "route_departure_times": [1051.9525229927913, 10354.900183449632, 748.6765849186336, 19584.300343649, 10170.0],
+        "published_duration_sum": 49683.84758988021,
+        "optimality": {
+            "proven": true,
+            "prover": "kayros 1.5.1 lera branch-price-and-cut (HiGHS backend; campaign build commit df05a37, behavior-identical to release v1.5.1)",
+            "certificate": "Optimal under checker-exact route costs and standard LP/pricing tolerances. Certified by four independent solves (cold and warm starts x asymmetric and symmetric labeling modes) agreeing on the value, each with an audited exact-pricing phase and zero checker-infeasible priced columns.",
+            "date": "2026-08-06",
+            "arithmetic": "checker-exact route costs (IEEE-754 doubles, canonical route order); the proven optimum equals compute_solution_cost of the stored routes bit-exactly",
+            "proven_optimum": 49683.84758988022,
+            "dual_bound": 49683.84758988021,
+            "wall_time_s": 102.65,
+            "time_limit_s": 1800.0,
+            "checker": "mamut-routing-lib td Duration checker",
+            "campaign": "2026-08-06 full TD re-certification on Grid'5000 abaca (job 6830467 + memory retry 6830998)"
+        }
+    },
+    "objective_function": "Duration"
+}

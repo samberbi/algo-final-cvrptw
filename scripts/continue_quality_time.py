@@ -55,7 +55,8 @@ def main():
     out['below_120_cpu'] = out['total_including_warmup_cpu_s'] < 120
     target.write_text(json.dumps(out, indent=2))
     (folder/'continuation_script_sha256.txt').write_text(hashlib.sha256(Path(__file__).read_bytes()).hexdigest())
-    print({k:v for k,v in out.items() if k not in ['routes', 'stages']})
+    from scripts.test_instances import show_quality_result
+    show_quality_result(out)
 
 
 if __name__ == '__main__':

@@ -1,0 +1,486 @@
+{
+  "measurement": {
+    "instance": "RC201",
+    "n": 50,
+    "family": "RC2",
+    "benchmark": "Dabia2013",
+    "seed": 4101,
+    "method": "pilot",
+    "valid": true,
+    "requested_s": 10.0,
+    "duration": 14823.898858283806,
+    "reference_duration": 14121.186503898036,
+    "gap_duration_bks_pct": 4.976298232388565,
+    "vehicles": 6,
+    "reference_vehicles": 6,
+    "initial_duration": 17730.64600284208,
+    "gain_construction_pct": 16.39391561983893,
+    "total_wall_s": 10.069758099969476,
+    "total_cpu_s": 10.046875,
+    "load_wall_s": 0.06503089994657785,
+    "load_cpu_s": 0.046875,
+    "travel": 9632.29979998702,
+    "waiting": 191.59905829678746,
+    "service": 5000.0,
+    "reference_certificate_note": "Re-priced on 2026-09-24 from 14121.186503898034 to 14121.186503898036 by mamut-routing-lib td checker, contract td-fold/2 (lib >= 0.12.0) (exact vertex ready-time transforms and slope-one arc interpolation). Routes unchanged. The proof was obtained under the pre-0.12 fold (td-fold/1); dual_bound is the prover's value under that arithmetic. Re-certification under td-fold/2 is pending.",
+    "full_atf_serialization_hash_checked": true
+  },
+  "result": {
+    "status": "feasible",
+    "objective": "Duration",
+    "routes": [
+      [
+        14,
+        5,
+        45,
+        2,
+        47,
+        15,
+        12,
+        11,
+        16
+      ],
+      [
+        42,
+        39,
+        36,
+        33,
+        29,
+        27,
+        28,
+        30,
+        31,
+        23,
+        21,
+        18,
+        19,
+        22,
+        9
+      ],
+      [
+        38,
+        44,
+        40,
+        41,
+        7,
+        6,
+        8,
+        3,
+        46,
+        34,
+        50,
+        26,
+        32
+      ],
+      [
+        49,
+        20,
+        43,
+        35,
+        37,
+        1,
+        4,
+        17
+      ],
+      [
+        10,
+        13
+      ],
+      [
+        24,
+        25,
+        48
+      ]
+    ],
+    "cost": 14823.898858283806,
+    "initial_cost": 17730.64600284208,
+    "runtime_s": 10.00455700000748,
+    "cpu_s": 10.0,
+    "budget_s": 10.0,
+    "overrun_s": 0.004557000007480383,
+    "trace": [
+      {
+        "elapsed_s": 0.10487019992433488,
+        "best": 17730.64600284208,
+        "phase": "construction"
+      },
+      {
+        "elapsed_s": 0.12840229994617403,
+        "best": 17601.979336175413,
+        "phase": "relocate"
+      },
+      {
+        "elapsed_s": 0.1790217999368906,
+        "best": 17241.15748714758,
+        "phase": "two_opt_star"
+      },
+      {
+        "elapsed_s": 0.31338969990611076,
+        "best": 16664.96675626395,
+        "phase": "relocate"
+      },
+      {
+        "elapsed_s": 0.315963999950327,
+        "best": 16635.966834264003,
+        "phase": "two_opt"
+      },
+      {
+        "elapsed_s": 0.4028501999564469,
+        "best": 16435.82673660255,
+        "phase": "relocate"
+      },
+      {
+        "elapsed_s": 0.6673336999956518,
+        "best": 16327.181375903583,
+        "phase": "relocate"
+      },
+      {
+        "elapsed_s": 0.9403668999439105,
+        "best": 16286.848899710658,
+        "phase": "two_opt_star"
+      },
+      {
+        "elapsed_s": 0.972816800000146,
+        "best": 16219.420149507088,
+        "phase": "relocate"
+      },
+      {
+        "elapsed_s": 2.9414805999258533,
+        "best": 16090.166462129335,
+        "phase": "two_opt_star"
+      },
+      {
+        "elapsed_s": 2.9931224999018013,
+        "best": 16059.803310169194,
+        "phase": "relocate"
+      },
+      {
+        "elapsed_s": 3.0599866999546066,
+        "best": 15982.279562332104,
+        "phase": "two_opt_star"
+      },
+      {
+        "elapsed_s": 3.102789699914865,
+        "best": 15879.279676331778,
+        "phase": "relocate"
+      },
+      {
+        "elapsed_s": 3.1952362000010908,
+        "best": 15795.99501192295,
+        "phase": "relocate"
+      },
+      {
+        "elapsed_s": 3.3715700999600813,
+        "best": 15777.000307146227,
+        "phase": "two_opt"
+      },
+      {
+        "elapsed_s": 4.48322829999961,
+        "best": 15762.165632046213,
+        "phase": "two_opt_star"
+      },
+      {
+        "elapsed_s": 4.512550299987197,
+        "best": 15636.928435310001,
+        "phase": "two_opt_star"
+      },
+      {
+        "elapsed_s": 4.550672999932431,
+        "best": 15528.283074611034,
+        "phase": "relocate"
+      },
+      {
+        "elapsed_s": 4.672666299971752,
+        "best": 15015.281626804235,
+        "phase": "relocate"
+      },
+      {
+        "elapsed_s": 8.567163200001232,
+        "best": 14933.47123179134,
+        "phase": "two_opt_star"
+      },
+      {
+        "elapsed_s": 8.672337399912067,
+        "best": 14823.898858283806,
+        "phase": "relocate"
+      }
+    ],
+    "route_evaluations": [
+      {
+        "route": [
+          14,
+          5,
+          45,
+          2,
+          47,
+          15,
+          12,
+          11,
+          16
+        ],
+        "feasible": true,
+        "duration": 2523.245902611283,
+        "departure_time": 603.9536029897058
+      },
+      {
+        "route": [
+          42,
+          39,
+          36,
+          33,
+          29,
+          27,
+          28,
+          30,
+          31,
+          23,
+          21,
+          18,
+          19,
+          22,
+          9
+        ],
+        "feasible": true,
+        "duration": 3813.832124158051,
+        "departure_time": 672.6680865946743
+      },
+      {
+        "route": [
+          38,
+          44,
+          40,
+          41,
+          7,
+          6,
+          8,
+          3,
+          46,
+          34,
+          50,
+          26,
+          32
+        ],
+        "feasible": true,
+        "duration": 3688.648364330629,
+        "departure_time": 2938.80050039908
+      },
+      {
+        "route": [
+          49,
+          20,
+          43,
+          35,
+          37,
+          1,
+          4,
+          17
+        ],
+        "feasible": true,
+        "duration": 2942.429362142271,
+        "departure_time": 5329.249089120402
+      },
+      {
+        "route": [
+          10,
+          13
+        ],
+        "feasible": true,
+        "duration": 781.7416050378215,
+        "departure_time": 6135.400431699216
+      },
+      {
+        "route": [
+          24,
+          25,
+          48
+        ],
+        "feasible": true,
+        "duration": 1074.001500003751,
+        "departure_time": 7680.0
+      }
+    ],
+    "proposals": 149313,
+    "cycles": 13,
+    "accepted": 120,
+    "operators": {
+      "relocate": 68,
+      "swap": 5,
+      "two_opt": 14,
+      "two_opt_star": 33
+    },
+    "evaluation_calls": 100506,
+    "cache": {
+      "hits": 854604,
+      "misses": 100506,
+      "maxsize": 60000,
+      "currsize": 60000
+    },
+    "attribution": "Own insertion, ILS and four move generators; external MAMUT 0.12.0 temporal evaluator/checker",
+    "checker_contract": "td-fold/2",
+    "departures": "optimized, not fixed at zero"
+  },
+  "physical": {
+    "valid": true,
+    "errors": [],
+    "routes": [
+      {
+        "departure": 603.9536029897058,
+        "returned": 3127.1995056009887,
+        "duration": 2523.245902611283,
+        "travel": 1623.2459026112829,
+        "waiting": 0.0,
+        "service": 900.0,
+        "load": 180.0
+      },
+      {
+        "departure": 672.6680865946743,
+        "returned": 4486.500210752725,
+        "duration": 3813.832124158051,
+        "travel": 2313.832124158051,
+        "waiting": 0.0,
+        "service": 1500.0,
+        "load": 300.0
+      },
+      {
+        "departure": 2938.80050039908,
+        "returned": 6627.448864729709,
+        "duration": 3688.648364330629,
+        "travel": 2197.0493060338417,
+        "waiting": 191.59905829678746,
+        "service": 1300.0,
+        "load": 260.0
+      },
+      {
+        "departure": 5329.249089120402,
+        "returned": 8271.678451262673,
+        "duration": 2942.429362142271,
+        "travel": 2142.429362142271,
+        "waiting": 0.0,
+        "service": 800.0,
+        "load": 150.0
+      },
+      {
+        "departure": 6135.400431699216,
+        "returned": 6917.142036737037,
+        "duration": 781.7416050378215,
+        "travel": 581.7416050378215,
+        "waiting": 0.0,
+        "service": 200.0,
+        "load": 40.0
+      },
+      {
+        "departure": 7680.0,
+        "returned": 8754.001500003751,
+        "duration": 1074.001500003751,
+        "travel": 774.0015000037511,
+        "waiting": 0.0,
+        "service": 300.0,
+        "load": 40.0
+      }
+    ],
+    "duration": 14823.898858283806,
+    "travel": 9632.29979998702,
+    "waiting": 191.59905829678746,
+    "service": 5000.0
+  },
+  "reference_check": {
+    "status": "valid",
+    "routing_cost": 14121.186503898036,
+    "num_routes": 6,
+    "error_message": "",
+    "route_evaluations": [
+      {
+        "route": [
+          10,
+          13
+        ],
+        "feasible": true,
+        "duration": 781.7416050378215,
+        "departure_time": 6135.400431699216
+      },
+      {
+        "route": [
+          14,
+          5,
+          45,
+          2,
+          47,
+          12,
+          11,
+          16,
+          15,
+          23,
+          21,
+          18,
+          19,
+          22,
+          9
+        ],
+        "feasible": true,
+        "duration": 3848.4127120309313,
+        "departure_time": 609.2868963229993
+      },
+      {
+        "route": [
+          24,
+          25,
+          48
+        ],
+        "feasible": true,
+        "duration": 1074.001500003751,
+        "departure_time": 7680.0
+      },
+      {
+        "route": [
+          37,
+          35,
+          43,
+          1,
+          4,
+          17
+        ],
+        "feasible": true,
+        "duration": 2144.5797682887787,
+        "departure_time": 6199.400419698857
+      },
+      {
+        "route": [
+          42,
+          39,
+          36,
+          33,
+          29,
+          27,
+          28,
+          30,
+          31,
+          44,
+          40,
+          38,
+          41,
+          7,
+          8,
+          6,
+          3,
+          46
+        ],
+        "feasible": true,
+        "duration": 4516.667045740402,
+        "departure_time": 768.3336037613659
+      },
+      {
+        "route": [
+          49,
+          20,
+          50,
+          34,
+          32,
+          26
+        ],
+        "feasible": true,
+        "duration": 1755.7838727963517,
+        "departure_time": 5108.5009292480345
+      }
+    ]
+  }
+}

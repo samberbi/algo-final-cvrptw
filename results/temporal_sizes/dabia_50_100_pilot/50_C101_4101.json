@@ -1,0 +1,471 @@
+{
+  "measurement": {
+    "instance": "C101",
+    "n": 50,
+    "family": "C1",
+    "benchmark": "Dabia2013",
+    "seed": 4101,
+    "method": "pilot",
+    "valid": true,
+    "requested_s": 10.0,
+    "duration": 49242.92185601275,
+    "reference_duration": 49242.92185601275,
+    "gap_duration_bks_pct": 0.0,
+    "vehicles": 6,
+    "reference_vehicles": 6,
+    "initial_duration": 51499.78733543829,
+    "gain_construction_pct": 4.38228116307684,
+    "total_wall_s": 10.115563799976371,
+    "total_cpu_s": 10.09375,
+    "load_wall_s": 0.06552119995467365,
+    "load_cpu_s": 0.046875,
+    "travel": 4004.9218560127542,
+    "waiting": 237.99999999999818,
+    "service": 45000.0,
+    "reference_certificate_note": "",
+    "full_atf_serialization_hash_checked": true
+  },
+  "result": {
+    "status": "feasible",
+    "objective": "Duration",
+    "routes": [
+      [
+        5,
+        3,
+        7,
+        8,
+        10,
+        11,
+        9,
+        6,
+        4,
+        2,
+        1
+      ],
+      [
+        43,
+        42,
+        41,
+        40,
+        44,
+        46,
+        45,
+        48
+      ],
+      [
+        13,
+        17,
+        18,
+        19,
+        15,
+        16,
+        14,
+        12
+      ],
+      [
+        32,
+        33,
+        31,
+        35,
+        37,
+        38,
+        39
+      ],
+      [
+        20,
+        24,
+        25,
+        27,
+        29,
+        30,
+        28,
+        36,
+        34,
+        22,
+        21
+      ],
+      [
+        26,
+        23,
+        50,
+        49,
+        47
+      ]
+    ],
+    "cost": 49242.92185601275,
+    "initial_cost": 51499.78733543829,
+    "runtime_s": 10.049879299942404,
+    "cpu_s": 10.046875,
+    "budget_s": 10.0,
+    "overrun_s": 0.04987929994240403,
+    "trace": [
+      {
+        "elapsed_s": 0.052523399936035275,
+        "best": 51499.78733543829,
+        "phase": "construction"
+      },
+      {
+        "elapsed_s": 0.10749059997033328,
+        "best": 51442.3361307124,
+        "phase": "two_opt_star"
+      },
+      {
+        "elapsed_s": 0.15515869995579123,
+        "best": 51399.43693876259,
+        "phase": "two_opt_star"
+      },
+      {
+        "elapsed_s": 0.1713972999714315,
+        "best": 51391.09871431839,
+        "phase": "two_opt_star"
+      },
+      {
+        "elapsed_s": 0.2127474999288097,
+        "best": 51384.698558618315,
+        "phase": "relocate"
+      },
+      {
+        "elapsed_s": 0.26623069995548576,
+        "best": 51375.41392686019,
+        "phase": "relocate"
+      },
+      {
+        "elapsed_s": 0.29546989989466965,
+        "best": 51264.41392686019,
+        "phase": "two_opt_star"
+      },
+      {
+        "elapsed_s": 0.3154359998879954,
+        "best": 51106.12806310545,
+        "phase": "two_opt_star"
+      },
+      {
+        "elapsed_s": 0.38485269993543625,
+        "best": 51084.22733815481,
+        "phase": "swap"
+      },
+      {
+        "elapsed_s": 0.4167326999595389,
+        "best": 51073.22639530036,
+        "phase": "two_opt_star"
+      },
+      {
+        "elapsed_s": 0.43595219997223467,
+        "best": 50893.69773903588,
+        "phase": "two_opt_star"
+      },
+      {
+        "elapsed_s": 0.6550109999952838,
+        "best": 50402.097684736545,
+        "phase": "two_opt_star"
+      },
+      {
+        "elapsed_s": 1.442048899945803,
+        "best": 50304.231836514184,
+        "phase": "relocate"
+      },
+      {
+        "elapsed_s": 1.7087923999642953,
+        "best": 50283.33971432078,
+        "phase": "swap"
+      },
+      {
+        "elapsed_s": 1.7325860999990255,
+        "best": 50116.2929401687,
+        "phase": "two_opt_star"
+      },
+      {
+        "elapsed_s": 1.752269799937494,
+        "best": 49953.43574833211,
+        "phase": "two_opt_star"
+      },
+      {
+        "elapsed_s": 1.7728391999844462,
+        "best": 49757.836261031385,
+        "phase": "two_opt_star"
+      },
+      {
+        "elapsed_s": 3.2369679999537766,
+        "best": 49242.921856012756,
+        "phase": "relocate"
+      }
+    ],
+    "route_evaluations": [
+      {
+        "route": [
+          5,
+          3,
+          7,
+          8,
+          10,
+          11,
+          9,
+          6,
+          4,
+          2,
+          1
+        ],
+        "feasible": true,
+        "duration": 10516.047880079223,
+        "departure_time": 0.0
+      },
+      {
+        "route": [
+          43,
+          42,
+          41,
+          40,
+          44,
+          46,
+          45,
+          48
+        ],
+        "feasible": true,
+        "duration": 7659.156789559365,
+        "departure_time": 0.0
+      },
+      {
+        "route": [
+          13,
+          17,
+          18,
+          19,
+          15,
+          16,
+          14,
+          12
+        ],
+        "feasible": true,
+        "duration": 8098.713994746611,
+        "departure_time": 0.0
+      },
+      {
+        "route": [
+          32,
+          33,
+          31,
+          35,
+          37,
+          38,
+          39
+        ],
+        "feasible": true,
+        "duration": 7046.488874590602,
+        "departure_time": 296.76208353690424
+      },
+      {
+        "route": [
+          20,
+          24,
+          25,
+          27,
+          29,
+          30,
+          28,
+          36,
+          34,
+          22,
+          21
+        ],
+        "feasible": true,
+        "duration": 10616.713968135065,
+        "departure_time": 14.28595918297377
+      },
+      {
+        "route": [
+          26,
+          23,
+          50,
+          49,
+          47
+        ],
+        "feasible": true,
+        "duration": 5305.800348901887,
+        "departure_time": 6659.199988598956
+      }
+    ],
+    "proposals": 323662,
+    "cycles": 21,
+    "accepted": 296,
+    "operators": {
+      "relocate": 68,
+      "swap": 49,
+      "two_opt": 0,
+      "two_opt_star": 179
+    },
+    "evaluation_calls": 161172,
+    "cache": {
+      "hits": 2119584,
+      "misses": 183842,
+      "maxsize": 60000,
+      "currsize": 60000
+    },
+    "attribution": "Own insertion, ILS and four move generators; external MAMUT 0.12.0 temporal evaluator/checker",
+    "checker_contract": "td-fold/2",
+    "departures": "optimized, not fixed at zero"
+  },
+  "physical": {
+    "valid": true,
+    "errors": [],
+    "routes": [
+      {
+        "departure": 0.0,
+        "returned": 10516.047880079223,
+        "duration": 10516.047880079223,
+        "travel": 616.0478800792221,
+        "waiting": 0.0,
+        "service": 9900.0,
+        "load": 160.0
+      },
+      {
+        "departure": 0.0,
+        "returned": 7659.156789559365,
+        "duration": 7659.156789559365,
+        "travel": 459.1567895593653,
+        "waiting": 0.0,
+        "service": 7200.0,
+        "load": 110.0
+      },
+      {
+        "departure": 0.0,
+        "returned": 8098.713994746611,
+        "duration": 8098.713994746611,
+        "travel": 898.7139947466112,
+        "waiting": 0.0,
+        "service": 7200.0,
+        "load": 190.0
+      },
+      {
+        "departure": 296.76208353690424,
+        "returned": 7343.250958127506,
+        "duration": 7046.488874590602,
+        "travel": 746.4888745906024,
+        "waiting": 0.0,
+        "service": 6300.0,
+        "load": 170.0
+      },
+      {
+        "departure": 14.28595918297377,
+        "returned": 10630.999927318038,
+        "duration": 10616.713968135065,
+        "travel": 716.7139681350641,
+        "waiting": 0.0,
+        "service": 9900.0,
+        "load": 180.0
+      },
+      {
+        "departure": 6659.199988598956,
+        "returned": 11965.000337500844,
+        "duration": 5305.800348901887,
+        "travel": 567.8003489018893,
+        "waiting": 237.99999999999818,
+        "service": 4500.0,
+        "load": 50.0
+      }
+    ],
+    "duration": 49242.921856012756,
+    "travel": 4004.9218560127542,
+    "waiting": 237.99999999999818,
+    "service": 45000.0
+  },
+  "reference_check": {
+    "status": "valid",
+    "routing_cost": 49242.92185601275,
+    "num_routes": 6,
+    "error_message": "",
+    "route_evaluations": [
+      {
+        "route": [
+          5,
+          3,
+          7,
+          8,
+          10,
+          11,
+          9,
+          6,
+          4,
+          2,
+          1
+        ],
+        "feasible": true,
+        "duration": 10516.047880079223,
+        "departure_time": 0.0
+      },
+      {
+        "route": [
+          13,
+          17,
+          18,
+          19,
+          15,
+          16,
+          14,
+          12
+        ],
+        "feasible": true,
+        "duration": 8098.713994746611,
+        "departure_time": 0.0
+      },
+      {
+        "route": [
+          20,
+          24,
+          25,
+          27,
+          29,
+          30,
+          28,
+          36,
+          34,
+          22,
+          21
+        ],
+        "feasible": true,
+        "duration": 10616.713968135065,
+        "departure_time": 14.28595918297377
+      },
+      {
+        "route": [
+          26,
+          23,
+          50,
+          49,
+          47
+        ],
+        "feasible": true,
+        "duration": 5305.800348901887,
+        "departure_time": 6659.199988598956
+      },
+      {
+        "route": [
+          32,
+          33,
+          31,
+          35,
+          37,
+          38,
+          39
+        ],
+        "feasible": true,
+        "duration": 7046.488874590602,
+        "departure_time": 296.76208353690424
+      },
+      {
+        "route": [
+          43,
+          42,
+          41,
+          40,
+          44,
+          46,
+          45,
+          48
+        ],
+        "feasible": true,
+        "duration": 7659.156789559365,
+        "departure_time": 0.0
+      }
+    ]
+  }
+}

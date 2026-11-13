@@ -1,0 +1,1106 @@
+{
+  "measurement": {
+    "instance": "R101",
+    "n": 100,
+    "family": "R1",
+    "benchmark": "Dabia2013",
+    "seed": 4101,
+    "method": "pilot",
+    "valid": true,
+    "requested_s": 10.0,
+    "duration": 28114.89198861152,
+    "reference_duration": 26857.526185244315,
+    "gap_duration_bks_pct": 4.68161436274801,
+    "vehicles": 20,
+    "reference_vehicles": 20,
+    "initial_duration": 30404.35166805598,
+    "gain_construction_pct": 7.530039464218719,
+    "total_wall_s": 10.255468199960887,
+    "total_cpu_s": 10.234375,
+    "load_wall_s": 0.24117299995850772,
+    "load_cpu_s": 0.21875,
+    "travel": 16801.454765485854,
+    "waiting": 1313.4372231256734,
+    "service": 10000.0,
+    "reference_certificate_note": "",
+    "full_atf_serialization_hash_checked": true
+  },
+  "result": {
+    "status": "feasible",
+    "objective": "Duration",
+    "routes": [
+      [
+        5,
+        83,
+        61,
+        85,
+        84,
+        97,
+        13
+      ],
+      [
+        59,
+        42,
+        15,
+        38
+      ],
+      [
+        14,
+        98,
+        44,
+        87,
+        43,
+        91,
+        100,
+        58
+      ],
+      [
+        45,
+        82,
+        7,
+        6
+      ],
+      [
+        63,
+        62,
+        88,
+        18
+      ],
+      [
+        12,
+        53
+      ],
+      [
+        27,
+        31,
+        30,
+        81,
+        34,
+        68,
+        24,
+        80
+      ],
+      [
+        28,
+        21,
+        73,
+        57,
+        56,
+        74
+      ],
+      [
+        40,
+        22,
+        54
+      ],
+      [
+        95,
+        75,
+        41,
+        55,
+        4,
+        25
+      ],
+      [
+        36,
+        11,
+        90,
+        10
+      ],
+      [
+        39,
+        23,
+        67,
+        50,
+        35,
+        77
+      ],
+      [
+        69,
+        76,
+        78,
+        3,
+        26,
+        1,
+        70
+      ],
+      [
+        47,
+        19,
+        8,
+        46,
+        60,
+        89
+      ],
+      [
+        65,
+        71,
+        79,
+        66
+      ],
+      [
+        52
+      ],
+      [
+        33,
+        29,
+        51,
+        9,
+        20,
+        32,
+        48
+      ],
+      [
+        72,
+        2,
+        99,
+        94
+      ],
+      [
+        92,
+        64,
+        49,
+        96
+      ],
+      [
+        16,
+        86,
+        37,
+        17,
+        93
+      ]
+    ],
+    "cost": 28114.89198861152,
+    "initial_cost": 30404.35166805598,
+    "runtime_s": 10.01402230001986,
+    "cpu_s": 10.015625,
+    "budget_s": 10.0,
+    "overrun_s": 0.014022300019860268,
+    "trace": [
+      {
+        "elapsed_s": 0.20683650008868426,
+        "best": 30404.35166805598,
+        "phase": "construction"
+      },
+      {
+        "elapsed_s": 0.2539238000754267,
+        "best": 30285.418799634437,
+        "phase": "two_opt_star"
+      },
+      {
+        "elapsed_s": 0.2752599000232294,
+        "best": 30262.91866838411,
+        "phase": "two_opt_star"
+      },
+      {
+        "elapsed_s": 0.3458941000280902,
+        "best": 30203.98693357758,
+        "phase": "two_opt_star"
+      },
+      {
+        "elapsed_s": 0.3986775000812486,
+        "best": 30064.383877832635,
+        "phase": "relocate"
+      },
+      {
+        "elapsed_s": 0.4154539000010118,
+        "best": 30012.469958772723,
+        "phase": "relocate"
+      },
+      {
+        "elapsed_s": 0.45091260003391653,
+        "best": 29931.369869722945,
+        "phase": "two_opt_star"
+      },
+      {
+        "elapsed_s": 0.473012899979949,
+        "best": 29776.11258175824,
+        "phase": "relocate"
+      },
+      {
+        "elapsed_s": 0.6596494000405073,
+        "best": 29772.969732451802,
+        "phase": "two_opt_star"
+      },
+      {
+        "elapsed_s": 0.9634453000035137,
+        "best": 29680.303065785134,
+        "phase": "two_opt_star"
+      },
+      {
+        "elapsed_s": 1.1386722000315785,
+        "best": 29666.402961833577,
+        "phase": "swap"
+      },
+      {
+        "elapsed_s": 1.1549673000117764,
+        "best": 29583.203018633474,
+        "phase": "two_opt_star"
+      },
+      {
+        "elapsed_s": 1.2018847999861464,
+        "best": 29557.80218243431,
+        "phase": "two_opt_star"
+      },
+      {
+        "elapsed_s": 1.213439500075765,
+        "best": 29545.968883017937,
+        "phase": "relocate"
+      },
+      {
+        "elapsed_s": 1.3621466000331566,
+        "best": 29534.769518417947,
+        "phase": "two_opt_star"
+      },
+      {
+        "elapsed_s": 1.3843116000061855,
+        "best": 29483.16938161822,
+        "phase": "two_opt_star"
+      },
+      {
+        "elapsed_s": 1.4938045999733731,
+        "best": 29458.83599161822,
+        "phase": "swap"
+      },
+      {
+        "elapsed_s": 1.5955461000557989,
+        "best": 29355.525190518343,
+        "phase": "two_opt_star"
+      },
+      {
+        "elapsed_s": 1.6361182000255212,
+        "best": 29230.524992818093,
+        "phase": "two_opt_star"
+      },
+      {
+        "elapsed_s": 1.7988724000751972,
+        "best": 29216.72502041804,
+        "phase": "swap"
+      },
+      {
+        "elapsed_s": 1.83179199998267,
+        "best": 29138.053615289748,
+        "phase": "two_opt_star"
+      },
+      {
+        "elapsed_s": 1.850237900041975,
+        "best": 29136.653033531467,
+        "phase": "swap"
+      },
+      {
+        "elapsed_s": 1.8868153999792412,
+        "best": 29108.319670198136,
+        "phase": "relocate"
+      },
+      {
+        "elapsed_s": 1.910494500072673,
+        "best": 28871.004978571596,
+        "phase": "two_opt_star"
+      },
+      {
+        "elapsed_s": 1.9223089000442997,
+        "best": 28866.871518173,
+        "phase": "two_opt_star"
+      },
+      {
+        "elapsed_s": 2.265982100041583,
+        "best": 28863.319778618465,
+        "phase": "relocate"
+      },
+      {
+        "elapsed_s": 2.403036699979566,
+        "best": 28786.931517368812,
+        "phase": "two_opt_star"
+      },
+      {
+        "elapsed_s": 2.4430748000741005,
+        "best": 28769.37951311511,
+        "phase": "relocate"
+      },
+      {
+        "elapsed_s": 2.5299780999775976,
+        "best": 28718.23011304103,
+        "phase": "two_opt_star"
+      },
+      {
+        "elapsed_s": 2.766854100045748,
+        "best": 28712.729591789728,
+        "phase": "two_opt_star"
+      },
+      {
+        "elapsed_s": 2.8160621999995783,
+        "best": 28693.778980314277,
+        "phase": "two_opt_star"
+      },
+      {
+        "elapsed_s": 2.838361700065434,
+        "best": 28661.178585514826,
+        "phase": "two_opt_star"
+      },
+      {
+        "elapsed_s": 2.8918392000487074,
+        "best": 28623.52846768985,
+        "phase": "swap"
+      },
+      {
+        "elapsed_s": 3.248191900085658,
+        "best": 28590.229186040793,
+        "phase": "swap"
+      },
+      {
+        "elapsed_s": 3.329138500033878,
+        "best": 28463.52879769108,
+        "phase": "two_opt_star"
+      },
+      {
+        "elapsed_s": 3.4756561000831425,
+        "best": 28418.529114689445,
+        "phase": "two_opt_star"
+      },
+      {
+        "elapsed_s": 3.5631538999732584,
+        "best": 28361.171625144307,
+        "phase": "two_opt_star"
+      },
+      {
+        "elapsed_s": 3.593887499999255,
+        "best": 28346.771561945774,
+        "phase": "two_opt_star"
+      },
+      {
+        "elapsed_s": 3.7495113000040874,
+        "best": 28335.23800351047,
+        "phase": "two_opt_star"
+      },
+      {
+        "elapsed_s": 3.851595100015402,
+        "best": 28333.33817256052,
+        "phase": "two_opt_star"
+      },
+      {
+        "elapsed_s": 3.8647532999748364,
+        "best": 28323.33822256052,
+        "phase": "relocate"
+      },
+      {
+        "elapsed_s": 4.047684799996205,
+        "best": 28292.11599744952,
+        "phase": "two_opt_star"
+      },
+      {
+        "elapsed_s": 4.081581500009634,
+        "best": 28235.449230782855,
+        "phase": "relocate"
+      },
+      {
+        "elapsed_s": 4.222536000073887,
+        "best": 28181.02068179295,
+        "phase": "two_opt_star"
+      },
+      {
+        "elapsed_s": 4.35577020002529,
+        "best": 28114.891988611525,
+        "phase": "two_opt_star"
+      }
+    ],
+    "route_evaluations": [
+      {
+        "route": [
+          5,
+          83,
+          61,
+          85,
+          84,
+          97,
+          13
+        ],
+        "feasible": true,
+        "duration": 1659.2000532800214,
+        "departure_time": 164.0
+      },
+      {
+        "route": [
+          59,
+          42,
+          15,
+          38
+        ],
+        "feasible": true,
+        "duration": 1201.8999599521894,
+        "departure_time": 50.0
+      },
+      {
+        "route": [
+          14,
+          98,
+          44,
+          87,
+          43,
+          91,
+          100,
+          58
+        ],
+        "feasible": true,
+        "duration": 2191.0007350018377,
+        "departure_time": 73.4998012495031
+      },
+      {
+        "route": [
+          45,
+          82,
+          7,
+          6
+        ],
+        "feasible": true,
+        "duration": 1005.1002530512321,
+        "departure_time": 226.0
+      },
+      {
+        "route": [
+          63,
+          62,
+          88,
+          18
+        ],
+        "feasible": true,
+        "duration": 1090.8990761110306,
+        "departure_time": 44.400985539976595
+      },
+      {
+        "route": [
+          12,
+          53
+        ],
+        "feasible": true,
+        "duration": 531.4000747000418,
+        "departure_time": 544.9998725000637
+      },
+      {
+        "route": [
+          27,
+          31,
+          30,
+          81,
+          34,
+          68,
+          24,
+          80
+        ],
+        "feasible": true,
+        "duration": 1848.0001008000404,
+        "departure_time": 324.0
+      },
+      {
+        "route": [
+          28,
+          21,
+          73,
+          57,
+          56,
+          74
+        ],
+        "feasible": true,
+        "duration": 1381.9992211450538,
+        "departure_time": 409.42877477495784
+      },
+      {
+        "route": [
+          40,
+          22,
+          54
+        ],
+        "feasible": true,
+        "duration": 839.6849678141009,
+        "departure_time": 808.6003227993544
+      },
+      {
+        "route": [
+          95,
+          75,
+          41,
+          55,
+          4,
+          25
+        ],
+        "feasible": true,
+        "duration": 1753.528209265336,
+        "departure_time": 320.22232511100003
+      },
+      {
+        "route": [
+          36,
+          11,
+          90,
+          10
+        ],
+        "feasible": true,
+        "duration": 1467.8338262511907,
+        "departure_time": 62.666650000000004
+      },
+      {
+        "route": [
+          39,
+          23,
+          67,
+          50,
+          35,
+          77
+        ],
+        "feasible": true,
+        "duration": 1981.2366063733002,
+        "departure_time": 169.4298396284279
+      },
+      {
+        "route": [
+          69,
+          76,
+          78,
+          3,
+          26,
+          1,
+          70
+        ],
+        "feasible": true,
+        "duration": 1744.33338,
+        "departure_time": 385.66661999999997
+      },
+      {
+        "route": [
+          47,
+          19,
+          8,
+          46,
+          60,
+          89
+        ],
+        "feasible": true,
+        "duration": 1819.1426867353237,
+        "departure_time": 167.99994999999998
+      },
+      {
+        "route": [
+          65,
+          71,
+          79,
+          66
+        ],
+        "feasible": true,
+        "duration": 1386.0945425870211,
+        "departure_time": 227.33333333333331
+      },
+      {
+        "route": [
+          52
+        ],
+        "feasible": true,
+        "duration": 280.7998644002712,
+        "departure_time": 477.0
+      },
+      {
+        "route": [
+          33,
+          29,
+          51,
+          9,
+          20,
+          32,
+          48
+        ],
+        "feasible": true,
+        "duration": 1824.606504789253,
+        "departure_time": 232.5365648060593
+      },
+      {
+        "route": [
+          72,
+          2,
+          99,
+          94
+        ],
+        "feasible": true,
+        "duration": 1001.9996764307012,
+        "departure_time": 188.00054856986125
+      },
+      {
+        "route": [
+          92,
+          64,
+          49,
+          96
+        ],
+        "feasible": true,
+        "duration": 1589.7994499235813,
+        "departure_time": 97.0
+      },
+      {
+        "route": [
+          16,
+          86,
+          37,
+          17,
+          93
+        ],
+        "feasible": true,
+        "duration": 1516.3328,
+        "departure_time": 665.6672000000001
+      }
+    ],
+    "proposals": 265505,
+    "cycles": 5,
+    "accepted": 89,
+    "operators": {
+      "relocate": 19,
+      "swap": 11,
+      "two_opt": 0,
+      "two_opt_star": 59
+    },
+    "evaluation_calls": 147441,
+    "cache": {
+      "hits": 5174359,
+      "misses": 148299,
+      "maxsize": 60000,
+      "currsize": 60000
+    },
+    "attribution": "Own insertion, ILS and four move generators; external MAMUT 0.12.0 temporal evaluator/checker",
+    "checker_contract": "td-fold/2",
+    "departures": "optimized, not fixed at zero"
+  },
+  "physical": {
+    "valid": true,
+    "errors": [],
+    "routes": [
+      {
+        "departure": 164.0,
+        "returned": 1823.2000532800214,
+        "duration": 1659.2000532800214,
+        "travel": 776.9500791565979,
+        "waiting": 182.2499741234235,
+        "service": 700.0,
+        "load": 133.0
+      },
+      {
+        "departure": 50.0,
+        "returned": 1251.8999599521894,
+        "duration": 1201.8999599521894,
+        "travel": 793.8999599521894,
+        "waiting": 8.0,
+        "service": 400.0,
+        "load": 57.0
+      },
+      {
+        "departure": 73.4998012495031,
+        "returned": 2264.5005362513407,
+        "duration": 2191.0007350018377,
+        "travel": 1205.7715467560197,
+        "waiting": 185.22918824581802,
+        "service": 800.0,
+        "load": 117.0
+      },
+      {
+        "departure": 226.0,
+        "returned": 1231.1002530512321,
+        "duration": 1005.1002530512321,
+        "travel": 585.600361801504,
+        "waiting": 19.49989124972808,
+        "service": 400.0,
+        "load": 40.0
+      },
+      {
+        "departure": 44.400985539976595,
+        "returned": 1135.3000616510071,
+        "duration": 1090.8990761110306,
+        "travel": 690.8990761110306,
+        "waiting": 0.0,
+        "service": 400.0,
+        "load": 50.0
+      },
+      {
+        "departure": 544.9998725000637,
+        "returned": 1076.3999472001055,
+        "duration": 531.4000747000418,
+        "travel": 292.9999115003683,
+        "waiting": 38.40016319967356,
+        "service": 200.0,
+        "load": 33.0
+      },
+      {
+        "departure": 324.0,
+        "returned": 2172.0001008000404,
+        "duration": 1848.0001008000404,
+        "travel": 964.5074631792152,
+        "waiting": 83.49263762082523,
+        "service": 800.0,
+        "load": 149.0
+      },
+      {
+        "departure": 409.42877477495784,
+        "returned": 1791.4279959200117,
+        "duration": 1381.9992211450538,
+        "travel": 704.4987058960494,
+        "waiting": 77.50051524900437,
+        "service": 600.0,
+        "load": 57.0
+      },
+      {
+        "departure": 808.6003227993544,
+        "returned": 1648.2852906134553,
+        "duration": 839.6849678141009,
+        "travel": 477.685387815151,
+        "waiting": 61.99957999894991,
+        "service": 300.0,
+        "load": 45.0
+      },
+      {
+        "departure": 320.22232511100003,
+        "returned": 2073.750534376336,
+        "duration": 1753.528209265336,
+        "travel": 1090.9928444590282,
+        "waiting": 62.5353648063076,
+        "service": 600.0,
+        "load": 70.0
+      },
+      {
+        "departure": 62.666650000000004,
+        "returned": 1530.5004762511905,
+        "duration": 1467.8338262511907,
+        "travel": 906.6838231771333,
+        "waiting": 161.15000307405728,
+        "service": 400.0,
+        "load": 36.0
+      },
+      {
+        "departure": 169.4298396284279,
+        "returned": 2150.666446001728,
+        "duration": 1981.2366063733002,
+        "travel": 1381.2366063733004,
+        "waiting": 0.0,
+        "service": 600.0,
+        "load": 120.0
+      },
+      {
+        "departure": 385.66661999999997,
+        "returned": 2130.0,
+        "duration": 1744.33338,
+        "travel": 1022.2335891928653,
+        "waiting": 22.099790807134696,
+        "service": 700.0,
+        "load": 67.0
+      },
+      {
+        "departure": 167.99994999999998,
+        "returned": 1987.1426367353235,
+        "duration": 1819.1426867353237,
+        "travel": 1214.7423563364534,
+        "waiting": 4.40033039887021,
+        "service": 600.0,
+        "load": 72.0
+      },
+      {
+        "departure": 227.33333333333331,
+        "returned": 1613.4278759203544,
+        "duration": 1386.0945425870211,
+        "travel": 964.4938657883747,
+        "waiting": 21.60067679864642,
+        "service": 400.0,
+        "load": 83.0
+      },
+      {
+        "departure": 477.0,
+        "returned": 757.7998644002712,
+        "duration": 280.7998644002712,
+        "travel": 180.7998644002712,
+        "waiting": 0.0,
+        "service": 100.0,
+        "load": 9.0
+      },
+      {
+        "departure": 232.5365648060593,
+        "returned": 2057.143069595312,
+        "duration": 1824.606504789253,
+        "travel": 1117.8567129147732,
+        "waiting": 6.749791874479797,
+        "service": 700.0,
+        "load": 114.0
+      },
+      {
+        "departure": 188.00054856986125,
+        "returned": 1190.0002250005625,
+        "duration": 1001.9996764307012,
+        "travel": 551.3995801314,
+        "waiting": 50.6000962993013,
+        "service": 400.0,
+        "load": 68.0
+      },
+      {
+        "departure": 97.0,
+        "returned": 1686.7994499235813,
+        "duration": 1589.7994499235813,
+        "travel": 1117.4494432496663,
+        "waiting": 72.350006673915,
+        "service": 400.0,
+        "load": 52.0
+      },
+      {
+        "departure": 665.6672000000001,
+        "returned": 2182.0,
+        "duration": 1516.3328,
+        "travel": 760.7535872944613,
+        "waiting": 255.57921270553857,
+        "service": 500.0,
+        "load": 86.0
+      }
+    ],
+    "duration": 28114.891988611525,
+    "travel": 16801.454765485854,
+    "waiting": 1313.4372231256734,
+    "service": 10000.0
+  },
+  "reference_check": {
+    "status": "valid",
+    "routing_cost": 26857.526185244315,
+    "num_routes": 20,
+    "error_message": "",
+    "route_evaluations": [
+      {
+        "route": [
+          2,
+          75,
+          22,
+          55,
+          4,
+          25
+        ],
+        "feasible": true,
+        "duration": 1665.7508583761742,
+        "departure_time": 407.9996760001619
+      },
+      {
+        "route": [
+          5,
+          83,
+          38
+        ],
+        "feasible": true,
+        "duration": 1049.5991528016943,
+        "departure_time": 164.0
+      },
+      {
+        "route": [
+          14,
+          98,
+          61,
+          85,
+          6
+        ],
+        "feasible": true,
+        "duration": 1148.5997228005544,
+        "departure_time": 100.0
+      },
+      {
+        "route": [
+          27,
+          62,
+          88,
+          90,
+          10,
+          32,
+          48
+        ],
+        "feasible": true,
+        "duration": 1706.3751462514415,
+        "departure_time": 320.0
+      },
+      {
+        "route": [
+          28,
+          21,
+          73,
+          41,
+          26,
+          54
+        ],
+        "feasible": true,
+        "duration": 1370.2847689006317,
+        "departure_time": 409.42877477495784
+      },
+      {
+        "route": [
+          31,
+          30,
+          81,
+          66
+        ],
+        "feasible": true,
+        "duration": 1176.0945425870211,
+        "departure_time": 437.3333333333333
+      },
+      {
+        "route": [
+          33,
+          29,
+          51,
+          9,
+          20,
+          35,
+          77
+        ],
+        "feasible": true,
+        "duration": 1932.7973451939406,
+        "departure_time": 232.5365648060593
+      },
+      {
+        "route": [
+          36,
+          11,
+          19,
+          8,
+          46,
+          60,
+          89
+        ],
+        "feasible": true,
+        "duration": 1991.475478736029,
+        "departure_time": 9.667199999999857
+      },
+      {
+        "route": [
+          37,
+          17,
+          93
+        ],
+        "feasible": true,
+        "duration": 869.9994240011522,
+        "departure_time": 1312.0005759988478
+      },
+      {
+        "route": [
+          39,
+          23,
+          67
+        ],
+        "feasible": true,
+        "duration": 1049.1558370617822,
+        "departure_time": 215.14357958977263
+      },
+      {
+        "route": [
+          45,
+          82,
+          7,
+          84,
+          43,
+          13
+        ],
+        "feasible": true,
+        "duration": 1599.7004845310996,
+        "departure_time": 226.0
+      },
+      {
+        "route": [
+          52,
+          99,
+          94
+        ],
+        "feasible": true,
+        "duration": 685.2506806267015,
+        "departure_time": 504.749544373861
+      },
+      {
+        "route": [
+          59,
+          47,
+          18
+        ],
+        "feasible": true,
+        "duration": 1012.7998104003791,
+        "departure_time": 52.0
+      },
+      {
+        "route": [
+          63,
+          64,
+          49,
+          96,
+          91,
+          100,
+          58
+        ],
+        "feasible": true,
+        "duration": 2125.642550702774,
+        "departure_time": 138.85798554856663
+      },
+      {
+        "route": [
+          65,
+          71,
+          79,
+          3,
+          50
+        ],
+        "feasible": true,
+        "duration": 1295.5666176174568,
+        "departure_time": 227.33333333333331
+      },
+      {
+        "route": [
+          69
+        ],
+        "feasible": true,
+        "duration": 383.4167718752297,
+        "departure_time": 352.33332
+      },
+      {
+        "route": [
+          72,
+          12,
+          76,
+          78,
+          34,
+          68,
+          24,
+          80
+        ],
+        "feasible": true,
+        "duration": 1967.9994682303472,
+        "departure_time": 204.00063256969327
+      },
+      {
+        "route": [
+          87,
+          57,
+          56,
+          74
+        ],
+        "feasible": true,
+        "duration": 945.2279113207885,
+        "departure_time": 846.2000845992231
+      },
+      {
+        "route": [
+          92,
+          42,
+          15,
+          40,
+          53
+        ],
+        "feasible": true,
+        "duration": 1056.9332001335995,
+        "departure_time": 59.666666666666686
+      },
+      {
+        "route": [
+          95,
+          44,
+          16,
+          86,
+          97,
+          1,
+          70
+        ],
+        "feasible": true,
+        "duration": 1824.8564130955165,
+        "departure_time": 310.0002
+      }
+    ]
+  }
+}

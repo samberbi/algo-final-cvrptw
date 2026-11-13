@@ -1,0 +1,36 @@
+{
+    "instance_name": "R201",
+    "routes": [
+        [4, 25, 24],
+        [6, 8, 46, 49],
+        [10, 20, 32, 35, 1, 48, 17],
+        [27, 28, 39, 23, 15, 2, 21, 16, 44, 38],
+        [37, 43, 13],
+        [40, 41, 22, 9, 34, 3, 50, 26],
+        [42, 14, 5, 45, 47, 36, 31, 33, 29, 12, 30, 11, 19, 7, 18]
+    ],
+    "cost": 14051.502498920065,
+    "metadata": {
+        "authors": "Florian Rascoussier (0nyr)",
+        "source": "Lera-Romero et al. 2020 (linear edge costs) published solutions",
+        "validated_by": "mamut-routing-lib td Duration checker",
+        "date": "2026-07-02",
+        "route_durations": [1037.8567793387783, 1210.5988588022828, 2293.507097772572, 2720.8557251825805, 952.8426331585515, 1894.1997231042324, 3941.6416815610683],
+        "route_departure_times": [7797.143408161691, 4524.600370799258, 6167.600304799391, 1239.1431510195687, 6142.299952148348, 4157.900882447881, 46.85861468967232],
+        "published_duration_sum": 14051.502498920065,
+        "optimality": {
+            "proven": true,
+            "prover": "kayros 1.5.1 lera branch-price-and-cut (HiGHS backend; campaign build commit df05a37, behavior-identical to release v1.5.1)",
+            "certificate": "Optimal under checker-exact route costs and standard LP/pricing tolerances. Certified by four independent solves (cold and warm starts x asymmetric and symmetric labeling modes) agreeing on the value, each with an audited exact-pricing phase and zero checker-infeasible priced columns.",
+            "date": "2026-08-06",
+            "arithmetic": "checker-exact route costs (IEEE-754 doubles, canonical route order); the proven optimum equals compute_solution_cost of the stored routes bit-exactly",
+            "proven_optimum": 14051.502498920065,
+            "dual_bound": 14051.502498920065,
+            "wall_time_s": 168.31,
+            "time_limit_s": 1800.0,
+            "checker": "mamut-routing-lib td Duration checker",
+            "campaign": "2026-08-06 full TD re-certification on Grid'5000 abaca (job 6830467 + memory retry 6830998)"
+        }
+    },
+    "objective_function": "Duration"
+}
