@@ -9,12 +9,14 @@ import itertools
 import json
 import re
 import sys
+from dataclasses import replace
 import xml.etree.ElementTree as ET
 ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT))
 import nbformat
 import numpy as np
 import pandas as pd
+import vrplib
 from algo.data import load as load_full
 from algo.static_small import load as load_small
 from algo.model import Instance,Objective
@@ -37,6 +39,20 @@ def main():
         for field in ['xy','demand','service','early','late']:
             assert np.array_equal(getattr(ins,field),getattr(parent,field)[:limit])
         assert np.array_equal(ins.travel,parent.travel[:limit,:limit])
+    published_checks=0
+    audit=ROOT/'results/final_static/reference_audit'
+    for path in audit.glob('*_25.json'):
+        record=json.loads(path.read_text());comparison=record['comparison']
+        source=ROOT/'data/static_small/n25'/(comparison['instance']+'.txt')
+        ins=load_small(source);result=record['result']
+        checked=verify(result['routes'],ins)
+        assert checked['valid'] and abs(checked['duration']/10-result['cost'])<1e-7
+        full_matrix=10*np.asarray(vrplib.read_instance(source,instance_format='solomon')['edge_weight'])
+        full=verify(result['routes'],replace(ins,travel=full_matrix,distance=full_matrix))
+        assert full['valid']==comparison['full_precision_feasible']
+        assert abs(full['duration']/10-comparison['repriced_full_precision'])<1e-7
+        published_checks+=1
+    assert published_checks==5
     datasets={};records=failures=0;campaigns={}
     for name in ['pilote25','couverture_progressive','confirmation_ils_v2']:
         folder=ROOT/'results/final_static'/name
@@ -122,6 +138,7 @@ def main():
     receipt=dict(validated=True,scope='Static final notebook, all saved new pilot records, data hashes, ten exact controls and current test suite',
         instances_original=len(manifest['reference_instances']),original_files_checked=len(manifest['files']),
         small_instances_checked=len(small['files']),pilot_records=records,pilot_feasible=records-failures,
+        published_reference_audit_solves=published_checks,
         pilot_unsuccessful_searches=failures,campaigns=campaigns,exact_controls=exact_controls,
         passed_tests=total_tests-skipped,skipped_tests=skipped,notebook_code_cells=len(codes),
         notebook_sha256=digest(ROOT/'notebooks/Livrable_Final_CVRPTW.ipynb'),

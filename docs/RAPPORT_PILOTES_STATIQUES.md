@@ -79,7 +79,7 @@ du temps restant pour la dernière recherche locale.
 
 **Coûts observés dans la couverture progressive, une graine par cas.**
 Les nombres ci-dessous sont des durées complètes en unités du benchmark.
-Une cellule vide signifie qu'aucune solution réalisable n'a été trouvée dans
+Une cellule « échec » signifie qu'aucune solution réalisable n'a été trouvée dans
 le budget, pas un coût nul. Chaque coût disponible a passé le contrôleur.
 
 | instance   |    n |      ils |       sa |    pyvrp |    hybrid |   refined |   refined_no_partition |   refined_ils |   ortools |
@@ -88,9 +88,9 @@ le budget, pas un coût nul. Chaque coût disponible a passé le contrôleur.
 | C1_2_1     |  200 | 21478.90 | 21290.20 | 21001.70 |  20707.50 |  20760.70 |               20760.70 |      20747.90 |  20801.00 |
 | C2_8_1     |  800 | 91915.00 | 89533.50 | 92914.60 |  87526.00 |  84183.40 |               84180.00 |      84970.50 |  87667.40 |
 | R202       |  100 |  2796.90 |  2476.00 |  2380.20 |   2436.00 |   2913.10 |                2913.10 |       2831.00 |   2731.90 |
-| R2_10_8    | 1000 | 96861.60 | 90255.80 |   nan    | 100994.00 |  86097.40 |               86097.40 |      86564.50 | 107932.40 |
+| R2_10_8    | 1000 | 96861.60 | 90255.80 | échec    | 100994.00 |  86097.40 |               86097.40 |      86564.50 | 107932.40 |
 | R2_4_1     |  400 | 24748.90 | 21373.70 | 23213.90 |  25206.00 |  21598.70 |               21598.70 |      21569.20 |  23145.50 |
-| RC2_6_1    |  600 | 55553.80 | 45584.00 |   nan    |  57999.50 |  38827.00 |               38827.00 |      41971.70 |  48169.30 |
+| RC2_6_1    |  600 | 55553.80 | 45584.00 | échec    |  57999.50 |  38827.00 |               38827.00 |      41971.70 |  48169.30 |
 
 PyVRP seul ne trouve pas de solution à trois secondes sur RC2_6_1 et R2_10_8.
 L'initialisation par une solution faisable explique pourquoi nos profils
@@ -151,6 +151,16 @@ ne sont pas comptées comme de nouvelles recherches. Le bilan de conformité est
 `docs/BILAN_CONFORMITE_FINAL.md`. Nous ne garantissons pas moins de 6 % à un
 optimum temporel inconnu, ni la qualité obtenue à trois secondes sur tous les
 matériels. Les variantes à temps de trajet variable restent hors du modèle.
+
+**Tentative exacte à 25 clients.** Le PLNE C101/25 a été lancé avec une limite
+de dix secondes : statut `time_limit`, 10,55 secondes mesurées, 33 200 variables
+et 34 525 contraintes. Son incumbent vaut 8297,90 et sa borne inférieure
+1020,60 ; le gap interne HiGHS reste 87,70 %. Ce résultat est conservé dans
+`results/final_static/exact/C101_25_10s.json`. Il ne certifie pas l'optimum et
+ne sert pas de référence de qualité à notre métaheuristique. Les dix cas de
+3–5 clients restent les preuves exactes contrôlées par énumération. Ce contraste
+explique l'intérêt pratique des heuristiques, sans conclure que toute méthode
+exacte serait incapable de résoudre C101/25 avec un modèle ou budget différent.
 
 Sources : [Phonin et al., 2025](https://www.mdpi.com/2305-6290/9/3/85),
 [OR-Tools VRPTW](https://developers.google.com/optimization/routing/vrptw),

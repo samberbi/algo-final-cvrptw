@@ -88,6 +88,7 @@ python scripts/benchmark_final_static.py --cases C101:25 R101:25 RC201:25 --meth
 python scripts/report_final_static.py --label demonstration_statique
 python -m pytest tests -q --junitxml=livraison/TESTS_SOUTENANCE.xml
 python scripts/validate_final_static.py
+python scripts/finalize_static.py --execute --validate
 ```
 
 L'installation et le préchauffage initial précèdent les temps affichés. Une

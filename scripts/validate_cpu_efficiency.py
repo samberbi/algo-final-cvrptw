@@ -45,15 +45,15 @@ def main():
     assert not any(ch in c.source for c in nb.cells for ch in ['\x08','\x0c','\r'])
     # Les instantanés avant/après sont distincts ; les sources communes complètent
     # la reproductibilité sans remplacer les versions d'anciennes campagnes.
+    # Vérifier les sources historiques figées, sans ajouter les nouveaux modules
+    # du dépôt ni attribuer rétroactivement leur présence à l'étude CPU.
+    frozen=json.loads((folder/'VALIDATION_CPU.json').read_text())['sources']
     hashes={}
-    paths=[*sorted((ROOT/'algo').glob('*.py')),*[ROOT/'scripts'/name for name in
-        ['profile_cpu_duration.py','benchmark_cpu_efficiency.py','benchmark_parallel_cpu.py','report_cpu_efficiency.py','validate_cpu_efficiency.py']]]
-    for path in paths:
-        rel=path.relative_to(ROOT)
-        target=folder/'source_common'/rel;target.parent.mkdir(parents=True,exist_ok=True)
-        if target.exists():assert target.read_bytes()==path.read_bytes()
-        else:target.write_bytes(path.read_bytes())
-        hashes[rel.as_posix()]=hashlib.sha256(path.read_bytes()).hexdigest()
+    for rel,expected in frozen.items():
+        target=folder/'source_common'/rel
+        actual=hashlib.sha256(target.read_bytes()).hexdigest()
+        assert actual==expected,rel
+        hashes[rel]=actual
     info=json.loads((folder/'analysis.json').read_text())
     receipt=dict(validated=True,paired_runs=24,paired_cases=12,identical_costs=True,
         parallel_tasks=72,all_feasible=True,cpu_reduction_pct=info['cpu_reduction_pct'],

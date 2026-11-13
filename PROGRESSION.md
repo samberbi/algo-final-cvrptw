@@ -11,6 +11,31 @@ Les expériences Dabia2013/Lera2026 ont des trajets variables et des départs
 optimisés : elles sont **exploratoires et hors modèle principal**, même si leurs
 coûts ont été vérifiés. Elles ne constituent pas une preuve de conformité CESI.
 
+## État actuel après validation finale
+
+| Étape | État | Preuve |
+|---|---|---|
+| Audit | Terminé dans le périmètre statique confirmé | Cahier transmis, bilan de conformité, sauvegardes Git |
+| Compatibilité | Vérifiée avec réserves explicites | Phonin non certifié directement ; cinq contrôles numériques, OR-Tools indépendant |
+| Corrections | Effectuées | Modèle statique, provenance, comparateurs, variante ILS testée séparément |
+| Tests | Réussis | 182 réussites, deux modules optionnels ignorés |
+| Notebook | Corrigé et réexécuté | 16 cellules, zéro erreur, dernier passage 33,99 s |
+| Benchmarks progressifs | Terminés pour les trois lots pilotes | 119 résolutions, 117 faisables, deux échecs conservés ; tailles 25 à 1000 |
+| Statistiques et figures | Produites | CSV complets, statistiques par lot, PNG/SVG et explications |
+| Validation finale | Réussie dans le périmètre documenté | VALIDATION_FINALE_STATIQUE.json, données et sources figées contrôlées |
+
+**Ce qui n'est pas démontré :** un gap à un optimum temporel inférieur à 6 %
+sur tous les cas, une nouvelle campagne uniforme sur les 356 instances ou une
+supériorité générale de la variante ILS. Le comparateur indépendant est parfois
+plus faible que notre méthode ; les écarts négatifs restent visibles. Aucun
+résultat n'a été plafonné, renommé en preuve d'optimalité ou supprimé.
+
+Le notebook canonique est 
+otebooks/Livrable_Final_CVRPTW.ipynb. La copie de
+lecture avec figures intégrées est
+C:/Users/user/Downloads/Livrable_Final_CVRPTW_A_ENVOYER.ipynb (environ 2,93 Mo).
+Son exécution exige le projet complet ; elle ne remplace pas le dépôt.
+
 ## État sauvegardé avant la révision finale
 
 - Code statique : ILS, recuit, hybride PyVRP 0.12.2, constructions renforcées,
@@ -31,7 +56,7 @@ coûts ont été vérifiés. Elles ne constituent pas une preuve de conformité 
 - Chargement IGP paresseux : 8 tests réussis, comparaison bit à bit avec le
   matérialiseur complet sur des arcs d'une instance à 200 clients.
 
-## Étapes de la mission finale
+## État de démarrage des étapes (historique)
 
 | Étape | État | Livrable / prochaine action |
 |---|---|---|
@@ -175,3 +200,23 @@ Dans `C:\Users\user\Downloads\CVRPTW_REMISE_PROF_20261112T203928` :
 Cette commande recalcule les statistiques/figures des fichiers déjà sauvés,
 met à jour le notebook, exécute ses cellules et valide. Aucun nouveau benchmark,
 push, PDF, Word ou ZIP. Pour les tests, la commande pytest du début reste valable.
+
+
+## Clôture de cette passe
+
+- Dernière exécution intégrale : 33,99 s, seize cellules, zéro erreur.
+- Validation historique également réussie : 646 solutions initiales, archive
+  472 lignes sur 356 instances, sensibilité contrôlée et étude CPU conservées.
+- Le validateur CPU avait le même défaut de provenance que celui de l'ancienne
+  optimisation : ajout automatique des nouveaux modules aux anciennes sources.
+  Il vérifie désormais uniquement les fichiers figés. Les sept copies ajoutées
+  par cette validation ont été retirées, sans supprimer de résultat historique.
+  Nouvelle vérification CPU réussie ; sources avant/après et coûts inchangés.
+- Les cinq contrôles numériques Phonin ont aussi été réévalués depuis leurs
+  tournées pendant la dernière validation, sans nouvelle recherche.
+- Aucun nouvel export PDF/Word/ZIP ou push GitHub. Commits locaux conservés.
+- Quota Codex : toujours inaccessible. Toute reprise doit partir des fichiers
+  et de la commande scripts/finalize_static.py --execute --validate ci-dessus.
+- Prochaine extension scientifique éventuelle : renforcer les références
+  indépendantes sur un petit lot difficile et augmenter les répétitions, avant
+  toute campagne exhaustive. Aucune mesure future n'est incluse dans les tableaux.
