@@ -59,6 +59,21 @@ Le PLNE de `controle/plne.py` est réellement résolu par HiGHS avec le coût pl
 | exact-duration-8 | 5 | 109,100 | 109,100 | Optimum atteint | 0,652 |
 | exact-duration-9 | 3 | 66,000 | 66,000 | Optimum atteint | 0,041 |
 
+<!-- LECTURE_TABLE_BEGIN -->
+**Clés de lecture de ce tableau.**
+
+**Périmètre.** une instance est un jeu de clients et de contraintes ; `n` ou Clients compte les clients, dépôt exclu. Les graines correspondent aux tirages aléatoires ; elles ne sont pas des instances supplémentaires.
+
+**Valeurs.** `optimum` est le coût optimal établi sur ces petits cas de contrôle ; `returned` est le coût retourné par le solveur. Les durées de livraison sont exprimées en unités de temps (u.t.) : trajets, attentes, services et retours au dépôt, pour des départs à zéro.
+
+**Statuts et effectifs.** Positifs compte les solutions plus coûteuses que le témoin ; référence améliorée ou dépassée signifie un coût inférieur vérifié ; référence égalée signifie un coût identique sans preuve d’optimalité. Non comparables ou sans référence indique l’absence de comparaison compatible. Les colonnes au-dessus de six comptent les dépassements du seuil ; elles ne sont pas des pourcentages moyens.
+
+**Temps de calcul.** réel, écoulé, `wall_s` et calcul désignent le temps de résolution chronométré en secondes selon le périmètre de la campagne. Ces secondes de calcul sont distinctes des durées de livraison en u.t. Une moyenne de temps porte sur le groupe annoncé, et non sur la somme de tout le catalogue.
+
+<!-- LECTURE_TABLE_END -->
+
+
+
 
 Ces dix cas contrôlent la formulation ; ils ne démontrent pas l’optimalité des solutions à 100–1 000 clients.
 
@@ -499,6 +514,18 @@ de l'algorithme n'a été détérioré pour changer le signe d'un pourcentage.
 |  800 |       60 |         19 |                     41 |                    0 |                 0 | 5.9762                 | 4.8539                 |                       6 |
 | 1000 |      120 |         42 |                     78 |                    0 |                 0 | 9.6411                 | 9.3202                 |                      29 |
 
+<!-- LECTURE_TABLE_BEGIN -->
+**Clés de lecture de ce tableau.**
+
+**Périmètre.** `n` ou Clients compte les clients, dépôt exclu ; Essais, `attempts`, `runs` ou résolutions compte les exécutions du périmètre indiqué. Les graines correspondent aux tirages aléatoires ; elles ne sont pas des instances supplémentaires.
+
+**Statistiques de comparaison.** La moyenne et la médiane positives portent seulement sur les écarts strictement positifs au plan témoin réévalué en durée. Les effectifs précisent combien d’essais y contribuent ; ce ne sont pas des statistiques globales sur tous les essais. Un pourcentage élevé signifie une durée supérieure au comparateur, dont l’optimalité temporelle n’est pas démontrée.
+
+**Statuts et effectifs.** Positifs compte les solutions plus coûteuses que le témoin ; référence améliorée ou dépassée signifie un coût inférieur vérifié ; référence égalée signifie un coût identique sans preuve d’optimalité. Non comparables ou sans référence indique l’absence de comparaison compatible. Les colonnes au-dessus de six comptent les dépassements du seuil ; elles ne sont pas des pourcentages moyens.
+
+<!-- LECTURE_TABLE_END -->
+
+
 **Archive des plans sélectionnés — budgets différents, pas campagne uniforme.**
 
 |    n |   Essais |   Positifs |   References_depassees |   References_egalees |   Non_comparables | Moyenne_positive_pct   | Mediane_positive_pct   |   Positifs_superieurs_6 |
@@ -509,6 +536,18 @@ de l'algorithme n'a été détérioré pour changer le signe d'un pourcentage.
 |  600 |       60 |         16 |                     44 |                    0 |                 0 | 2.9670                 | 2.6530                 |                       0 |
 |  800 |       60 |         19 |                     41 |                    0 |                 0 | 3.0979                 | 3.1898                 |                       0 |
 | 1000 |      120 |         38 |                     82 |                    0 |                 0 | 2.6492                 | 2.5722                 |                       0 |
+
+<!-- LECTURE_TABLE_BEGIN -->
+**Clés de lecture de ce tableau.**
+
+**Périmètre.** `n` ou Clients compte les clients, dépôt exclu ; Essais, `attempts`, `runs` ou résolutions compte les exécutions du périmètre indiqué. Les graines correspondent aux tirages aléatoires ; elles ne sont pas des instances supplémentaires.
+
+**Statistiques de comparaison.** La moyenne et la médiane positives portent seulement sur les écarts strictement positifs au plan témoin réévalué en durée. Les effectifs précisent combien d’essais y contribuent ; ce ne sont pas des statistiques globales sur tous les essais. Un pourcentage élevé signifie une durée supérieure au comparateur, dont l’optimalité temporelle n’est pas démontrée.
+
+**Statuts et effectifs.** Positifs compte les solutions plus coûteuses que le témoin ; référence améliorée ou dépassée signifie un coût inférieur vérifié ; référence égalée signifie un coût identique sans preuve d’optimalité. Non comparables ou sans référence indique l’absence de comparaison compatible. Les colonnes au-dessus de six comptent les dépassements du seuil ; elles ne sont pas des pourcentages moyens.
+
+<!-- LECTURE_TABLE_END -->
+
 
 **Nouveaux pilotes — comparaison au solveur indépendant du même lot.**
 
@@ -532,6 +571,20 @@ de l'algorithme n'a été détérioré pour changer le signe d'un pourcentage.
 | pilote25               | refined              |        3 |          1 |                      0 |                    2 |                 0 | 0.9114                 | 0.9114                 |                       0 |
 | pilote25               | refined_no_partition |        3 |          1 |                      0 |                    2 |                 0 | 0.9114                 | 0.9114                 |                       0 |
 | pilote25               | sa                   |        3 |          0 |                      0 |                    3 |                 0 | Non applicable         | Non applicable         |                       0 |
+
+<!-- LECTURE_TABLE_BEGIN -->
+**Clés de lecture de ce tableau.**
+
+**Périmètre.** Essais, `attempts`, `runs` ou résolutions compte les exécutions du périmètre indiqué. Les graines correspondent aux tirages aléatoires ; elles ne sont pas des instances supplémentaires.
+
+**Statistiques de comparaison.** La moyenne et la médiane positives portent seulement sur les écarts strictement positifs au plan témoin réévalué en durée. Les effectifs précisent combien d’essais y contribuent ; ce ne sont pas des statistiques globales sur tous les essais. Un pourcentage élevé signifie une durée supérieure au comparateur, dont l’optimalité temporelle n’est pas démontrée.
+
+**Statuts et effectifs.** Positifs compte les solutions plus coûteuses que le témoin ; référence améliorée ou dépassée signifie un coût inférieur vérifié ; référence égalée signifie un coût identique sans preuve d’optimalité. Non comparables ou sans référence indique l’absence de comparaison compatible. Les colonnes au-dessus de six comptent les dépassements du seuil ; elles ne sont pas des pourcentages moyens.
+
+**Méthodes.** ILS et SA désignent notre recherche locale itérée et notre recuit simulé ; PyVRP et OR-Tools sont des moteurs externes. Hybrid et les profils renforcés combinent notre code avec les bibliothèques attribuées dans la section. Dans le tableau à une colonne par méthode, les cellules sont les durées moyennes observées sur le lot annoncé.
+
+<!-- LECTURE_TABLE_END -->
+
 
 Les autres tableaux signalent « voir répartition par statut » lorsque leur
 ancienne colonne était une moyenne signée mélangeant les statuts. Cette
@@ -559,6 +612,20 @@ indisponibles restent comptées. Ces moyennes ne représentent pas tous les essa
 |  800 |       60 |         19 |                     41 |                    0 |                 0 | 5.9762                 | 4.8539                 |                       6 |
 | 1000 |      120 |         42 |                     78 |                    0 |                 0 | 9.6411                 | 9.3202                 |                      29 |
 
+<!-- LECTURE_TABLE_BEGIN -->
+**Clés de lecture de ce tableau.**
+
+**Périmètre.** `n` ou Clients compte les clients, dépôt exclu ; Essais, `attempts`, `runs` ou résolutions compte les exécutions du périmètre indiqué. Les graines correspondent aux tirages aléatoires ; elles ne sont pas des instances supplémentaires.
+
+**Statistiques de comparaison.** La moyenne et la médiane positives portent seulement sur les écarts strictement positifs au plan témoin réévalué en durée. Les effectifs précisent combien d’essais y contribuent ; ce ne sont pas des statistiques globales sur tous les essais. Un pourcentage élevé signifie une durée supérieure au comparateur, dont l’optimalité temporelle n’est pas démontrée.
+
+**Statuts et effectifs.** Positifs compte les solutions plus coûteuses que le témoin ; référence améliorée ou dépassée signifie un coût inférieur vérifié ; référence égalée signifie un coût identique sans preuve d’optimalité. Non comparables ou sans référence indique l’absence de comparaison compatible. Les colonnes au-dessus de six comptent les dépassements du seuil ; elles ne sont pas des pourcentages moyens.
+
+<!-- LECTURE_TABLE_END -->
+
+
+
+
 Les moyennes favorables ne suppriment pas les cas difficiles. Voici les six instances dont la durée moyenne dépasse le plus celle du plan témoin ; elles restent dans tous les tableaux de leur périmètre.
 
 | instance | n | mean_duration | reference_duration | Moyenne positive conditionnelle — mean_delta_reference_pct / statut | mean_calculation_s |
@@ -569,6 +636,23 @@ Les moyennes favorables ne suppriment pas les cas difficiles. Voici les six inst
 | C2_10_2 | 1000 | 126639,150 | 109395,800 | 15.7624 % (positifs 2/2) | 14,420 |
 | C1_6_1 | 600 | 78992,900 | 68564,200 | 15.2101 % (positifs 1/1) | 11,290 |
 | C2_10_1 | 1000 | 122295,950 | 106856,600 | 14.4487 % (positifs 2/2) | 13,862 |
+
+<!-- LECTURE_TABLE_BEGIN -->
+**Clés de lecture de ce tableau.**
+
+**Périmètre.** une instance est un jeu de clients et de contraintes ; `n` ou Clients compte les clients, dépôt exclu. Les graines correspondent aux tirages aléatoires ; elles ne sont pas des instances supplémentaires.
+
+**Valeurs.** `mean_duration` est la durée moyenne des solutions réalisables ; `reference_duration` est la durée du plan témoin réévalué. Les durées de livraison sont exprimées en unités de temps (u.t.) : trajets, attentes, services et retours au dépôt, pour des départs à zéro.
+
+**Statistiques de comparaison.** La moyenne et la médiane positives portent seulement sur les écarts strictement positifs au plan témoin réévalué en durée. Les effectifs précisent combien d’essais y contribuent ; ce ne sont pas des statistiques globales sur tous les essais. Un pourcentage élevé signifie une durée supérieure au comparateur, dont l’optimalité temporelle n’est pas démontrée.
+
+**Statuts et effectifs.** Positifs compte les solutions plus coûteuses que le témoin ; référence améliorée ou dépassée signifie un coût inférieur vérifié ; référence égalée signifie un coût identique sans preuve d’optimalité. Non comparables ou sans référence indique l’absence de comparaison compatible. Les colonnes au-dessus de six comptent les dépassements du seuil ; elles ne sont pas des pourcentages moyens.
+
+**Temps de calcul.** réel, écoulé, `wall_s` et calcul désignent le temps de résolution chronométré en secondes selon le périmètre de la campagne. Ces secondes de calcul sont distinctes des durées de livraison en u.t. Une moyenne de temps porte sur le groupe annoncé, et non sur la somme de tout le catalogue.
+
+<!-- LECTURE_TABLE_END -->
+
+
 
 
 Le pire essai individuel est C1_10_6, graine 4102 : **+26.767 %** au témoin. Il ne doit pas être confondu avec une moyenne d’instance.
@@ -612,6 +696,20 @@ Les tableaux suivants portent sur les **vingt répétitions d’une même instan
 | R2_10_8    | ILS durée + HGS |  20 | 87594,075 | 85859,000 | 5803,493 | 80273,000 | 83718,000 | 89652,825 | 100546,600 | 5934,825 |
 | R2_10_8    | ILS durée       |  20 | 93806,260 | 93459,750 | 1806,187 | 90535,300 | 92558,050 | 95147,150 | 98220,100  | 2589,100 |
 | R2_10_8    | Recuit durée    |  20 | 88610,995 | 88195,800 | 2647,555 | 82803,900 | 86916,400 | 90490,425 | 95106,800  | 3574,025 |
+
+<!-- LECTURE_TABLE_BEGIN -->
+**Clés de lecture de ce tableau.**
+
+**Périmètre.** une instance est un jeu de clients et de contraintes ; `n` ou Clients compte les clients, dépôt exclu. Les graines correspondent aux tirages aléatoires ; elles ne sont pas des instances supplémentaires.
+
+**Valeurs.** `mean` est la moyenne ; `median` est la médiane ; `std` est l’écart-type ; `minimum` est la plus petite valeur ; `maximum` est la plus grande valeur ; `q0.25` et `q0.75` sont les premier et troisième quartiles ; `iqr` est l’écart entre ces quartiles. Les durées de livraison sont exprimées en unités de temps (u.t.) : trajets, attentes, services et retours au dépôt, pour des départs à zéro.
+
+**Méthodes.** ILS et SA désignent notre recherche locale itérée et notre recuit simulé ; PyVRP et OR-Tools sont des moteurs externes. Hybrid et les profils renforcés combinent notre code avec les bibliothèques attribuées dans la section. Dans le tableau à une colonne par méthode, les cellules sont les durées moyennes observées sur le lot annoncé.
+
+<!-- LECTURE_TABLE_END -->
+
+
+
 
 Sur C101, les vingt résultats hybrides ont une moyenne de 9827.300 et une médiane de 9827.300 u.t., avec un écart-type de 0.000. Cette stabilité observée ne garantit pas tous les essais futurs. Sur R2_10_8, la moyenne vaut 87594.075 contre une médiane de 85859.000 u.t. ; l’histogramme permet de lire l’influence des durées les plus élevées.
 
@@ -689,6 +787,22 @@ Nous alignons les traces sur le temps après construction. Chaque trace est une 
 | R2_10_8    | ils      |       20 |          0 |                     20 |                    0 |                 0 | Non applicable         | Non applicable         |                       0 |
 | R2_10_8    | sa       |       20 |          0 |                     20 |                    0 |                 0 | Non applicable         | Non applicable         |                       0 |
 
+<!-- LECTURE_TABLE_BEGIN -->
+**Clés de lecture de ce tableau.**
+
+**Périmètre.** une instance est un jeu de clients et de contraintes ; Essais, `attempts`, `runs` ou résolutions compte les exécutions du périmètre indiqué. Les graines correspondent aux tirages aléatoires ; elles ne sont pas des instances supplémentaires.
+
+**Statistiques de comparaison.** La moyenne et la médiane positives portent seulement sur les écarts strictement positifs au plan témoin réévalué en durée. Les effectifs précisent combien d’essais y contribuent ; ce ne sont pas des statistiques globales sur tous les essais. Un pourcentage élevé signifie une durée supérieure au comparateur, dont l’optimalité temporelle n’est pas démontrée.
+
+**Statuts et effectifs.** Positifs compte les solutions plus coûteuses que le témoin ; référence améliorée ou dépassée signifie un coût inférieur vérifié ; référence égalée signifie un coût identique sans preuve d’optimalité. Non comparables ou sans référence indique l’absence de comparaison compatible. Les colonnes au-dessus de six comptent les dépassements du seuil ; elles ne sont pas des pourcentages moyens.
+
+**Méthodes.** ILS et SA désignent notre recherche locale itérée et notre recuit simulé ; PyVRP et OR-Tools sont des moteurs externes. Hybrid et les profils renforcés combinent notre code avec les bibliothèques attribuées dans la section. Dans le tableau à une colonne par méthode, les cellules sont les durées moyennes observées sur le lot annoncé.
+
+<!-- LECTURE_TABLE_END -->
+
+
+
+
 Sur ce lot de vingt graines par cas, l’hybride présente la durée moyenne la plus faible pour les trois cas. Les distributions se recouvrent, notamment sur la grande instance : cette observation descriptive ne constitue pas un test de significativité ni une preuve de supériorité sur tout le catalogue.
 
 Ces moyennes et dispersions comparent des méthodes à effort de recherche égal. Nous ne retenons pas seulement le meilleur essai ; un mécanisme plus complexe peut régresser sur un cas. Les trois cas ont été choisis pour leur contraste et ne permettent pas une conclusion universelle de supériorité.
@@ -705,6 +819,16 @@ Le temps de calcul est une seconde mesure, distincte de la durée des tournées 
 |       600 |          60 | 11,336                   |
 |       800 |          60 | 12,611                   |
 |      1000 |          60 | 14,279                   |
+
+<!-- LECTURE_TABLE_BEGIN -->
+**Clés de lecture de ce tableau.**
+
+**Périmètre.** une instance est un jeu de clients et de contraintes ; `n` ou Clients compte les clients, dépôt exclu. Les graines correspondent aux tirages aléatoires ; elles ne sont pas des instances supplémentaires.
+
+**Temps de calcul.** réel, écoulé, `wall_s` et calcul désignent le temps de résolution chronométré en secondes selon le périmètre de la campagne. Ces secondes de calcul sont distinctes des durées de livraison en u.t. Une moyenne de temps porte sur le groupe annoncé, et non sur la somme de tout le catalogue.
+
+<!-- LECTURE_TABLE_END -->
+
 
 ![Temps de calcul total selon la taille, pour dix secondes de recherche.](livraison/duree_figures/taille_temps.png)
 
@@ -726,6 +850,16 @@ Le seuil est appliqué à l'écart signé : « au plus +6 % » signifie ne pas d
 | 600 | 60 | 3 | 60 | 3 | 15.2100 % |
 | 800 | 60 | 6 | 60 | 6 | 20.8860 % |
 | 1000 | 60 | 14 | 120 | 29 | 26.7670 % |
+
+<!-- LECTURE_TABLE_BEGIN -->
+**Clés de lecture de ce tableau.**
+
+**Périmètre.** une instance est un jeu de clients et de contraintes ; `n` ou Clients compte les clients, dépôt exclu. Les graines correspondent aux tirages aléatoires ; elles ne sont pas des instances supplémentaires.
+
+**Statuts et effectifs.** Positifs compte les solutions plus coûteuses que le témoin ; référence améliorée ou dépassée signifie un coût inférieur vérifié ; référence égalée signifie un coût identique sans preuve d’optimalité. Non comparables ou sans référence indique l’absence de comparaison compatible. Les colonnes au-dessus de six comptent les dépassements du seuil ; elles ne sont pas des pourcentages moyens.
+
+<!-- LECTURE_TABLE_END -->
+
 
 **Bilan du catalogue mesuré : 23 instances sur 356 dépassent +6 % en moyenne.** Une moyenne globale favorable n'annule pas ces dépassements ; la liste complète figure dans `INSTANCES_AU_DESSUS_DE_6.csv`. Les cas suivants sont ceux à améliorer, sans retirer leurs essais du bilan :
 
@@ -755,6 +889,20 @@ Le seuil est appliqué à l'écart signé : « au plus +6 % » signifie ne pas d
 | C1_8_3 | 800 | 1 | 6.6262 % (positifs 1/1) | 12,532 |
 | C2_10_8 | 1000 | 2 | 6.3880 % (positifs 2/2) | 13,935 |
 
+<!-- LECTURE_TABLE_BEGIN -->
+**Clés de lecture de ce tableau.**
+
+**Périmètre.** une instance est un jeu de clients et de contraintes ; `n` ou Clients compte les clients, dépôt exclu ; Essais, `attempts`, `runs` ou résolutions compte les exécutions du périmètre indiqué. Les graines correspondent aux tirages aléatoires ; elles ne sont pas des instances supplémentaires.
+
+**Statistiques de comparaison.** La moyenne et la médiane positives portent seulement sur les écarts strictement positifs au plan témoin réévalué en durée. Les effectifs précisent combien d’essais y contribuent ; ce ne sont pas des statistiques globales sur tous les essais. Un pourcentage élevé signifie une durée supérieure au comparateur, dont l’optimalité temporelle n’est pas démontrée.
+
+**Statuts et effectifs.** Positifs compte les solutions plus coûteuses que le témoin ; référence améliorée ou dépassée signifie un coût inférieur vérifié ; référence égalée signifie un coût identique sans preuve d’optimalité. Non comparables ou sans référence indique l’absence de comparaison compatible. Les colonnes au-dessus de six comptent les dépassements du seuil ; elles ne sont pas des pourcentages moyens.
+
+**Temps de calcul.** réel, écoulé, `wall_s` et calcul désignent le temps de résolution chronométré en secondes selon le périmètre de la campagne. Ces secondes de calcul sont distinctes des durées de livraison en u.t. Une moyenne de temps porte sur le groupe annoncé, et non sur la somme de tout le catalogue.
+
+<!-- LECTURE_TABLE_END -->
+
+
 **Optimisations exploratoires, distinctes de la campagne.** Nous avons testé des départs Clarke–Wright et insertion séquentielle, sélectionnés en durée, suivis de la recherche locale externe de PyVRP avec des voisinages de 40, 60, 80 puis 120 clients. Quatre départs sont essayés dans cette variante. Les données et contraintes restent identiques, et chaque solution ci-dessous est revalidée indépendamment.
 
 | Instance | Graine | Écart campagne / statut | Écart essai local / statut | Durée locale | Calcul local (s) | Réalisable |
@@ -764,6 +912,18 @@ Le seuil est appliqué à l'écart signé : « au plus +6 % » signifie ne pas d
 | C1_8_1 | 4101 | 20.8860 % | 0.3050 % | 98001,700 | 3,385 | True |
 | C2_10_7 | 4101 | 20.8930 % | 6.8780 % | 114295,300 | 6,173 | True |
 | C2_10_7 | 4102 | 18.7870 % | 6.9530 % | 114375,200 | 6,165 | True |
+
+<!-- LECTURE_TABLE_BEGIN -->
+**Clés de lecture de ce tableau.**
+
+**Périmètre.** une instance est un jeu de clients et de contraintes ; Réalisables, `feasible` ou faisables compte les solutions respectant toutes les contraintes. Les graines correspondent aux tirages aléatoires ; elles ne sont pas des instances supplémentaires.
+
+**Statuts et effectifs.** Positifs compte les solutions plus coûteuses que le témoin ; référence améliorée ou dépassée signifie un coût inférieur vérifié ; référence égalée signifie un coût identique sans preuve d’optimalité. Non comparables ou sans référence indique l’absence de comparaison compatible. Les colonnes au-dessus de six comptent les dépassements du seuil ; elles ne sont pas des pourcentages moyens.
+
+**Temps de calcul.** réel, écoulé, `wall_s` et calcul désignent le temps de résolution chronométré en secondes selon le périmètre de la campagne. Ces secondes de calcul sont distinctes des durées de livraison en u.t. Une moyenne de temps porte sur le groupe annoncé, et non sur la somme de tout le catalogue.
+
+<!-- LECTURE_TABLE_END -->
+
 
 Ces paramètres ont été explorés sur des cas déjà identifiés comme difficiles : ce sont des résultats de mise au point, pas une validation indépendante ni une nouvelle moyenne sur 356 instances. Les temps locaux sont mesurés après préchauffage ; ils concernent le calcul de chaque variante, sans absorber le coût des expériences exploratoires antérieures. Sur C1_10_6, les deux écarts sont 6,28 % et 5,86 %, soit 6,07 % en moyenne. Les quatre départs n'ont pas amélioré les résultats du premier essai renforcé sur ce cas ; le temps supplémentaire n'apporte donc pas ici de gain mesurable. Les résultats initiaux et locaux restent dans des colonnes et fichiers distincts.
 
@@ -798,7 +958,7 @@ Les schémas suivants reprennent deux solutions de la campagne, avec la graine 4
 
 **Résultats par instance.** Les colonnes avant/après utilisent les mêmes graines disponibles. Le pire essai est affiché pour ne pas masquer un dépassement par une moyenne favorable.
 
-| Instance | Clients | Essais | Réalisables | Moyenne positive conditionnelle — Avant moyen / statut | Moyenne positive conditionnelle — Prototype moyen / statut | Moyenne positive conditionnelle — Après moyen / statut | Pire après / statut | Calcul cumulé moyen (s) |
+| Instance | Clients | Essais | Réalisables | Avant — écart positif moyen / statut | Prototype — écart positif moyen / statut | Après — écart positif moyen / statut | Pire après / statut | Calcul cumulé moyen (s) |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | C1_10_2 | 1000 | 2 | 2 | 11.2576 % (positifs 2/2) | 3.8889 % (positifs 2/2) | 3.5435 % (positifs 2/2) | 4.0020 % | 15,203 |
 | C1_10_3 | 1000 | 2 | 2 | 9.9139 % (positifs 2/2) | 2.0192 % (positifs 2/2) | 2.0192 % (positifs 2/2) | 2.2920 % | 4,744 |
@@ -827,6 +987,29 @@ Les schémas suivants reprennent deux solutions de la campagne, avec la graine 4
 | C2_6_2 | 600 | 1 | 1 | 6.7347 % (positifs 1/1) | 4.1912 % (positifs 1/1) | Aucun écart positif (effectif 1) | Référence dépassée — solution améliorante validée | 22,782 |
 | C2_8_7 | 800 | 1 | 1 | 14.3805 % (positifs 1/1) | 4.8700 % (positifs 1/1) | 3.5062 % (positifs 1/1) | 3.5060 % | 24,522 |
 
+<!-- LECTURE_TABLE_BEGIN -->
+**Lecture des colonnes et des étapes de ce tableau.**
+
+- **Instance** : identifiant du jeu de données, avec les mêmes clients et contraintes aux trois étapes. **Clients** : nombre de clients à servir, sans compter le dépôt.
+- **Essais** : nombre de couples instance–graine suivis. Une graine fixe les tirages aléatoires pour permettre la reproduction. Une reprise de la même solution avec la même graine n'ajoute pas un essai dans cette colonne ; elle ajoute du temps de calcul.
+- **Réalisables** : nombre de ces essais dont la solution finale respecte toutes les contraintes : couverture unique, capacité, fenêtres de début de service, flotte et retour au dépôt avant sa fermeture.
+- **Avant — écart positif moyen / statut** : bilan du profil hybride historique du catalogue, avant cette mise au point. Il associait déjà notre code à PyVRP. Cette colonne ne mesure donc pas l'ILS autonome utilisé dans les nouvelles commandes de comparaison.
+- **Prototype — écart positif moyen / statut** : bilan du premier profil renforcé en durée, avec constructions Clarke–Wright et insertion séquentielle, recherche locale externe PyVRP et partitionnement de tournées. Son budget total demandé était de dix secondes, après préchauffage, avec mesure des dépassements éventuels.
+- **Après — écart positif moyen / statut** : bilan de la meilleure solution observée pour chaque couple instance–graine après les reprises ciblées. Une continuation HGS externe PyVRP n'est retenue que si elle améliore la durée. Lorsque le prototype n'est pas amélioré, les colonnes prototype et après peuvent être identiques. Ce sont des résultats d'archive à budgets variables, distincts du profil actuel `size_based` expliqué plus loin.
+- **Pire après / statut** : plus grand écart individuel après optimisation, parmi les essais réalisables et comparables de la ligne. Cette colonne empêche une bonne moyenne de masquer un essai moins bon ; les échecs restent comptés dans la colonne Réalisables.
+- **Calcul cumulé moyen (s)** : pour chaque couple instance–graine, somme du temps réel du prototype et des continuations tentées, y compris celles qui n'ont pas amélioré le résultat ; puis moyenne de ces sommes sur les essais de la ligne. Le calcul historique « avant », le préchauffage et le démarrage extérieur à ces chronométrages ne sont pas ajoutés ici. Cette valeur mesure l'effort de mise au point enregistré, et non la durée de livraison ou un temps CPU.
+
+**Sens de la moyenne positive conditionnelle.** À chaque étape, nous calculons l'écart relatif à la durée du même plan témoin réévalué : `100 × (durée solution − durée témoin) / durée témoin`. La durée comprend trajets, attentes, services et retours, avec départs à zéro. La moyenne affichée porte uniquement sur les écarts strictement positifs de cette étape. La mention « positifs m/N » indique que m des N essais contribuent à cette moyenne ; les autres ne sont pas remplacés par une valeur artificielle. Les sous-ensembles peuvent changer entre avant et après : une différence de ces moyennes ne constitue pas automatiquement un gain moyen sur tous les essais.
+
+**Lecture des statuts.** « Aucun écart positif » signifie qu'aucun écart disponible n'est strictement positif ; cela ne démontre pas l'optimalité. « Référence dépassée » signifie que la solution vérifiée a une durée inférieure à celle du comparateur heuristique. « Référence égalée — optimalité non démontrée » signifie que les coûts sont identiques. « Optimum atteint » est réservé aux cas disposant d'une preuve compatible. Une référence insuffisante ou un échec de recherche empêche de chiffrer un gap fiable. Les plans publics ayant été optimisés en distance, leur réévaluation en durée ne leur confère pas une preuve d'optimalité temporelle.
+
+**Exemple réel : C1_10_6.** Cette ligne suit deux graines sur 1 000 clients, avec deux solutions finales réalisables. La moyenne des deux écarts positifs passe de 24.9690 % avant la mise au point à 5.3361 % pour le prototype, puis 2.8668 % après les reprises. Le pire résultat final vaut 3.8818 %, et l'effort cumulé moyen de cette mise au point est de 25.113 secondes par couple instance–graine. Il ne s'agit ni du temps d'une livraison ni d'un résultat obtenu sous un budget uniforme de dix secondes.
+
+**Intérêt dans la démonstration.** Ce tableau relie les changements algorithmiques à la qualité des solutions et à l'effort supplémentaire consenti. Il complète les résultats initiaux et prépare le graphique suivant, qui compte aussi les références améliorées et égalées. Les anciennes mesures restent disponibles : le tableau décrit la progression sur les cas ciblés, sans démontrer une supériorité à temps égal ou un gap à l'optimum temporel.
+
+<!-- LECTURE_TABLE_END -->
+
+
 Sur ce lot ciblé, **43/43 essais sont réalisables et au plus à +6 %**, 0 essais restent au-dessus et 0 essais sont en échec. Les moyennes positives sont conditionnelles et leur effectif est indiqué pour chaque instance ; les valeurs individuelles et les chemins des solutions sont conservés dans `results/time_objective/outliers10/AVANT_APRES_ESSAIS.csv`.
 
 **Portée.** Les valeurs précédentes des 646 résolutions ne sont pas remplacées. Ce tableau documente une nouvelle variante sur les cas ciblés et ne constitue ni une nouvelle moyenne indépendante des 356 instances, ni une preuve de gap à un optimum temporel. Le seuil porte toujours sur la durée du plan témoin réévalué. Les valeurs négatives, les temps supplémentaires et les dépassements éventuels sont conservés.
@@ -852,6 +1035,16 @@ Le gain final est vérifiable physiquement : les temps de service restent inchan
 | C1_10_6    | 70491,950       | 46912,100       | 6660,000         | 677,100          | 90000,000            |
 | C1_8_6     | 33106,500       | 26377,600       | 824,400          | 319,800          | 72000,000            |
 | C2_10_7    | 37587,700       | 22080,750       | 569,300          | 183,300          | 90000,000            |
+
+<!-- LECTURE_TABLE_BEGIN -->
+**Clés de lecture de ce tableau.**
+
+**Périmètre.** une instance est un jeu de clients et de contraintes. Les graines correspondent aux tirages aléatoires ; elles ne sont pas des instances supplémentaires.
+
+**Composition de la durée.** Trajets additionne les déplacements, retours au dépôt inclus ; attentes mesure le temps avant l’ouverture des fenêtres ; services représente les opérations chez les clients. Ces trois composantes s’additionnent pour former la durée totale. Avant et après désignent les phases précisées dans cette section ; les services restent constants lorsque les mêmes clients sont servis.
+
+<!-- LECTURE_TABLE_END -->
+
 
 **Recherche supplémentaire sous le seuil de 6 %.** Une deuxième prolongation a ciblé 13 essais encore au-dessus de +4 %. Chacun reçoit vingt secondes de HGS, avec 120 voisins et un autre décalage de graine. 10 essais améliorent leur parent, 3 restent sans gain et 0 échouent. Le tableau `CONTINUATIONS_ET_GAINS.csv` conserve chaque résultat. Plusieurs paramètres changent ensemble : ce lot mesure l'effet de cette continuation, sans isoler l'effet du voisinage de celui du budget ou de la graine.
 
@@ -892,6 +1085,17 @@ Le réglage de voisins concerne uniquement le HGS externe ; le voisinage de notr
 
 **Attribution du gain.** Avec une tolérance nulle, le coût moyen du préfixe ILS varie ici de +0.496 % : il est donc moins bon que celui du témoin avant l'appel externe. Le résultat final après HGS varie de -0.286 %. Cette différence montre une interaction entre le départ produit et la recherche externe ; elle ne démontre pas que notre ILS autonome est meilleur. Les voisins 80/120 ne changent pas ce préfixe, ce que confirment leurs empreintes identiques. Leurs différences finales concernent bien le réglage du HGS sur ces entrées.
 
+<!-- LECTURE_TABLE_BEGIN -->
+**Clés de lecture de ce tableau.**
+
+**Périmètre.** une instance est un jeu de clients et de contraintes. Les graines correspondent aux tirages aléatoires ; elles ne sont pas des instances supplémentaires.
+
+**Variation entre méthodes.** Le gain ILS/renforcé vaut `100 × (durée initiale − durée renforcée) / durée initiale` : positif si le renforcé améliore l’initial, négatif dans le cas inverse. Un gain depuis la construction prend la construction comme point de départ. Les variations de sensibilité suivent la convention annoncée dans leur section. Ces variations ne sont pas les gaps au plan témoin.
+
+<!-- LECTURE_TABLE_END -->
+
+
+
 ### 6.11. Scénarios géographiques, fenêtres et capacités
 
 **Population comparable.** Cette analyse utilise la campagne initiale à dix secondes de recherche : 356 instances, une observation par instance après moyenne de ses graines. Elle ne mélange pas ces mesures avec l'archive à budgets différents. C désigne les clients groupés, R les clients répartis aléatoirement et RC une organisation mixte. Les six familles C1/C2/R1/R2/RC1/RC2 combinent ces structures et des paramètres temporels et de capacité différents. Nous mesurons les caractéristiques des fichiers originaux, plutôt que supposer que l'indice 2 élargit uniformément toutes les contraintes. Les données ne sont pas modifiées pour construire ces scénarios.
@@ -905,6 +1109,20 @@ Le gain depuis la construction est $G=100(T_{\mathrm{construction}}-T_{\mathrm{f
 | C | 117 | Voir les effectifs par statut, pas une moyenne globale | 6,633 | 0,371 | 2,501 | 11,507 |
 | R | 123 | Voir les effectifs par statut, pas une moyenne globale | 14,610 | 12,221 | 56,824 | 11,511 |
 | RC | 116 | Voir les effectifs par statut, pas une moyenne globale | 19,318 | 11,424 | 54,690 | 11,517 |
+
+<!-- LECTURE_TABLE_BEGIN -->
+**Clés de lecture de ce tableau.**
+
+**Périmètre.** une instance est un jeu de clients et de contraintes. Les graines correspondent aux tirages aléatoires ; elles ne sont pas des instances supplémentaires.
+
+**Statuts et effectifs.** Positifs compte les solutions plus coûteuses que le témoin ; référence améliorée ou dépassée signifie un coût inférieur vérifié ; référence égalée signifie un coût identique sans preuve d’optimalité. Non comparables ou sans référence indique l’absence de comparaison compatible. Les colonnes au-dessus de six comptent les dépassements du seuil ; elles ne sont pas des pourcentages moyens.
+
+**Temps de calcul.** réel, écoulé, `wall_s` et calcul désignent le temps de résolution chronométré en secondes selon le périmètre de la campagne. Ces secondes de calcul sont distinctes des durées de livraison en u.t. Une moyenne de temps porte sur le groupe annoncé, et non sur la somme de tout le catalogue.
+
+**Variation entre méthodes.** Le gain ILS/renforcé vaut `100 × (durée initiale − durée renforcée) / durée initiale` : positif si le renforcé améliore l’initial, négatif dans le cas inverse. Un gain depuis la construction prend la construction comme point de départ. Les variations de sensibilité suivent la convention annoncée dans leur section. Ces variations ne sont pas les gaps au plan témoin.
+
+<!-- LECTURE_TABLE_END -->
+
 
 ![Performances par géographie et par taille dans la campagne initiale.](livraison/duree_figures/presentation_statuts_geographie.png)
 
@@ -923,6 +1141,16 @@ Le gain depuis la construction est $G=100(T_{\mathrm{construction}}-T_{\mathrm{f
 | RC1       |          58 | 200,000  | 200,000  | 240,000  | 1821,000 | 208,800                          | 22,200          | 8,908           | 85,679            |
 | RC2       |          58 | 1000,000 | 1000,000 | 960,000  | 7284,000 | 891,451                          | 23,700          | 1,782           | 72,551            |
 
+<!-- LECTURE_TABLE_BEGIN -->
+**Clés de lecture de ce tableau.**
+
+**Périmètre.** une instance est un jeu de clients et de contraintes. Les graines correspondent aux tirages aléatoires ; elles ne sont pas des instances supplémentaires.
+
+**Contraintes.** Q est la capacité d’un véhicule et H l’horizon de fermeture du dépôt. La largeur d’une fenêtre mesure son temps d’ouverture ; fenêtre/H la rapporte à l’horizon. Demande/Q rapporte la demande d’un client à la capacité ; le remplissage décrit la charge utilisée dans les tournées. Les pourcentages décrivent ici des caractéristiques des données, pas des gaps.
+
+<!-- LECTURE_TABLE_END -->
+
+
 ![Fenêtres, attentes et remplissage : observations à 1 000 clients.](livraison/duree_figures/contraintes_observees.png)
 
 **Lecture des nuages.** Chaque point est une des soixante instances à 1 000 clients, après moyenne de ses graines. À gauche, nous rapprochons l'ouverture relative moyenne des fenêtres de la part d'attente finale. À droite, nous rapprochons la demande relative à la capacité du remplissage effectif. Les couleurs distinguent C, R et RC. La taille et le budget de recherche sont fixes, mais les autres caractéristiques restent différentes.
@@ -937,6 +1165,18 @@ Le gain depuis la construction est $G=100(T_{\mathrm{construction}}-T_{\mathrm{f
 | C     |      154 |         87 |                     43 |                   24 |                 0 | 6.9063                 | 4.8712                 |                      38 |
 | R     |      166 |          3 |                    163 |                    0 |                 0 | 1.2366                 | 1.4576                 |                       0 |
 | RC    |      152 |          0 |                    152 |                    0 |                 0 | Non applicable         | Non applicable         |                       0 |
+
+<!-- LECTURE_TABLE_BEGIN -->
+**Clés de lecture de ce tableau.**
+
+**Périmètre.** Essais, `attempts`, `runs` ou résolutions compte les exécutions du périmètre indiqué. Les graines correspondent aux tirages aléatoires ; elles ne sont pas des instances supplémentaires.
+
+**Statistiques de comparaison.** La moyenne et la médiane positives portent seulement sur les écarts strictement positifs au plan témoin réévalué en durée. Les effectifs précisent combien d’essais y contribuent ; ce ne sont pas des statistiques globales sur tous les essais. Un pourcentage élevé signifie une durée supérieure au comparateur, dont l’optimalité temporelle n’est pas démontrée.
+
+**Statuts et effectifs.** Positifs compte les solutions plus coûteuses que le témoin ; référence améliorée ou dépassée signifie un coût inférieur vérifié ; référence égalée signifie un coût identique sans preuve d’optimalité. Non comparables ou sans référence indique l’absence de comparaison compatible. Les colonnes au-dessus de six comptent les dépassements du seuil ; elles ne sont pas des pourcentages moyens.
+
+<!-- LECTURE_TABLE_END -->
+
 
 **Association et causalité.** Sur les soixante cas à 1 000 clients, la corrélation de Pearson entre ouverture relative des fenêtres et part d'attente vaut -0.269, et celle entre demande relative à Q et remplissage vaut 0.227. Ces associations modestes ne suffisent pas à isoler un effet causal des contraintes. La colonne d'attente du témoin rappelle aussi que les plans de référence n'ont pas été sélectionnés pour minimiser ce temps : leurs écarts de durée peuvent différer fortement selon les familles.
 
@@ -959,6 +1199,16 @@ Le CPU est mesuré par `time.process_time`, qui inclut les threads natifs du pro
 | R1_10_5    |      1000 | 4,479           | 2,417           | 46,047              | 4,771              | 2,615              |
 | RC2_10_5   |      1000 | 5,891           | 3,854           | 34,571              | 6,231              | 4,123              |
 
+<!-- LECTURE_TABLE_BEGIN -->
+**Clés de lecture de ce tableau.**
+
+**Périmètre.** une instance est un jeu de clients et de contraintes ; `n` ou Clients compte les clients, dépôt exclu. Les graines correspondent aux tirages aléatoires ; elles ne sont pas des instances supplémentaires.
+
+**Temps de calcul.** réel, écoulé, `wall_s` et calcul désignent le temps de résolution chronométré en secondes selon le périmètre de la campagne ; CPU mesure le temps processeur consommé ; un CPU cumulé additionne les processus, et un maximum CPU est le plus grand temps observé. Ces secondes de calcul sont distinctes des durées de livraison en u.t. Une moyenne de temps porte sur le groupe annoncé, et non sur la somme de tout le catalogue.
+
+<!-- LECTURE_TABLE_END -->
+
+
 Sur les douze paires, la somme des temps CPU diminue de **39.57 %**, à coût de tournée identique. Cette valeur concerne le profil renforcé et ce lot ; elle ne s’applique pas rétroactivement à toutes les campagnes ou au moteur ILS autonome.
 
 ![CPU et temps écoulé avant/après réutilisation des voisinages.](livraison/duree_figures/cpu_cache.png)
@@ -977,6 +1227,14 @@ Le CPU total additionne le parent et tous ses workers. Sous Windows, des handles
 |           2 |               6 | 6,834              | 12,935                 | 1,876                  | 6,702               |
 |           4 |               6 | 3,919              | 14,089                 | 3,271                  | 16,219              |
 
+<!-- LECTURE_TABLE_BEGIN -->
+**Clés de lecture de ce tableau.**
+
+**Temps de calcul.** réel, écoulé, `wall_s` et calcul désignent le temps de résolution chronométré en secondes selon le périmètre de la campagne ; CPU mesure le temps processeur consommé ; un CPU cumulé additionne les processus, et un maximum CPU est le plus grand temps observé. Ces secondes de calcul sont distinctes des durées de livraison en u.t. Une moyenne de temps porte sur le groupe annoncé, et non sur la somme de tout le catalogue.
+
+<!-- LECTURE_TABLE_END -->
+
+
 ![Parallélisme : attendre moins longtemps peut consommer davantage de CPU.](livraison/duree_figures/cpu_parallelisme.png)
 
 **Lecture des deux panneaux.** Le panneau gauche mesure le délai pour terminer les mêmes quatre recherches et valider leur meilleure solution. Le panneau droit additionne le travail CPU des processus pendant ce portefeuille. Les unités sont des secondes dans les deux cas, mais leur sens diffère : les valeurs du panneau droit ne doivent pas être divisées par le nombre de processus. Tous les résultats de durée restent identiques à travail égal dans cette expérience.
@@ -990,6 +1248,14 @@ Le CPU total additionne le parent et tous ses workers. Sous Windows, des handles
 |           1 |      2 | 1,684                 | 40,542                   | 38,016                |
 |           2 |      2 | 1,787                 | 22,728                   | 42,008                |
 |           4 |      2 | 1,921                 | 14,167                   | 49,297                |
+
+<!-- LECTURE_TABLE_BEGIN -->
+**Clés de lecture de ce tableau.**
+
+**Temps de calcul.** réel, écoulé, `wall_s` et calcul désignent le temps de résolution chronométré en secondes selon le périmètre de la campagne ; CPU mesure le temps processeur consommé ; un CPU cumulé additionne les processus, et un maximum CPU est le plus grand temps observé. Ces secondes de calcul sont distinctes des durées de livraison en u.t. Une moyenne de temps porte sur le groupe annoncé, et non sur la somme de tout le catalogue.
+
+<!-- LECTURE_TABLE_END -->
+
 
 **Portée et reproductibilité.** Les anciens résultats restent conservés avec leurs temps écoulés d'origine ; nous ne leur attribuons pas un CPU non mesuré. La mesure CPU actuelle concerne les nouvelles campagnes `cpu_optimization/`. Les sources avant/après, mesures par graine, coûts, contraintes et temps complets sont archivés. L'amélioration n'est pas une preuve de minimum CPU global, ni une garantie d'accélération identique sur tout ordinateur. À budget limité, le cache peut aussi laisser explorer davantage de solutions ; ce bénéfice de qualité nécessiterait une campagne distincte à budget fixé. Les meilleurs résultats précédents ne sont pas remplacés par les essais de performance.
 
@@ -1018,6 +1284,18 @@ Ces trois résolutions ont été recalculées à neuf, sans transmettre les tém
 | C2_10_2 | 4101 | +1.47 % | 103.61 | 108.72 |
 | C2_10_7 | 4101 | +5.70 % | 54.41 | 56.05 |
 | C2_10_7 | 4102 | +5.25 % | 55.17 | 56.70 |
+
+<!-- LECTURE_TABLE_BEGIN -->
+**Clés de lecture de ce tableau.**
+
+**Périmètre.** une instance est un jeu de clients et de contraintes. Les graines correspondent aux tirages aléatoires ; elles ne sont pas des instances supplémentaires.
+
+**Statuts et effectifs.** Positifs compte les solutions plus coûteuses que le témoin ; référence améliorée ou dépassée signifie un coût inférieur vérifié ; référence égalée signifie un coût identique sans preuve d’optimalité. Non comparables ou sans référence indique l’absence de comparaison compatible. Les colonnes au-dessus de six comptent les dépassements du seuil ; elles ne sont pas des pourcentages moyens.
+
+**Temps de calcul.** réel, écoulé, `wall_s` et calcul désignent le temps de résolution chronométré en secondes selon le périmètre de la campagne ; CPU mesure le temps processeur consommé ; un CPU cumulé additionne les processus, et un maximum CPU est le plus grand temps observé. Ces secondes de calcul sont distinctes des durées de livraison en u.t. Une moyenne de temps porte sur le groupe annoncé, et non sur la somme de tout le catalogue.
+
+<!-- LECTURE_TABLE_END -->
+
 
 Le CPU inclut le préchauffage mesuré dans chaque worker et toutes les phases de résolution, y compris la vérification finale ; le démarrage de l’interpréteur est exclu. Les trois instances sont lancées sur des processus distincts. La limite de deux minutes est contrôlée **par résolution**, pas sur la somme CPU des trois workers. Cette vérification est a posteriori ; elle ne constitue pas un arrêt matériel garanti à 120 secondes.
 
@@ -1077,6 +1355,16 @@ ne déclarons donc pas avoir obtenu leurs octets originaux. Les tailles 100 à
 | couverture_progressive |           7 |            63 |          61 |               2 |             3 |            10 |
 | confirmation_ils_v2    |           4 |            32 |          32 |               0 |             3 |            10 |
 
+<!-- LECTURE_TABLE_BEGIN -->
+**Clés de lecture de ce tableau.**
+
+**Périmètre.** une instance est un jeu de clients et de contraintes ; Essais, `attempts`, `runs` ou résolutions compte les exécutions du périmètre indiqué ; Réalisables, `feasible` ou faisables compte les solutions respectant toutes les contraintes. Les graines correspondent aux tirages aléatoires ; elles ne sont pas des instances supplémentaires.
+
+**Temps de calcul.** budget, `requested` ou `recherche_s` est une allocation demandée, pas le temps total mesuré ; `reference_s` concerne la recherche du comparateur. Ces secondes de calcul sont distinctes des durées de livraison en u.t. Une moyenne de temps porte sur le groupe annoncé, et non sur la somme de tout le catalogue.
+
+<!-- LECTURE_TABLE_END -->
+
+
 Les constructions ne disposent pas artificiellement d'un temps de recherche.
 ILS/recuit/hybride/PyVRP reçoivent un budget de recherche auquel s'ajoutent
 préparation et construction. Le renforcé et ses variantes ont un budget total
@@ -1126,6 +1414,16 @@ le budget, pas un coût nul. Chaque coût disponible a passé le contrôleur.
 | R2_4_1     |  400 | 24748.90 | 21373.70 | 23213.90 |  25206.00 |  21598.70 |               21598.70 |      21569.20 |  23145.50 |
 | RC2_6_1    |  600 | 55553.80 | 45584.00 | échec    |  57999.50 |  38827.00 |               38827.00 |      41971.70 |  48169.30 |
 
+<!-- LECTURE_TABLE_BEGIN -->
+**Clés de lecture de ce tableau.**
+
+**Périmètre.** une instance est un jeu de clients et de contraintes ; `n` ou Clients compte les clients, dépôt exclu. Les graines correspondent aux tirages aléatoires ; elles ne sont pas des instances supplémentaires.
+
+**Méthodes.** ILS et SA désignent notre recherche locale itérée et notre recuit simulé ; PyVRP et OR-Tools sont des moteurs externes. Hybrid et les profils renforcés combinent notre code avec les bibliothèques attribuées dans la section. Dans le tableau à une colonne par méthode, les cellules sont les durées moyennes observées sur le lot annoncé.
+
+<!-- LECTURE_TABLE_END -->
+
+
 PyVRP seul ne trouve pas de solution à trois secondes sur RC2_6_1 et R2_10_8.
 L'initialisation par une solution faisable explique pourquoi nos profils
 hybrides peuvent retourner une solution sur ces mêmes cas. Cela ne prouve pas
@@ -1149,6 +1447,24 @@ d'entrée. Les résultats de cette confirmation à deux graines sont distincts :
 | R2_10_8 | 1000 | refined_ils | 2 | 2 | 83433.950 | 2663.450 | 80770.500 | Aucun écart positif (effectif 2) | 3.011 | 3.000 |
 | RC2_6_1 | 600 | refined | 2 | 2 | 38974.600 | 147.600 | 38827.000 | Aucun écart positif (effectif 2) | 1.767 | 1.781 |
 | RC2_6_1 | 600 | refined_ils | 2 | 2 | 38974.600 | 147.600 | 38827.000 | Aucun écart positif (effectif 2) | 3.006 | 3.016 |
+
+<!-- LECTURE_TABLE_BEGIN -->
+**Clés de lecture de ce tableau.**
+
+**Périmètre.** une instance est un jeu de clients et de contraintes ; `n` ou Clients compte les clients, dépôt exclu ; Essais, `attempts`, `runs` ou résolutions compte les exécutions du périmètre indiqué ; Réalisables, `feasible` ou faisables compte les solutions respectant toutes les contraintes. Les graines correspondent aux tirages aléatoires ; elles ne sont pas des instances supplémentaires.
+
+**Valeurs.** `mean_duration` est la durée moyenne des solutions réalisables ; `std_duration` est leur écart-type, qui décrit la dispersion ; `best_duration` est la plus petite durée observée, sans preuve d’optimalité. Les durées de livraison sont exprimées en unités de temps (u.t.) : trajets, attentes, services et retours au dépôt, pour des départs à zéro.
+
+**Statistiques de comparaison.** La moyenne et la médiane positives portent seulement sur les écarts strictement positifs au plan témoin réévalué en durée. Les effectifs précisent combien d’essais y contribuent ; ce ne sont pas des statistiques globales sur tous les essais. Un pourcentage élevé signifie une durée supérieure au comparateur, dont l’optimalité temporelle n’est pas démontrée.
+
+**Statuts et effectifs.** Positifs compte les solutions plus coûteuses que le témoin ; référence améliorée ou dépassée signifie un coût inférieur vérifié ; référence égalée signifie un coût identique sans preuve d’optimalité. Non comparables ou sans référence indique l’absence de comparaison compatible. Les colonnes au-dessus de six comptent les dépassements du seuil ; elles ne sont pas des pourcentages moyens.
+
+**Temps de calcul.** réel, écoulé, `wall_s` et calcul désignent le temps de résolution chronométré en secondes selon le périmètre de la campagne ; CPU mesure le temps processeur consommé ; un CPU cumulé additionne les processus, et un maximum CPU est le plus grand temps observé. Ces secondes de calcul sont distinctes des durées de livraison en u.t. Une moyenne de temps porte sur le groupe annoncé, et non sur la somme de tout le catalogue.
+
+**Méthodes.** ILS et SA désignent notre recherche locale itérée et notre recuit simulé ; PyVRP et OR-Tools sont des moteurs externes. Hybrid et les profils renforcés combinent notre code avec les bibliothèques attribuées dans la section. Dans le tableau à une colonne par méthode, les cellules sont les durées moyennes observées sur le lot annoncé.
+
+<!-- LECTURE_TABLE_END -->
+
 
 Les écarts-types descriptifs ci-dessus utilisent `ddof=0`. Deux graines ne
 suffisent pas pour établir une supériorité statistique générale ; l'étude
@@ -1237,6 +1553,20 @@ Le budget demandé et le temps total mesuré restent distincts.
 | 50 | 8 | 8 | 0 | 1 | 7 | Référence égalée — optimalité non démontrée | 0 | Sans écart positif | 5.0008 |
 | 100 | 56 | 56 | 41 | 8 | 0 | 7.0000 % | 0 | 0.40340650973485254 | 5.0014 |
 
+<!-- LECTURE_TABLE_BEGIN -->
+**Clés de lecture de ce tableau.**
+
+**Périmètre.** `n` ou Clients compte les clients, dépôt exclu ; Essais, `attempts`, `runs` ou résolutions compte les exécutions du périmètre indiqué ; Réalisables, `feasible` ou faisables compte les solutions respectant toutes les contraintes. Les graines correspondent aux tirages aléatoires ; elles ne sont pas des instances supplémentaires.
+
+**Statistiques de comparaison.** La moyenne et la médiane positives portent seulement sur les écarts strictement positifs au plan témoin réévalué en durée. Les effectifs précisent combien d’essais y contribuent ; ce ne sont pas des statistiques globales sur tous les essais. Un pourcentage élevé signifie une durée supérieure au comparateur, dont l’optimalité temporelle n’est pas démontrée.
+
+**Statuts et effectifs.** Positifs compte les solutions plus coûteuses que le témoin ; référence améliorée ou dépassée signifie un coût inférieur vérifié ; référence égalée signifie un coût identique sans preuve d’optimalité. Non comparables ou sans référence indique l’absence de comparaison compatible. Les colonnes au-dessus de six comptent les dépassements du seuil ; elles ne sont pas des pourcentages moyens.
+
+**Temps de calcul.** réel, écoulé, `wall_s` et calcul désignent le temps de résolution chronométré en secondes selon le périmètre de la campagne. Ces secondes de calcul sont distinctes des durées de livraison en u.t. Une moyenne de temps porte sur le groupe annoncé, et non sur la somme de tout le catalogue.
+
+<!-- LECTURE_TABLE_END -->
+
+
 Sur RC101/100, la nouvelle durée est **2921.1**, contre
 3335.2 à la construction : réduction réelle de
 414.1 unités, soit 12.42 %.
@@ -1279,6 +1609,20 @@ du processus restent distingués dans les fichiers JSON.
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | C2_10_2 | 1000 | 115983.7000 | 111539.1000 | 109395.8000 | Voir répartition par statut et statistiques conditionnelles | Voir répartition par statut et statistiques conditionnelles | 59.6041 | 58.8438 |
 | C2_10_7 | 1000 | 115159.9000 | 111486.9000 | 106940.0000 | Voir répartition par statut et statistiques conditionnelles | Voir répartition par statut et statistiques conditionnelles | 59.7897 | 58.5156 |
+
+<!-- LECTURE_TABLE_BEGIN -->
+**Clés de lecture de ce tableau.**
+
+**Périmètre.** une instance est un jeu de clients et de contraintes ; `n` ou Clients compte les clients, dépôt exclu. Les graines correspondent aux tirages aléatoires ; elles ne sont pas des instances supplémentaires.
+
+**Valeurs.** `reference` est la durée du comparateur indiqué ; `initial_duration` est la durée avant la phase d’amélioration indiquée ; `duration` est la durée totale de la solution. Les durées de livraison sont exprimées en unités de temps (u.t.) : trajets, attentes, services et retours au dépôt, pour des départs à zéro.
+
+**Statuts et effectifs.** Positifs compte les solutions plus coûteuses que le témoin ; référence améliorée ou dépassée signifie un coût inférieur vérifié ; référence égalée signifie un coût identique sans preuve d’optimalité. Non comparables ou sans référence indique l’absence de comparaison compatible. Les colonnes au-dessus de six comptent les dépassements du seuil ; elles ne sont pas des pourcentages moyens.
+
+**Temps de calcul.** réel, écoulé, `wall_s` et calcul désignent le temps de résolution chronométré en secondes selon le périmètre de la campagne ; CPU mesure le temps processeur consommé ; un CPU cumulé additionne les processus, et un maximum CPU est le plus grand temps observé. Ces secondes de calcul sont distinctes des durées de livraison en u.t. Une moyenne de temps porte sur le groupe annoncé, et non sur la somme de tout le catalogue.
+
+<!-- LECTURE_TABLE_END -->
+
 
 Le gain provient d’une exploration HGS supplémentaire sur une population
 initialisée avec notre solution réalisable. Il n’est pas attribué à l’ILS
@@ -1558,6 +1902,20 @@ par moteur, avec la même graine et le même ordre d'exécution séquentiel.
 | C2_10_7    | 1000 |               30.0000 |        124703.9000 |           112338.0000 |              9.9162 |          33.3713 |             29.5966 |         33.3594 |            29.4531 | Renforcé meilleur    |
 | R109       |  100 |                5.0000 |          2394.6000 |             2420.7000 |             -1.0900 |           5.0274 |              5.0014 |          5.0156 |             4.8906 | ILS initial meilleur |
 | RC101      |  100 |                5.0000 |          2917.7000 |             2921.1000 |             -0.1165 |           5.0299 |              5.0015 |          5.0312 |             4.8750 | ILS initial meilleur |
+
+<!-- LECTURE_TABLE_BEGIN -->
+**Clés de lecture de ce tableau.**
+
+**Périmètre.** une instance est un jeu de clients et de contraintes ; `n` ou Clients compte les clients, dépôt exclu. Les graines correspondent aux tirages aléatoires ; elles ne sont pas des instances supplémentaires.
+
+**Valeurs.** `initial_duration` est la durée avant la phase d’amélioration indiquée ; `reinforced_duration` est la durée du profil renforcé. Les durées de livraison sont exprimées en unités de temps (u.t.) : trajets, attentes, services et retours au dépôt, pour des départs à zéro.
+
+**Temps de calcul.** réel, écoulé, `wall_s` et calcul désignent le temps de résolution chronométré en secondes selon le périmètre de la campagne ; CPU mesure le temps processeur consommé ; un CPU cumulé additionne les processus, et un maximum CPU est le plus grand temps observé ; budget, `requested` ou `recherche_s` est une allocation demandée, pas le temps total mesuré ; `reference_s` concerne la recherche du comparateur. Ces secondes de calcul sont distinctes des durées de livraison en u.t. Une moyenne de temps porte sur le groupe annoncé, et non sur la somme de tout le catalogue.
+
+**Variation entre méthodes.** Le gain ILS/renforcé vaut `100 × (durée initiale − durée renforcée) / durée initiale` : positif si le renforcé améliore l’initial, négatif dans le cas inverse. Un gain depuis la construction prend la construction comme point de départ. Les variations de sensibilité suivent la convention annoncée dans leur section. Ces variations ne sont pas les gaps au plan témoin.
+
+<!-- LECTURE_TABLE_END -->
+
 
 Les résultats de ces cas restent un contrôle de fonctionnement des
 commandes. Ils ne constituent pas une nouvelle preuve statistique de supériorité

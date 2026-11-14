@@ -1,5 +1,29 @@
 # Progression — finalisation CVRPTW CESI
 
+## 14 novembre 2026 — explication des tableaux pour la correction
+
+- Vingt-huit tableaux chiffrés disposent désormais de clés de lecture locales :
+  population/essais, durées et statistiques, références et statuts, temps réel
+  et CPU, variations entre méthodes. Les trois tableaux conceptuels restent
+  accompagnés de leurs explications déjà présentes.
+- Le tableau historique de la section 6.9 a des en-têtes raccourcis et une
+  légende détaillée des neuf colonnes. « Avant » désigne bien l'ancien hybride,
+  et non l'ILS autonome des nouvelles commandes ; prototype et archive finale
+  sont distingués du profil actuel `size_based`.
+- La moyenne positive et l'effectif m/N sont définis. Les sous-ensembles peuvent
+  changer entre étapes : pas d'interprétation abusive en gain moyen global.
+  Égalités, références améliorées, comparaisons impossibles et preuves d'optimum
+  sont distinguées ; exemple de lecture réel C1_10_6, recalculé depuis le CSV.
+- Le calcul cumulé est explicité : temps réel du prototype et de toutes les
+  continuations tentées, même sans gain, moyenné par couple instance–graine ;
+  le calcul historique avant et le préchauffage en sont exclus.
+- Ajout éditorial reproductible : `scripts/explain_result_tables.py`, intégré
+  au générateur final après classement des statuts. Mesures, algorithmes et
+  seize cellules de code inchangés ; preuve `livraison/LECTURE_TABLEAUX.json`.
+- Notebook réexécuté : seize cellules, zéro erreur, 32,42 s. Validations
+  statique et présentation réussies ; HTML et copie à envoyer synchronisés.
+  Aucun nouveau benchmark, push, Word, PDF ou ZIP pendant cette passe éditoriale.
+
 ## 14 novembre 2026 — lots comparatifs et correction de l'environnement Python
 
 - Comparatif immédiat après chaque instance/taille/graine dès que toutes les
