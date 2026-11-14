@@ -16,7 +16,7 @@ try {
     }
     & $projectPython -m pip check
     if ($LASTEXITCODE -ne 0) { throw 'Dependances incoherentes.' }
-    & $projectPython -c "from scripts.run_benchmark import check_environment; print(check_environment(['ils', 'size_based']))"
+    & $projectPython -c "from scripts.run_benchmark import check_environment; print(check_environment(['ils', 'size_based'], plots=True))"
     if ($LASTEXITCODE -ne 0) { throw 'Le Python local ne fournit pas tous les moteurs requis.' }
     Write-Host 'Environnement statique pret. Consulter le README de ce dossier pour les tests.'
 } finally {

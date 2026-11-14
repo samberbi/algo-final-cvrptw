@@ -74,7 +74,6 @@ Le PLNE de `controle/plne.py` est réellement résolu par HiGHS avec le coût pl
 
 
 
-
 Ces dix cas contrôlent la formulation ; ils ne démontrent pas l’optimalité des solutions à 100–1 000 clients.
 
 ![Graphe orienté avec dépôt de départ et de retour virtuels.](livraison/figures_final_static/graphe_modele.png)
@@ -625,7 +624,6 @@ indisponibles restent comptées. Ces moyennes ne représentent pas tous les essa
 
 
 
-
 Les moyennes favorables ne suppriment pas les cas difficiles. Voici les six instances dont la durée moyenne dépasse le plus celle du plan témoin ; elles restent dans tous les tableaux de leur périmètre.
 
 | instance | n | mean_duration | reference_duration | Moyenne positive conditionnelle — mean_delta_reference_pct / statut | mean_calculation_s |
@@ -651,7 +649,6 @@ Les moyennes favorables ne suppriment pas les cas difficiles. Voici les six inst
 **Temps de calcul.** réel, écoulé, `wall_s` et calcul désignent le temps de résolution chronométré en secondes selon le périmètre de la campagne. Ces secondes de calcul sont distinctes des durées de livraison en u.t. Une moyenne de temps porte sur le groupe annoncé, et non sur la somme de tout le catalogue.
 
 <!-- LECTURE_TABLE_END -->
-
 
 
 
@@ -707,7 +704,6 @@ Les tableaux suivants portent sur les **vingt répétitions d’une même instan
 **Méthodes.** ILS et SA désignent notre recherche locale itérée et notre recuit simulé ; PyVRP et OR-Tools sont des moteurs externes. Hybrid et les profils renforcés combinent notre code avec les bibliothèques attribuées dans la section. Dans le tableau à une colonne par méthode, les cellules sont les durées moyennes observées sur le lot annoncé.
 
 <!-- LECTURE_TABLE_END -->
-
 
 
 
@@ -799,7 +795,6 @@ Nous alignons les traces sur le temps après construction. Chaque trace est une 
 **Méthodes.** ILS et SA désignent notre recherche locale itérée et notre recuit simulé ; PyVRP et OR-Tools sont des moteurs externes. Hybrid et les profils renforcés combinent notre code avec les bibliothèques attribuées dans la section. Dans le tableau à une colonne par méthode, les cellules sont les durées moyennes observées sur le lot annoncé.
 
 <!-- LECTURE_TABLE_END -->
-
 
 
 
@@ -1889,6 +1884,27 @@ reçoivent automatiquement un suffixe, sans écraser les résultats antérieurs.
 Les fichiers `RESULTATS.csv`, `SYNTHESE.txt` et
 `COMPARAISON_INITIAL_RENFORCE.csv` sont sauvegardés dans le dossier annoncé.
 `--show-results <label>` réaffiche aussi le comparatif, sans relancer les moteurs.
+
+**Graphiques automatiques.** Après les résolutions, chaque instance et graine
+reçoit une figure de convergence et des cartes des tournées finales. Pour le
+couple standard, les cartes représentent l'ILS initial et le renforcé hybride,
+avec durée complète, flotte et dépôt. Les courbes montrent les meilleurs coûts
+et les coûts courants effectivement archivés ; aucune température ni progression
+manquante n'est inventée. Une page `GRAPHIQUES.html` s'ouvre dans le navigateur
+et regroupe les figures PNG du sous-dossier `figures`, avec les tableaux de coûts.
+Ces cartes n'affichent pas de trafic réel : ce sont les arcs entre coordonnées
+des benchmarks, et la validité horaire reste vérifiée par le contrôleur.
+
+La génération intervient après le lot pour garder son coût séparé des budgets
+des solveurs. Son temps est conservé dans `GRAPHIQUES.json`. Ajouter
+`--no-open-plots` pour enregistrer sans ouvrir le navigateur, ou `--no-plots`
+pour une campagne sans rendu. Les résultats d'échec restent visibles.
+
+Pour dessiner un ancien lot à partir de ses JSON, sans nouvelle résolution :
+
+```powershell
+.\.venv\Scripts\python.exe scripts/plot_terminal_results.py --label comparaison_100 --open
+```
 
 **Essai de vérification réellement exécuté :** RC101, C204 et R109 à 100
 clients, graine 4101, cinq secondes demandées par moteur, un processus.

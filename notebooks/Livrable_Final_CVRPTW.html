@@ -8594,7 +8594,7 @@ supérieurs à 6 % et les échecs restent visibles ; aucun pourcentage n'est pla
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=a5316266">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=8ae6810a">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -11436,7 +11436,7 @@ SCT 21499478574.316 SCR 17925414546.205322 SCE 3574064028.110669
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=7003afec">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=06597ce5">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -12752,6 +12752,22 @@ reçoivent automatiquement un suffixe, sans écraser les résultats antérieurs.
 <p>Les fichiers <code>RESULTATS.csv</code>, <code>SYNTHESE.txt</code> et
 <code>COMPARAISON_INITIAL_RENFORCE.csv</code> sont sauvegardés dans le dossier annoncé.
 <code>--show-results &lt;label&gt;</code> réaffiche aussi le comparatif, sans relancer les moteurs.</p>
+<p><strong>Graphiques automatiques.</strong> Après les résolutions, chaque instance et graine
+reçoit une figure de convergence et des cartes des tournées finales. Pour le
+couple standard, les cartes représentent l'ILS initial et le renforcé hybride,
+avec durée complète, flotte et dépôt. Les courbes montrent les meilleurs coûts
+et les coûts courants effectivement archivés ; aucune température ni progression
+manquante n'est inventée. Une page <code>GRAPHIQUES.html</code> s'ouvre dans le navigateur
+et regroupe les figures PNG du sous-dossier <code>figures</code>, avec les tableaux de coûts.
+Ces cartes n'affichent pas de trafic réel : ce sont les arcs entre coordonnées
+des benchmarks, et la validité horaire reste vérifiée par le contrôleur.</p>
+<p>La génération intervient après le lot pour garder son coût séparé des budgets
+des solveurs. Son temps est conservé dans <code>GRAPHIQUES.json</code>. Ajouter
+<code>--no-open-plots</code> pour enregistrer sans ouvrir le navigateur, ou <code>--no-plots</code>
+pour une campagne sans rendu. Les résultats d'échec restent visibles.</p>
+<p>Pour dessiner un ancien lot à partir de ses JSON, sans nouvelle résolution :</p>
+<div class="highlight"><pre><span></span><span class="p">.\.</span><span class="n">venv</span><span class="p">\</span><span class="n">Scripts</span><span class="p">\</span><span class="n">python</span><span class="p">.</span><span class="n">exe</span> <span class="n">scripts</span><span class="p">/</span><span class="n">plot_terminal_results</span><span class="p">.</span><span class="n">py</span> <span class="p">-</span><span class="n">-label</span> <span class="n">comparaison_100</span> <span class="p">-</span><span class="n">-open</span>
+</pre></div>
 <p><strong>Essai de vérification réellement exécuté :</strong> RC101, C204 et R109 à 100
 clients, graine 4101, cinq secondes demandées par moteur, un processus.
 Les six solutions et leurs références ont été recalculées indépendamment.

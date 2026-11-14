@@ -89,6 +89,8 @@ def parser():
     p.add_argument('--show-results',nargs='?',const='from_label')
     p.add_argument('--show-routes',action='store_true')
     p.add_argument('--gaps-only',action='store_true')
+    p.add_argument('--no-plots',action='store_true',help='Désactiver la génération des graphiques après le lot')
+    p.add_argument('--no-open-plots',action='store_true',help='Sauvegarder les figures sans ouvrir le navigateur')
     return p
 
 
@@ -110,7 +112,7 @@ def completed_comparison(rows,latest,methods,shown):
     return group
 
 
-def check_environment(methods):
+def check_environment(methods,plots=False):
     """Diagnostiquer le Python actif avant de créer une campagne vide."""
     required={'numpy','psutil','vrplib'}
     if any(m not in ['pyvrp','ortools'] for m in methods):required.add('numba')
@@ -118,6 +120,7 @@ def check_environment(methods):
         required.add('pyvrp')
     if any(m=='size_based' or m.startswith('refined') for m in methods):required.add('scipy')
     if 'ortools' in methods:required.add('ortools')
+    if plots:required.add('matplotlib')
     packages={}
     for name in sorted(required | {'numpy','numba','scipy','pyvrp','psutil','vrplib','ortools'}):
         try:packages[name]=importlib.metadata.version(name)
@@ -139,8 +142,15 @@ def main(argv=None):
     if hasattr(sys.stdout,'reconfigure'):sys.stdout.reconfigure(encoding='utf-8',errors='replace')
     p=parser();args=p.parse_args(argv)
     if args.show_results:
-        try:replay(args.label if args.show_results=='from_label' else args.show_results,args.show_routes,args.gaps_only)
+        label=args.label if args.show_results=='from_label' else args.show_results
+        try:replay(label,args.show_routes,args.gaps_only)
         except ValueError as error:p.error(str(error))
+        page=ROOT/'results/local'/label/'GRAPHIQUES.html'
+        if page.exists() and not args.no_plots:
+            print('Graphiques : '+str(page),flush=True)
+            if not args.no_open_plots:
+                import webbrowser
+                webbrowser.open(page.resolve().as_uri())
         return
     if (not math.isfinite(args.seconds) or not math.isfinite(args.max_seconds)
         or not 0<args.seconds<=args.max_seconds or args.workers<1
@@ -149,7 +159,7 @@ def main(argv=None):
     try:methods=selected_methods(args)
     except ValueError as error:p.error(str(error))
     if not args.dry_run:
-        try:packages=check_environment(methods)
+        try:packages=check_environment(methods,plots=not args.no_plots)
         except ValueError as error:p.error(str(error))
     try:
         entries=support.select_cases(support.catalog(),args.instances,args.sizes,args.families,args.progressive,args.all_cases,args.limit)
@@ -168,7 +178,7 @@ def main(argv=None):
           'CPU/réel résolution excluent le préchauffage ; le garde-fou inclut tout le processus.\n'
           'Un arrêt par surveillance peut dépasser légèrement la limite lors de l’arrêt du processus.',flush=True)
     sources={}
-    paths=list((ROOT/'algo').glob('*.py'))+[Path(__file__).resolve(),ROOT/'scripts/terminal_support.py',ROOT/'scripts/test_instances.py',ROOT/'scripts/benchmark_final_static.py']
+    paths=list((ROOT/'algo').glob('*.py'))+[Path(__file__).resolve(),ROOT/'scripts/terminal_support.py',ROOT/'scripts/test_instances.py',ROOT/'scripts/benchmark_final_static.py',ROOT/'scripts/plot_terminal_results.py']
     for source in paths:
         rel=source.relative_to(ROOT);target=folder/'source'/rel;target.parent.mkdir(parents=True,exist_ok=True)
         target.write_bytes(source.read_bytes());sources[rel.as_posix()]=support.sha(source)
@@ -211,6 +221,17 @@ def main(argv=None):
     records.sort(key=lambda r:(r['measurement']['n'],r['measurement']['instance'],r['measurement']['seed'],r['measurement']['method']))
     print(support.save_tables(folder,records,time.perf_counter()-batch),flush=True)
     print(f"\nBILAN : {sum(r['measurement']['valid'] for r in records)}/{len(records)} réalisables.\nCSV : {folder/'RESULTATS.csv'}\nLabel : {folder.name}",flush=True)
+    if not args.no_plots:
+        print('Génération des graphiques après les résolutions, hors budget des solveurs...',flush=True)
+        try:
+            from scripts.plot_terminal_results import render
+            page=render(folder,records,open_page=not args.no_open_plots)
+            print('Graphiques : '+str(page),flush=True)
+        except Exception as error:
+            # Une erreur de dessin ne doit jamais effacer les mesures déjà sauvées.
+            support.dump(folder/'ERREUR_GRAPHIQUES.json',dict(error=repr(error)))
+            print('Graphiques non générés : '+str(error)+' ; mesures conservées.',flush=True)
+            raise SystemExit(1)
     if any(not r['measurement']['valid'] for r in records):raise SystemExit(1)
 
 

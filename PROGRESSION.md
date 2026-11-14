@@ -1,5 +1,31 @@
 # Progression — finalisation CVRPTW CESI
 
+## 14 novembre 2026 — graphiques automatiques après chaque lot de tests
+
+- Chaque couple instance/taille/graine produit une figure de convergence et
+  les cartes des résultats finaux des méthodes. Pour la comparaison standard :
+  ILS autonome et renforcé hybride, avec durées, véhicules, dépôt et tournées.
+- Les courbes utilisent les points réellement archivés. Le profil par taille
+  conserve maintenant la trace interne de son ILS et l'origine chronométrée de
+  sa continuation HGS ; il s'agit de journalisation, sans nouvel opérateur.
+  Aucune température ou courbe intermédiaire manquante n'est fabriquée.
+- Génération après toutes les résolutions, hors budgets des solveurs, avec
+  temps de rendu et empreinte du producteur enregistrés séparément. Une page
+  HTML locale ouvre les figures ; options `--no-open-plots` et `--no-plots`.
+  Relecture graphique d'un lot ancien via `scripts/plot_terminal_results.py`.
+- Démonstration exécutée : RC101 et C201, graine 4101, cinq secondes par moteur,
+  quatre solutions réalisables, deux figures. Rendu final : environ 1,62 s.
+  Preuves et page : `results/terminal_figures/demonstration_graphiques_v1/`.
+- Illustration supplémentaire depuis les deux résultats archivés C2_10_7/1000,
+  sans nouvelle résolution : `results/terminal_figures/lecture_archive_1000/`.
+- Tests : 236 réussis, deux modules ignorés ; contrôle des traces manquantes,
+  des décalages HGS, de l'immuabilité des mesures et des échecs visibles.
+- Instructions du dossier de soutenance et annexe du notebook actualisées.
+  Notebook réexécuté : seize cellules, zéro erreur, 39,02 s ; validations
+  statique et présentation réussies, HTML et copie à envoyer synchronisés.
+  Ouverture de la page de démonstration demandée au navigateur local.
+- Commande de reprise : `.\.venv\Scripts\python.exe scripts/test_instances.py --instances RC101 C201 --seconds 5`.
+
 ## 14 novembre 2026 — dossier de soutenance et livraison portable
 
 - Dossier `test a executer dans la soutenance` : README avec les trois commandes

@@ -122,6 +122,21 @@ installer les extensions Python et Jupyter et choisir le noyau du `.venv` local.
 
 ## 7. Lire et conserver les résultats
 
+Les commandes produisent aussi des graphiques **pour chaque instance et graine**.
+Après le lot, une page `GRAPHIQUES.html` s'ouvre dans le navigateur : courbes de
+convergence enregistrées, cartes des tournées finales de l'ILS et du renforcé,
+durées, véhicules et tableaux de comparaison. Les PNG sont dans `figures`.
+Les couleurs distinguent les tournées ; le carré noir représente le dépôt.
+Une phase sans trace intermédiaire n'est pas reconstituée artificiellement.
+La génération des images est chronométrée séparément des résolutions.
+
+Ajouter `--no-open-plots` pour sauvegarder sans ouverture automatique, ou
+`--no-plots` pour désactiver le rendu. Pour dessiner un lot ancien :
+
+```powershell
+.\.venv\Scripts\python.exe scripts/plot_terminal_results.py --label comparaison_100 --open
+```
+
 Chaque commande sans méthode explicite lance l'ILS initial et le profil renforcé
 `size_based`. Le comparatif apparaît pour chaque instance et graine dès que les
 deux méthodes sont terminées, puis dans le bilan global. Il affiche :

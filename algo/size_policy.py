@@ -51,10 +51,13 @@ def solve(ins,seed=4101,seconds=5.):
                         elapsed_s=time.perf_counter()-started,best=metrics['duration']/10))
             remaining=seconds-(time.perf_counter()-started)
             if remaining>.05:
+                ils_offset=time.perf_counter()-started
                 improved=search(ins,routes,remaining,seed+20000,method='ils')
                 checked=verify(improved['routes'],ins)
                 assert checked['valid'] and checked['duration']<=metrics['duration']+1e-7
                 routes,metrics=improved['routes'],checked
+                for point in improved.get('trace',[]):
+                    trace.append(dict(point,elapsed_s=ils_offset+point['elapsed_s'],phase='own_ils_observed'))
                 trace.append(dict(phase='own_ils',elapsed_s=time.perf_counter()-started,best=metrics['duration']/10))
             assert metrics['duration']/10<=initial+1e-7
             result.update(routes=routes,metrics=metrics,cost=metrics['duration']/10,
@@ -75,12 +78,14 @@ def solve(ins,seed=4101,seconds=5.):
             remaining=seconds-(time.perf_counter()-started)
             if remaining>2.:
                 from .hgs_tuning import solve as hgs
+                continuation_started=time.perf_counter()-started
                 continuation=hgs(ins,seconds=remaining-1.,seed=seed,
                     initial=initial_routes,neighbor_count=60,objective='duration')
                 checked=verify(continuation['routes'],ins)
                 assert checked['valid'] and checked['duration']<=initial['duration']+1e-7
                 result.update(routes=continuation['routes'],metrics=checked,cost=checked['duration']/10,
                     continuation=continuation,
+                    continuation_started_s=continuation_started,
                     attribution='Own constructions and route-pool model; external PyVRP LS and HGS, SciPy HiGHS partitioning')
             checked=verify(result['routes'],ins)
             result.update(improvement=(initial['duration']-checked['duration'])/10,
