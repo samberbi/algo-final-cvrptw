@@ -1,5 +1,15 @@
 # Commandes terminal CVRPTW — PowerShell Windows
 
+## Configuration actuelle des commandes : sélection par taille
+
+Depuis cette révision, les nouvelles commandes de test utilisent `size_based`
+par défaut : construction seule pour 25/50/100 clients, renforcé au-delà.
+Le moteur choisi est affiché et enregistré. Pour reproduire un ancien test
+implicitement renforcé, ajouter `--method refined`. Les résultats historiques
+et leurs références restent conservés ; ils ne deviennent pas des résultats
+du nouveau sélecteur. Le seuil ne dépend pas du gap. La validation de six cas
+et les limites sont dans [SELECTION_PAR_TAILLE.md](docs/SELECTION_PAR_TAILLE.md).
+
 Les commandes de cette fiche ont été vérifiées sur le projet. Les transcriptions,
 codes retour et résultats sont dans `results/terminal_validation/`.
 `scripts/test_instances.py` et `scripts/run_benchmark.py` utilisent la même
@@ -103,6 +113,7 @@ le tableau : un classement sur un cas n'est pas une supériorité générale.
 
 | Code | Méthode et attribution |
 |---|---|
+| `size_based` | Nouveau défaut : construction seule jusqu'à 100 clients, renforcé au-delà |
 | `ils` | Notre ILS et nos opérateurs, sans optimisation PyVRP |
 | `sa` | Notre recuit simulé et nos opérateurs |
 | `pyvrp` | PyVRP/HGS externe seul, population native |
@@ -246,8 +257,10 @@ prendre davantage de temps que la démonstration d'une petite instance.
 powershell -NoProfile -ExecutionPolicy Bypass -File scripts/demo_terminal.ps1 -Python $py -Instance C101 -Size 25 -Seconds 5
 ```
 
-Ce script a été exécuté : trois véhicules, durée 2623,5, faisabilité validée,
-tournées et horaires affichés. Il utilise le Python fourni ou celui de `.venv`
+La validation initiale de ce script utilisait le renforcé : trois véhicules,
+durée 2623,5, faisabilité validée et horaires affichés. Le nouveau défaut est
+`size_based` ; `-Method refined` permet de forcer l'ancien moteur.
+Il utilise le Python fourni ou celui de `.venv`
 dans le projet, puis le `python` du terminal en dernier recours. La politique
 d'exécution est modifiée seulement pour le processus de cette commande.
 

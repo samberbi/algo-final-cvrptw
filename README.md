@@ -1,5 +1,15 @@
 # CVRPTW — Minimisation de la durée totale
 
+## Configuration actuelle des commandes : sélection par taille
+
+Depuis cette révision, les nouvelles commandes de test utilisent `size_based`
+par défaut : construction seule pour 25/50/100 clients, renforcé au-delà.
+Le moteur choisi est affiché et enregistré. Pour reproduire un ancien test
+implicitement renforcé, ajouter `--method refined`. Les résultats historiques
+et leurs références restent conservés ; ils ne deviennent pas des résultats
+du nouveau sélecteur. Le seuil ne dépend pas du gap. La validation de six cas
+et les limites sont dans [SELECTION_PAR_TAILLE.md](docs/SELECTION_PAR_TAILLE.md).
+
 **Version de remise — 13 novembre 2026.** L’objectif est la somme des durées des tournées : trajets + attentes + services, départs fixés à zéro et retour au dépôt compris. La capacité, les fenêtres et la flotte maximale restent strictes. Le temps de calcul du programme est une mesure séparée.
 
 ## Ouvrir le livrable

@@ -38,7 +38,7 @@ Les dix petits cas exacts sont recertifiés par une énumération indépendante.
 La tentative MILP C101/25 à dix secondes reste au statut limite de temps.
 
 Le notebook a été réexécuté : seize cellules de code, aucune erreur. La suite
-actuelle compte 194 tests réussis et deux modules TD optionnels ignorés dans
+actuelle compte 222 tests réussis et deux modules TD optionnels ignorés dans
 l'environnement statique. Le reçu est `livraison/VALIDATION_FINALE_STATIQUE.json`.
 Les CSV conservent coûts, décomposition, faisabilité, temps, graines, sources et
 références. Les figures PNG/SVG sont dans `livraison/figures_final_static/`.
@@ -47,3 +47,6 @@ La commande de démonstration et celle de reprise sont dans le README et dans
 `PROGRESSION.md`. La première installation/précompilation est séparée du temps
 des recherches. Les plans et graphiques déjà enregistrés servent de secours
 pendant la présentation ; ils ne sont pas présentés comme une nouvelle exécution.
+
+
+Configuration actuelle des commandes de test : size_based choisit la construction seule jusqu’à 100 clients, puis le renforcé au-delà. Les campagnes historiques gardent leurs méthodes d’origine. Six essais du sélecteur sont réalisables ; C101/25 conserve un écart de +8,4925 % au comparateur. Le seuil académique reste un objectif non garanti. Les détails sont dans SELECTION_PAR_TAILLE.md.

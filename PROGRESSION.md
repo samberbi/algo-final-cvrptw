@@ -18,8 +18,8 @@ coûts ont été vérifiés. Elles ne constituent pas une preuve de conformité 
 | Audit | Terminé dans le périmètre statique confirmé | Cahier transmis, bilan de conformité, sauvegardes Git |
 | Compatibilité | Vérifiée avec réserves explicites | Phonin non certifié directement ; cinq contrôles numériques, OR-Tools indépendant |
 | Corrections | Effectuées | Modèle statique, provenance, comparateurs, variante ILS testée séparément |
-| Tests | Réussis | 206 réussites, deux modules optionnels ignorés |
-| Notebook | Corrigé et réexécuté | 16 cellules, zéro erreur, dernier passage 36,04 s |
+| Tests | Réussis | 222 réussites, deux modules optionnels ignorés |
+| Notebook | Corrigé et réexécuté | 16 cellules, zéro erreur, dernier passage 52,78 s |
 | Benchmarks progressifs | Terminés pour les trois lots pilotes | 119 résolutions, 117 faisables, deux échecs conservés ; tailles 25 à 1000 |
 | Statistiques et figures | Produites | CSV complets, statistiques par lot, PNG/SVG et explications |
 | Validation finale | Réussie dans le périmètre documenté | VALIDATION_FINALE_STATIQUE.json, données et sources figées contrôlées |
@@ -387,6 +387,19 @@ et résultats de cette passe sauvegardés ; aucun push demandé.
 - Notebook : nouvelle section 6.14, introduction et guide terminal mis à jour.
   Pour forcer le profil historique sur petit cas : `--method refined`.
   Pour expliciter le nouveau choix : `--method size_based`.
+
+### Sélection par taille : livraison vérifiée
+
+- Notebook exécuté intégralement après ajout de la section 6.14 : seize
+  cellules de code, zéro erreur, 52,78 secondes. Validations statique et
+  présentation réussies, avec 222 tests réussis et deux modules ignorés.
+- HTML et copie notebook à envoyer synchronisés avec cette configuration.
+- Démonstration PowerShell réellement exécutée avec `-Method size_based` :
+  C101/25 construit une solution réalisable, et le moteur est affiché.
+  Log : `results/size_policy/selection_par_taille_validation/DEMO_POWERSHELL.txt`.
+- Les moteurs initiaux restent inchangés ; la politique de sélection est une
+  nouvelle configuration de test, pas une amélioration de tous les coûts.
+  Le dépassement de qualité sur C101/25 reste publié, sans ajustement artificiel.
 
 ## Tableau complet des écarts conservés
 

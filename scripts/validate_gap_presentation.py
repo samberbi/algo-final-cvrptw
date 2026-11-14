@@ -55,7 +55,7 @@ def main():
     receipt=dict(validated=True,audited_comparisons=audit['records_checked'],
         reference_improvements=audit['improved_reference'],reference_equalities=audit['equal_reference'],
         zero_mean_or_median_groups_checked=audit['zero_mean_or_median_groups'],
-        scientific_values_unchanged=True,algorithms_unchanged=True,conditional_means_verified=True,
+        scientific_values_unchanged=True,original_solver_implementations_unchanged=True,conditional_means_verified=True,
         notebook_code_cells=len(codes),notebook_errors=0,
         tests_passed=len(list(tests.iter('testcase')))-len(list(tests.iter('skipped'))),
         tests_skipped=len(list(tests.iter('skipped'))),

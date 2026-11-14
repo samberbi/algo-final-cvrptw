@@ -1,0 +1,77 @@
+﻿1 instances ; 1 résolutions ; 1 processus maximum
+Départs zéro ; trajets fixes/symétriques ; objectif trajets + attentes + services, retour compris.
+Dossier : C:\Users\user\Downloads\CVRPTW_REMISE_PROF_20261112T203928\results\local\soutenance_demo_2
+Budget : recherche + construction pour ILS/SA/hybride/PyVRP ; total souple pour renforcé.
+CPU/réel résolution excluent le préchauffage ; le garde-fou inclut tout le processus.
+Un arrêt par surveillance peut dépasser légèrement la limite lors de l’arrêt du processus.
+
+========================================================================
+TEST CVRPTW
+========================================================================
+Instance                     : C101
+Famille                      : C1
+Nombre de clients            : 25
+Méthode                      : size_based — Sélection par taille : construction seule jusqu’à 100 clients, renforcé au-delà
+Moteur exécuté               : construction
+Graine                       : 4101
+FAISABILITÉ                  : OUI
+Statut                       : feasible
+Véhicules utilisés           : 3
+Durée des trajets            : 247.000 u.t.
+Durée des attentes           : 349.300 u.t.
+Durée des services           : 2250.000 u.t.
+DURÉE TOTALE                 : 2846.300 u.t.
+Durée de référence           : 2623.500 u.t.
+Type de référence            : OR-Tools indépendant enregistré, solution réalisable non prouvée optimale
+Source de référence          : results/final_static/pilote25/runs/C101_25_ortools_4101.json
+Comparaison à la référence   : 8.4925 %
+Gap certifié                 : NON DISPONIBLE
+Temps CPU résolution         : 0.016 s
+Temps réel résolution        : 0.005 s
+Temps total processus        : 3.091 s
+Budget demandé               : 5.000 s
+Garde-fou processus          : 120.000 s
+Dépassement budget demandé   : 0.000 s
+Contraintes                  : VALIDÉES
+Le seuil indicatif de +6 % est dépassé. Valeur réelle conservée.
+Tournée 1 : 0 -> 5 -> 3 -> 7 -> 8 -> 10 -> 11 -> 9 -> 6 -> 4 -> 2 -> 1 -> 0
+  client 5: arrivée 15.10, début 15.10, fin 105.10
+  client 3: arrivée 106.10, début 106.10, fin 196.10
+  client 7: arrivée 198.10, début 198.10, fin 288.10
+  client 8: arrivée 290.90, début 290.90, fin 380.90
+  client 10: arrivée 384.50, début 384.50, fin 474.50
+  client 11: arrivée 477.50, début 477.50, fin 567.50
+  client 9: arrivée 570.60, début 570.60, fin 660.60
+  client 6: arrivée 662.80, début 662.80, fin 752.80
+  client 4: arrivée 755.00, début 755.00, fin 845.00
+  client 2: arrivée 848.60, début 848.60, fin 938.60
+  client 1: arrivée 940.60, début 940.60, fin 1030.60
+  retour au dépôt : 1049.20
+Tournée 2 : 0 -> 13 -> 17 -> 18 -> 19 -> 16 -> 14 -> 23 -> 22 -> 21 -> 0
+  client 13: arrivée 30.80, début 30.80, fin 120.80
+  client 17: arrivée 124.80, début 124.80, fin 214.80
+  client 18: arrivée 217.80, début 217.80, fin 307.80
+  client 19: arrivée 312.80, début 312.80, fin 402.80
+  client 16: arrivée 409.80, début 475.00, fin 565.00
+  client 14: arrivée 567.00, début 567.00, fin 657.00
+  client 23: arrivée 687.50, début 732.00, fin 822.00
+  client 22: arrivée 825.00, début 825.00, fin 915.00
+  client 21: arrivée 917.00, début 917.00, fin 1007.00
+  retour au dépôt : 1017.10
+Tournée 3 : 0 -> 20 -> 24 -> 25 -> 15 -> 12 -> 0
+  client 20: arrivée 10.00, début 10.00, fin 100.00
+  client 24: arrivée 105.00, début 105.00, fin 195.00
+  client 25: arrivée 197.00, début 197.00, fin 287.00
+  client 15: arrivée 315.40, début 384.00, fin 474.00
+  client 12: arrivée 481.00, début 652.00, fin 742.00
+  retour au dépôt : 780.00
+
+COMPARAISON — classement en durée réalisable, par instance et graine
+Budgets de recherche et temps totaux sont distincts ; échecs non classés.
+Instance / n / graine | Méthode | Durée | Faisable | Véhicules | Réel(s) | Budget(s) | Comparaison / statut | Rang
+C101 / 25 / 4101 | size_based | 2846.300 | OUI | 3 | 0.005 | 5.000 | 8.4925 % | 1
+Meilleure(s) méthode(s) sur ce cas/essai : size_based
+
+BILAN : 1/1 réalisables.
+CSV : C:\Users\user\Downloads\CVRPTW_REMISE_PROF_20261112T203928\results\local\soutenance_demo_2\RESULTATS.csv
+Label : soutenance_demo_2
