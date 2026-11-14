@@ -159,6 +159,23 @@ commandes. Ils ne constituent pas une nouvelle preuve statistique de supériorit
 universelle. Les tournées et sources sont dans
 `results/terminal_comparison/`.
 '''
+    env_receipt=ROOT/'results/terminal_comparison/VALIDATION_ENV_STATIQUE.json'
+    if env_receipt.exists():
+        env=json.loads(env_receipt.read_text(encoding='utf-8'))
+        assert env['validated'] and env['trials']==12 and env['paired_comparisons']==6
+        text+='''
+
+**Correction de l'environnement vérifiée.** L'environnement local `.venv`
+a été installé et `pip check` ne signale aucune dépendance incohérente.
+Le lot C101, C201, R101, R201, RC101 et RC201 a été réellement exécuté avec
+ce Python, graine 4101, cinq secondes demandées par moteur : douze solutions
+réalisables et six comparatifs immédiats affichés. Les tournées, références,
+formules et empreintes de sources ont été contrôlées indépendamment.
+Cette vérification des six familles ne représente pas une campagne exhaustive
+sur les 116 instances. Les preuves sont dans
+`results/terminal_comparison/verification_env_six_familles/` et
+`results/terminal_comparison/VALIDATION_ENV_STATIQUE.json`.
+'''
     text=text.replace('python scripts/test_instances.py',r'.\.venv\Scripts\python.exe scripts/test_instances.py')
     (ROOT/'docs/COMPARAISON_INITIAL_RENFORCE.md').write_text(text,encoding='utf-8')
     for doc in [ROOT/'COMMANDES_TERMINAL.md',ROOT/'README.md']:

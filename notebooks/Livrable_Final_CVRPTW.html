@@ -8587,7 +8587,7 @@ supérieurs à 6 % et les échecs restent visibles ; aucun pourcentage n'est pla
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=0f8446af">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=a5316266">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -12499,7 +12499,21 @@ sans invalider une solution réalisable ; les pourcentages signés sont conserv�
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="Comparaison-automatique-:-ILS-initial-et-profil-renforc%C3%A9">Comparaison automatique : ILS initial et profil renforcé<a class="anchor-link" href="#Comparaison-automatique-:-ILS-initial-et-profil-renforc%C3%A9">¶</a></h2><p>Sans <code>--method</code> ou <code>--methods</code>, chaque commande exécute maintenant <strong>deux
+<h2 id="Comparaison-automatique-:-ILS-initial-et-profil-renforc%C3%A9">Comparaison automatique : ILS initial et profil renforcé<a class="anchor-link" href="#Comparaison-automatique-:-ILS-initial-et-profil-renforc%C3%A9">¶</a></h2><p><strong>Python à utiliser.</strong> Depuis la racine du projet, appeler directement
+<code>.\.venv\Scripts\python.exe</code> pour le solveur statique. L'activation de
+<code>.venv_dabia</code> ne fournit pas ses dépendances : cet environnement appartient
+à l'extension optionnelle. Le script vérifie maintenant les bibliothèques
+nécessaires avant toute résolution et donne une erreur explicite si le
+Python choisi est incomplet, sans créer une campagne vide.</p>
+<p>Préparation unique sur un nouvel ordinateur :</p>
+<div class="highlight"><pre><span></span><span class="n">py</span> <span class="p">-</span><span class="n">3</span><span class="p">.</span><span class="n">12</span> <span class="n">-m</span> <span class="n">venv</span> <span class="p">.</span><span class="n">venv</span>
+<span class="p">.\.</span><span class="n">venv</span><span class="p">\</span><span class="n">Scripts</span><span class="p">\</span><span class="n">python</span><span class="p">.</span><span class="n">exe</span> <span class="n">-m</span> <span class="n">pip</span> <span class="n">install</span> <span class="n">-r</span> <span class="n">requirements-reference-final</span><span class="p">.</span><span class="n">txt</span>
+<span class="p">.\.</span><span class="n">venv</span><span class="p">\</span><span class="n">Scripts</span><span class="p">\</span><span class="n">python</span><span class="p">.</span><span class="n">exe</span> <span class="n">-m</span> <span class="n">pip</span> <span class="n">check</span>
+</pre></div>
+<p>Les commandes ci-dessous utilisent ce Python directement : elles fonctionnent
+même si le terminal affiche encore <code>(.venv_dabia)</code> et ne nécessitent pas de
+changer la politique d'exécution PowerShell.</p>
+<p>Sans <code>--method</code> ou <code>--methods</code>, chaque commande exécute maintenant <strong>deux
 résolutions par instance et par graine</strong> : notre <code>ils</code> autonome, puis le profil
 hybride <code>size_based</code>. Le renforcé utilise la recherche locale externe PyVRP
 et, sur les grands cas selon le temps restant, son HGS. Ces contributions sont
@@ -12508,6 +12522,10 @@ attribuées à la bibliothèque. L'initial n'est pas une construction seule.</p>
 la flotte, la référence et l'écart compatible, le temps réel, le CPU et le
 budget demandé. Un second tableau donne le gain entre méthodes :</p>
 <p><code>gain = 100 × (durée ILS initial − durée renforcée) / durée ILS initial</code>.</p>
+<p>Dans un lot, le comparatif est affiché <strong>après chaque instance et chaque graine</strong>,
+dès que toutes les méthodes demandées sont terminées pour ce cas. Le bilan
+global reprend ensuite tous les cas. Cette règle fonctionne aussi avec plusieurs
+processus, sans mélanger les instances, tailles ou graines.</p>
 <p>Ce gain n'est pas le gap au plan témoin. Une valeur positive signifie que le
 renforcé améliore l'ILS ; une égalité ou une régression reste explicitement
 affichée. Un échec interdit de chiffrer le gain. Nous ne sélectionnons pas une
@@ -12518,12 +12536,32 @@ budget total souple. Le même paramètre ne constitue donc pas un temps total
 strictement égal. Les temps réellement mesurés sont affichés pour juger le
 compromis qualité/coût. Le garde-fou de 120 secondes concerne chaque processus,
 pas la somme des deux méthodes. Par défaut, les exécutions sont séquentielles.</p>
-<div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">scripts</span><span class="p">/</span><span class="n">test_instances</span><span class="p">.</span><span class="n">py</span> <span class="p">-</span><span class="n">-instances</span> <span class="n">RC101</span> <span class="p">-</span><span class="n">-methods</span> <span class="n">ils</span> <span class="n">size_based</span> <span class="p">-</span><span class="n">-seconds</span> <span class="n">5</span> <span class="p">-</span><span class="n">-label</span> <span class="n">comparaison_RC1</span>
-<span class="n">python</span> <span class="n">scripts</span><span class="p">/</span><span class="n">test_instances</span><span class="p">.</span><span class="n">py</span> <span class="p">-</span><span class="n">-instances</span> <span class="n">C101</span> <span class="n">C201</span> <span class="p">-</span><span class="n">-methods</span> <span class="n">ils</span> <span class="n">size_based</span> <span class="p">-</span><span class="n">-seconds</span> <span class="n">5</span> <span class="p">-</span><span class="n">-label</span> <span class="n">comparaison_C</span>
-<span class="n">python</span> <span class="n">scripts</span><span class="p">/</span><span class="n">test_instances</span><span class="p">.</span><span class="n">py</span> <span class="p">-</span><span class="n">-instances</span> <span class="n">R101</span> <span class="n">R201</span> <span class="p">-</span><span class="n">-methods</span> <span class="n">ils</span> <span class="n">size_based</span> <span class="p">-</span><span class="n">-seconds</span> <span class="n">5</span> <span class="p">-</span><span class="n">-label</span> <span class="n">comparaison_R</span>
-<span class="n">python</span> <span class="n">scripts</span><span class="p">/</span><span class="n">test_instances</span><span class="p">.</span><span class="n">py</span> <span class="p">-</span><span class="n">-instances</span> <span class="n">RC101</span> <span class="n">RC201</span> <span class="p">-</span><span class="n">-methods</span> <span class="n">ils</span> <span class="n">size_based</span> <span class="p">-</span><span class="n">-seconds</span> <span class="n">5</span> <span class="p">-</span><span class="n">-label</span> <span class="n">comparaison_RC</span>
-<span class="n">python</span> <span class="n">scripts</span><span class="p">/</span><span class="n">test_instances</span><span class="p">.</span><span class="n">py</span> <span class="p">-</span><span class="n">-instances</span> <span class="n">C2_10_7</span> <span class="p">-</span><span class="n">-methods</span> <span class="n">ils</span> <span class="n">size_based</span> <span class="p">-</span><span class="n">-seconds</span> <span class="n">60</span> <span class="p">-</span><span class="n">-label</span> <span class="n">comparaison_1000</span>
+<div class="highlight"><pre><span></span><span class="p">.\.</span><span class="n">venv</span><span class="p">\</span><span class="n">Scripts</span><span class="p">\</span><span class="n">python</span><span class="p">.</span><span class="n">exe</span> <span class="n">scripts</span><span class="p">/</span><span class="n">test_instances</span><span class="p">.</span><span class="n">py</span> <span class="p">-</span><span class="n">-instances</span> <span class="n">RC101</span> <span class="p">-</span><span class="n">-methods</span> <span class="n">ils</span> <span class="n">size_based</span> <span class="p">-</span><span class="n">-seconds</span> <span class="n">5</span> <span class="p">-</span><span class="n">-label</span> <span class="n">comparaison_RC1</span>
+<span class="p">.\.</span><span class="n">venv</span><span class="p">\</span><span class="n">Scripts</span><span class="p">\</span><span class="n">python</span><span class="p">.</span><span class="n">exe</span> <span class="n">scripts</span><span class="p">/</span><span class="n">test_instances</span><span class="p">.</span><span class="n">py</span> <span class="p">-</span><span class="n">-instances</span> <span class="n">C101</span> <span class="n">C201</span> <span class="p">-</span><span class="n">-methods</span> <span class="n">ils</span> <span class="n">size_based</span> <span class="p">-</span><span class="n">-seconds</span> <span class="n">5</span> <span class="p">-</span><span class="n">-label</span> <span class="n">comparaison_C</span>
+<span class="p">.\.</span><span class="n">venv</span><span class="p">\</span><span class="n">Scripts</span><span class="p">\</span><span class="n">python</span><span class="p">.</span><span class="n">exe</span> <span class="n">scripts</span><span class="p">/</span><span class="n">test_instances</span><span class="p">.</span><span class="n">py</span> <span class="p">-</span><span class="n">-instances</span> <span class="n">R101</span> <span class="n">R201</span> <span class="p">-</span><span class="n">-methods</span> <span class="n">ils</span> <span class="n">size_based</span> <span class="p">-</span><span class="n">-seconds</span> <span class="n">5</span> <span class="p">-</span><span class="n">-label</span> <span class="n">comparaison_R</span>
+<span class="p">.\.</span><span class="n">venv</span><span class="p">\</span><span class="n">Scripts</span><span class="p">\</span><span class="n">python</span><span class="p">.</span><span class="n">exe</span> <span class="n">scripts</span><span class="p">/</span><span class="n">test_instances</span><span class="p">.</span><span class="n">py</span> <span class="p">-</span><span class="n">-instances</span> <span class="n">RC101</span> <span class="n">RC201</span> <span class="p">-</span><span class="n">-methods</span> <span class="n">ils</span> <span class="n">size_based</span> <span class="p">-</span><span class="n">-seconds</span> <span class="n">5</span> <span class="p">-</span><span class="n">-label</span> <span class="n">comparaison_RC</span>
+<span class="p">.\.</span><span class="n">venv</span><span class="p">\</span><span class="n">Scripts</span><span class="p">\</span><span class="n">python</span><span class="p">.</span><span class="n">exe</span> <span class="n">scripts</span><span class="p">/</span><span class="n">test_instances</span><span class="p">.</span><span class="n">py</span> <span class="p">-</span><span class="n">-instances</span> <span class="n">C2_10_7</span> <span class="p">-</span><span class="n">-methods</span> <span class="n">ils</span> <span class="n">size_based</span> <span class="p">-</span><span class="n">-seconds</span> <span class="n">60</span> <span class="p">-</span><span class="n">-label</span> <span class="n">comparaison_1000</span>
 </pre></div>
+<p><strong>Lots de test :</strong> chaque ligne suivante compare les deux méthodes pour toutes
+les instances sélectionnées. Une graine est utilisée par défaut (4101).</p>
+<div class="highlight"><pre><span></span><span class="c"># Un cas de chacune des six familles : six instances, douze résolutions.</span>
+<span class="p">.\.</span><span class="n">venv</span><span class="p">\</span><span class="n">Scripts</span><span class="p">\</span><span class="n">python</span><span class="p">.</span><span class="n">exe</span> <span class="n">scripts</span><span class="p">/</span><span class="n">test_instances</span><span class="p">.</span><span class="n">py</span> <span class="p">-</span><span class="n">-instances</span> <span class="n">C101</span> <span class="n">C201</span> <span class="n">R101</span> <span class="n">R201</span> <span class="n">RC101</span> <span class="n">RC201</span> <span class="p">-</span><span class="n">-seconds</span> <span class="n">5</span> <span class="p">-</span><span class="n">-label</span> <span class="n">comparaison_six_familles</span>
+
+<span class="c"># Toutes les 56 Solomon à 100 clients : 112 résolutions.</span>
+<span class="p">.\.</span><span class="n">venv</span><span class="p">\</span><span class="n">Scripts</span><span class="p">\</span><span class="n">python</span><span class="p">.</span><span class="n">exe</span> <span class="n">scripts</span><span class="p">/</span><span class="n">test_instances</span><span class="p">.</span><span class="n">py</span> <span class="p">-</span><span class="n">-all</span> <span class="p">-</span><span class="n">-sizes</span> <span class="n">100</span> <span class="p">-</span><span class="n">-seconds</span> <span class="n">5</span> <span class="p">-</span><span class="n">-label</span> <span class="n">comparaison_solomon_complete</span>
+
+<span class="c"># Toutes les 60 instances à 1000 clients : 120 résolutions, campagne longue.</span>
+<span class="p">.\.</span><span class="n">venv</span><span class="p">\</span><span class="n">Scripts</span><span class="p">\</span><span class="n">python</span><span class="p">.</span><span class="n">exe</span> <span class="n">scripts</span><span class="p">/</span><span class="n">test_instances</span><span class="p">.</span><span class="n">py</span> <span class="p">-</span><span class="n">-all</span> <span class="p">-</span><span class="n">-sizes</span> <span class="n">1000</span> <span class="p">-</span><span class="n">-seconds</span> <span class="n">30</span> <span class="p">-</span><span class="n">-label</span> <span class="n">comparaison_1000_complete</span>
+
+<span class="c"># Vérifier la sélection et le nombre de résolutions sans lancer de calcul.</span>
+<span class="p">.\.</span><span class="n">venv</span><span class="p">\</span><span class="n">Scripts</span><span class="p">\</span><span class="n">python</span><span class="p">.</span><span class="n">exe</span> <span class="n">scripts</span><span class="p">/</span><span class="n">test_instances</span><span class="p">.</span><span class="n">py</span> <span class="p">-</span><span class="n">-all</span> <span class="p">-</span><span class="n">-sizes</span> <span class="n">100</span> <span class="n">1000</span> <span class="p">-</span><span class="n">-seconds</span> <span class="n">5</span> <span class="p">-</span><span class="n">-dry-run</span>
+</pre></div>
+<p>Pour avancer famille par famille, ajouter <code>--families C1</code>, <code>C2</code>, <code>R1</code>, <code>R2</code>,
+<code>RC1</code> ou <code>RC2</code> à une commande avec <code>--all --sizes 100</code> ou <code>1000</code>.
+Les campagnes complètes ci-dessus sont des commandes proposées, pas des
+comparaisons exhaustives déjà exécutées. Deux moteurs doublent le nombre
+de résolutions. Avec un processus, les 60 grands cas peuvent demander
+environ une heure à trente secondes par moteur, plus construction et préparation.</p>
 <p>Le couple <code>--methods ils size_based</code> est explicite ici, mais il est désormais
 le défaut lorsqu'aucune méthode n'est donnée. Pour une seule résolution,
 utiliser <code>--method size_based</code> ou <code>--method ils</code>. Les labels déjà utilisés
@@ -12611,6 +12649,16 @@ par moteur, avec la même graine et le même ordre d'exécution séquentiel.</p>
 commandes. Ils ne constituent pas une nouvelle preuve statistique de supériorité
 universelle. Les tournées et sources sont dans
 <code>results/terminal_comparison/</code>.</p>
+<p><strong>Correction de l'environnement vérifiée.</strong> L'environnement local <code>.venv</code>
+a été installé et <code>pip check</code> ne signale aucune dépendance incohérente.
+Le lot C101, C201, R101, R201, RC101 et RC201 a été réellement exécuté avec
+ce Python, graine 4101, cinq secondes demandées par moteur : douze solutions
+réalisables et six comparatifs immédiats affichés. Les tournées, références,
+formules et empreintes de sources ont été contrôlées indépendamment.
+Cette vérification des six familles ne représente pas une campagne exhaustive
+sur les 116 instances. Les preuves sont dans
+<code>results/terminal_comparison/verification_env_six_familles/</code> et
+<code>results/terminal_comparison/VALIDATION_ENV_STATIQUE.json</code>.</p>
 </div>
 </div>
 </div>

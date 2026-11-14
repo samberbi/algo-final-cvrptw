@@ -106,3 +106,15 @@ Les résultats de ces cas restent un contrôle de fonctionnement des
 commandes. Ils ne constituent pas une nouvelle preuve statistique de supériorité
 universelle. Les tournées et sources sont dans
 `results/terminal_comparison/`.
+
+
+**Correction de l'environnement vérifiée.** L'environnement local `.venv`
+a été installé et `pip check` ne signale aucune dépendance incohérente.
+Le lot C101, C201, R101, R201, RC101 et RC201 a été réellement exécuté avec
+ce Python, graine 4101, cinq secondes demandées par moteur : douze solutions
+réalisables et six comparatifs immédiats affichés. Les tournées, références,
+formules et empreintes de sources ont été contrôlées indépendamment.
+Cette vérification des six familles ne représente pas une campagne exhaustive
+sur les 116 instances. Les preuves sont dans
+`results/terminal_comparison/verification_env_six_familles/` et
+`results/terminal_comparison/VALIDATION_ENV_STATIQUE.json`.

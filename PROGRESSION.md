@@ -15,10 +15,16 @@
   PyVRP ni VRPLIB. Nouveau contrôle avant création de campagne : message explicite,
   Python actif et procédure d'installation ; sortie 2 sans traceback. Les paquets
   optionnels non utilisés ne bloquent pas une méthode autonome.
-- Environnement statique local `.venv` en préparation avec les versions validées.
-  Utilisation directe de son python.exe : aucune activation PowerShell requise.
-- Tests CLI : vingt réussites après correction. Validation complète du nouvel
-  environnement et synchronisation finale du notebook restent à terminer.
+- Environnement statique local `.venv` installé avec les versions validées ;
+  `pip check` réussi. Utilisation directe de son python.exe sans activation.
+  Versions et contraintes locales sauvegardées dans `results/terminal_comparison/`.
+- Les six familles ont été réellement relancées dans ce nouvel environnement :
+  douze solutions réalisables et six comparatifs immédiats, cinq secondes par
+  méthode. Coûts, contraintes, références et sources figées vérifiés indépendamment.
+  Preuve : `results/terminal_comparison/VALIDATION_ENV_STATIQUE.json`.
+- Suite complète dans `.venv` : **232 tests réussis, 2 ignorés**. Notebook
+  réexécuté avec ce Python : seize cellules, zéro erreur, 33,03 s. Validations
+  statique et présentation réussies ; HTML et copie à envoyer synchronisés.
 - Reprise : `.\.venv\Scripts\python.exe scripts/test_instances.py --instances C101 C201 R101 R201 RC101 RC201 --seconds 5 --label verification_env_six_familles`.
 
 ## 14 novembre 2026 — comparaison automatique initial / renforcé

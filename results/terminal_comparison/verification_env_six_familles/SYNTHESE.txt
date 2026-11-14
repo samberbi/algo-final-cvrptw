@@ -1,0 +1,43 @@
+
+COMPARAISON — classement en durée réalisable, par instance et graine
+Budgets de recherche et temps totaux sont distincts ; échecs non classés.
+Instance / n / graine | Méthode | Durée | Faisable | Véhicules | Réel(s) | CPU(s) | Budget(s) | Comparaison / statut | Rang
+C101 / 100 / 4101 | size_based | 9827.300 | OUI | 10 | 5.001 | 2.453 | 5.000 | Référence égalée — optimalité non démontrée | 1
+C101 / 100 / 4101 | ils | 9961.000 | OUI | 11 | 5.026 | 5.031 | 5.000 | 1.3605 % | 2
+Meilleure(s) méthode(s) sur ce cas/essai : size_based
+C201 / 100 / 4101 | ils | 9589.100 | OUI | 3 | 5.026 | 5.016 | 5.000 | Référence égalée — optimalité non démontrée | 1
+C201 / 100 / 4101 | size_based | 9589.100 | OUI | 3 | 5.001 | 4.953 | 5.000 | Référence égalée — optimalité non démontrée | 1
+Meilleure(s) méthode(s) sur ce cas/essai : ils, size_based
+R101 / 100 / 4101 | ils | 3399.200 | OUI | 19 | 5.028 | 5.000 | 5.000 | Référence dépassée — solution améliorante validée | 1
+R101 / 100 / 4101 | size_based | 3399.200 | OUI | 19 | 5.001 | 4.938 | 5.000 | Référence dépassée — solution améliorante validée | 1
+Meilleure(s) méthode(s) sur ce cas/essai : ils, size_based
+R201 / 100 / 4101 | size_based | 2902.200 | OUI | 4 | 5.001 | 4.891 | 5.000 | Référence dépassée — solution améliorante validée | 1
+R201 / 100 / 4101 | ils | 3014.800 | OUI | 4 | 5.029 | 5.031 | 5.000 | Référence dépassée — solution améliorante validée | 2
+Meilleure(s) méthode(s) sur ce cas/essai : size_based
+RC101 / 100 / 4101 | ils | 2917.700 | OUI | 15 | 5.027 | 5.016 | 5.000 | Référence dépassée — solution améliorante validée | 1
+RC101 / 100 / 4101 | size_based | 2921.100 | OUI | 15 | 5.001 | 4.938 | 5.000 | Référence dépassée — solution améliorante validée | 2
+Meilleure(s) méthode(s) sur ce cas/essai : ils
+RC201 / 100 / 4101 | ils | 3036.200 | OUI | 4 | 5.028 | 5.016 | 5.000 | Référence dépassée — solution améliorante validée | 1
+RC201 / 100 / 4101 | size_based | 3061.100 | OUI | 4 | 5.001 | 4.891 | 5.000 | Référence dépassée — solution améliorante validée | 2
+Meilleure(s) méthode(s) sur ce cas/essai : ils
+
+INITIAL / RENFORCÉ — mêmes instances et graines
+Initial = notre ILS autonome. Renforcé = size_based, intégrant la recherche locale et éventuellement le HGS externes PyVRP.
+Gain durée = 100 × (durée ILS − durée renforcée) / durée ILS ; ce gain entre méthodes n’est pas le gap à la référence.
+Budget demandé identique si fourni par la commande ; ILS : recherche + construction, renforcé : total souple. Comparer aussi réel et CPU.
+Instance / n / graine | Durée initiale | Durée renforcée | Gain durée (%) | Réel initial/renforcé (s) | CPU initial/renforcé (s) | Conclusion
+C101 / 100 / 4101 | 9961.000 | 9827.300 | 1.342 | 5.026 / 5.001 | 5.031 / 2.453 | Renforcé meilleur
+C201 / 100 / 4101 | 9589.100 | 9589.100 | 0.000 | 5.026 / 5.001 | 5.016 / 4.953 | Égalité de durée
+R101 / 100 / 4101 | 3399.200 | 3399.200 | 0.000 | 5.028 / 5.001 | 5.000 / 4.938 | Égalité de durée
+R201 / 100 / 4101 | 3014.800 | 2902.200 | 3.735 | 5.029 / 5.001 | 5.031 / 4.891 | Renforcé meilleur
+RC101 / 100 / 4101 | 2917.700 | 2921.100 | -0.117 | 5.027 / 5.001 | 5.016 / 4.938 | ILS initial meilleur
+RC201 / 100 / 4101 | 3036.200 | 3061.100 | -0.820 | 5.028 / 5.001 | 5.016 / 4.891 | ILS initial meilleur
+
+{
+  "completed": 12,
+  "valid": 12,
+  "failed": 0,
+  "batch_wall_s": 77.63245949998964,
+  "resolution_cpu_sum_s": 57.171875,
+  "note": "Signed gap against feasible reference, not a certified duration optimum. Warmup excluded from solve time but included in process guard."
+}

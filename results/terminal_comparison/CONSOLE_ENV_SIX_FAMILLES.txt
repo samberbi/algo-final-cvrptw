@@ -1,0 +1,497 @@
+﻿6 instances ; 12 résolutions ; 1 processus maximum
+Méthodes exécutées : ils, size_based
+Départs zéro ; trajets fixes/symétriques ; objectif trajets + attentes + services, retour compris.
+Dossier : C:\Users\user\Downloads\CVRPTW_REMISE_PROF_20261112T203928\results\local\verification_env_six_familles
+Budget : recherche + construction pour ILS/SA/hybride/PyVRP ; total souple pour renforcé.
+CPU/réel résolution excluent le préchauffage ; le garde-fou inclut tout le processus.
+Un arrêt par surveillance peut dépasser légèrement la limite lors de l’arrêt du processus.
+
+========================================================================
+TEST CVRPTW
+========================================================================
+Instance                     : C101
+Famille                      : C1
+Nombre de clients            : 100
+Méthode                      : ils — ILS autonome, opérateurs propres
+Moteur exécuté               : ils
+Graine                       : 4101
+FAISABILITÉ                  : OUI
+Statut                       : feasible
+Véhicules utilisés           : 11
+Durée des trajets            : 895.300 u.t.
+Durée des attentes           : 65.700 u.t.
+Durée des services           : 9000.000 u.t.
+DURÉE TOTALE                 : 9961.000 u.t.
+Durée de référence           : 9827.300 u.t.
+Type de référence            : Plan public DISTANCE réévalué en DURÉE, non optimalité temporelle
+Source de référence          : data/instances/C101.sol
+Comparaison à la référence   : 1.3605 %
+Gap certifié                 : NON DISPONIBLE
+Temps CPU résolution         : 5.031 s
+Temps réel résolution        : 5.026 s
+Temps total processus        : 9.119 s
+Budget demandé               : 5.000 s
+Garde-fou processus          : 120.000 s
+Dépassement budget demandé   : 0.026 s
+Contraintes                  : VALIDÉES
+
+========================================================================
+TEST CVRPTW
+========================================================================
+Instance                     : C101
+Famille                      : C1
+Nombre de clients            : 100
+Méthode                      : size_based — Sélection v2 : construction + LS PyVRP + ILS jusqu’à 100 clients ; renforcé puis HGS externe au-delà
+Moteur exécuté               : construction_ls_ils
+Graine                       : 4101
+FAISABILITÉ                  : OUI
+Statut                       : feasible
+Véhicules utilisés           : 10
+Durée des trajets            : 827.300 u.t.
+Durée des attentes           : 0.000 u.t.
+Durée des services           : 9000.000 u.t.
+DURÉE TOTALE                 : 9827.300 u.t.
+Durée de référence           : 9827.300 u.t.
+Type de référence            : Plan public DISTANCE réévalué en DURÉE, non optimalité temporelle
+Source de référence          : data/instances/C101.sol
+Comparaison à la référence   : Référence égalée — optimalité non démontrée
+Gap certifié                 : NON DISPONIBLE
+Temps CPU résolution         : 2.453 s
+Temps réel résolution        : 5.001 s
+Temps total processus        : 6.224 s
+Budget demandé               : 5.000 s
+Garde-fou processus          : 120.000 s
+Dépassement budget demandé   : 0.001 s
+Contraintes                  : VALIDÉES
+
+RÉSULTATS COMPARÉS POUR CETTE INSTANCE ET CETTE GRAINE
+
+COMPARAISON — classement en durée réalisable, par instance et graine
+Budgets de recherche et temps totaux sont distincts ; échecs non classés.
+Instance / n / graine | Méthode | Durée | Faisable | Véhicules | Réel(s) | CPU(s) | Budget(s) | Comparaison / statut | Rang
+C101 / 100 / 4101 | size_based | 9827.300 | OUI | 10 | 5.001 | 2.453 | 5.000 | Référence égalée — optimalité non démontrée | 1
+C101 / 100 / 4101 | ils | 9961.000 | OUI | 11 | 5.026 | 5.031 | 5.000 | 1.3605 % | 2
+Meilleure(s) méthode(s) sur ce cas/essai : size_based
+
+INITIAL / RENFORCÉ — mêmes instances et graines
+Initial = notre ILS autonome. Renforcé = size_based, intégrant la recherche locale et éventuellement le HGS externes PyVRP.
+Gain durée = 100 × (durée ILS − durée renforcée) / durée ILS ; ce gain entre méthodes n’est pas le gap à la référence.
+Budget demandé identique si fourni par la commande ; ILS : recherche + construction, renforcé : total souple. Comparer aussi réel et CPU.
+Instance / n / graine | Durée initiale | Durée renforcée | Gain durée (%) | Réel initial/renforcé (s) | CPU initial/renforcé (s) | Conclusion
+C101 / 100 / 4101 | 9961.000 | 9827.300 | 1.342 | 5.026 / 5.001 | 5.031 / 2.453 | Renforcé meilleur
+
+========================================================================
+TEST CVRPTW
+========================================================================
+Instance                     : C201
+Famille                      : C2
+Nombre de clients            : 100
+Méthode                      : ils — ILS autonome, opérateurs propres
+Moteur exécuté               : ils
+Graine                       : 4101
+FAISABILITÉ                  : OUI
+Statut                       : feasible
+Véhicules utilisés           : 3
+Durée des trajets            : 589.100 u.t.
+Durée des attentes           : 0.000 u.t.
+Durée des services           : 9000.000 u.t.
+DURÉE TOTALE                 : 9589.100 u.t.
+Durée de référence           : 9589.100 u.t.
+Type de référence            : Plan public DISTANCE réévalué en DURÉE, non optimalité temporelle
+Source de référence          : data/instances/C201.sol
+Comparaison à la référence   : Référence égalée — optimalité non démontrée
+Gap certifié                 : NON DISPONIBLE
+Temps CPU résolution         : 5.016 s
+Temps réel résolution        : 5.026 s
+Temps total processus        : 6.159 s
+Budget demandé               : 5.000 s
+Garde-fou processus          : 120.000 s
+Dépassement budget demandé   : 0.026 s
+Contraintes                  : VALIDÉES
+
+========================================================================
+TEST CVRPTW
+========================================================================
+Instance                     : C201
+Famille                      : C2
+Nombre de clients            : 100
+Méthode                      : size_based — Sélection v2 : construction + LS PyVRP + ILS jusqu’à 100 clients ; renforcé puis HGS externe au-delà
+Moteur exécuté               : construction_ls_ils
+Graine                       : 4101
+FAISABILITÉ                  : OUI
+Statut                       : feasible
+Véhicules utilisés           : 3
+Durée des trajets            : 589.100 u.t.
+Durée des attentes           : 0.000 u.t.
+Durée des services           : 9000.000 u.t.
+DURÉE TOTALE                 : 9589.100 u.t.
+Durée de référence           : 9589.100 u.t.
+Type de référence            : Plan public DISTANCE réévalué en DURÉE, non optimalité temporelle
+Source de référence          : data/instances/C201.sol
+Comparaison à la référence   : Référence égalée — optimalité non démontrée
+Gap certifié                 : NON DISPONIBLE
+Temps CPU résolution         : 4.953 s
+Temps réel résolution        : 5.001 s
+Temps total processus        : 6.192 s
+Budget demandé               : 5.000 s
+Garde-fou processus          : 120.000 s
+Dépassement budget demandé   : 0.001 s
+Contraintes                  : VALIDÉES
+
+RÉSULTATS COMPARÉS POUR CETTE INSTANCE ET CETTE GRAINE
+
+COMPARAISON — classement en durée réalisable, par instance et graine
+Budgets de recherche et temps totaux sont distincts ; échecs non classés.
+Instance / n / graine | Méthode | Durée | Faisable | Véhicules | Réel(s) | CPU(s) | Budget(s) | Comparaison / statut | Rang
+C201 / 100 / 4101 | ils | 9589.100 | OUI | 3 | 5.026 | 5.016 | 5.000 | Référence égalée — optimalité non démontrée | 1
+C201 / 100 / 4101 | size_based | 9589.100 | OUI | 3 | 5.001 | 4.953 | 5.000 | Référence égalée — optimalité non démontrée | 1
+Meilleure(s) méthode(s) sur ce cas/essai : ils, size_based
+
+INITIAL / RENFORCÉ — mêmes instances et graines
+Initial = notre ILS autonome. Renforcé = size_based, intégrant la recherche locale et éventuellement le HGS externes PyVRP.
+Gain durée = 100 × (durée ILS − durée renforcée) / durée ILS ; ce gain entre méthodes n’est pas le gap à la référence.
+Budget demandé identique si fourni par la commande ; ILS : recherche + construction, renforcé : total souple. Comparer aussi réel et CPU.
+Instance / n / graine | Durée initiale | Durée renforcée | Gain durée (%) | Réel initial/renforcé (s) | CPU initial/renforcé (s) | Conclusion
+C201 / 100 / 4101 | 9589.100 | 9589.100 | 0.000 | 5.026 / 5.001 | 5.016 / 4.953 | Égalité de durée
+
+========================================================================
+TEST CVRPTW
+========================================================================
+Instance                     : R101
+Famille                      : R1
+Nombre de clients            : 100
+Méthode                      : ils — ILS autonome, opérateurs propres
+Moteur exécuté               : ils
+Graine                       : 4101
+FAISABILITÉ                  : OUI
+Statut                       : feasible
+Véhicules utilisés           : 19
+Durée des trajets            : 1839.800 u.t.
+Durée des attentes           : 559.400 u.t.
+Durée des services           : 1000.000 u.t.
+DURÉE TOTALE                 : 3399.200 u.t.
+Durée de référence           : 3715.800 u.t.
+Type de référence            : Plan public DISTANCE réévalué en DURÉE, non optimalité temporelle
+Source de référence          : data/instances/R101.sol
+Comparaison à la référence   : Référence dépassée — solution améliorante validée
+Gap certifié                 : NON DISPONIBLE
+Temps CPU résolution         : 5.000 s
+Temps réel résolution        : 5.028 s
+Temps total processus        : 6.210 s
+Budget demandé               : 5.000 s
+Garde-fou processus          : 120.000 s
+Dépassement budget demandé   : 0.028 s
+Contraintes                  : VALIDÉES
+Solution améliorante vérifiée ; référence heuristique dépassée, sans preuve d’optimalité.
+
+========================================================================
+TEST CVRPTW
+========================================================================
+Instance                     : R101
+Famille                      : R1
+Nombre de clients            : 100
+Méthode                      : size_based — Sélection v2 : construction + LS PyVRP + ILS jusqu’à 100 clients ; renforcé puis HGS externe au-delà
+Moteur exécuté               : construction_ls_ils
+Graine                       : 4101
+FAISABILITÉ                  : OUI
+Statut                       : feasible
+Véhicules utilisés           : 19
+Durée des trajets            : 1766.600 u.t.
+Durée des attentes           : 632.600 u.t.
+Durée des services           : 1000.000 u.t.
+DURÉE TOTALE                 : 3399.200 u.t.
+Durée de référence           : 3715.800 u.t.
+Type de référence            : Plan public DISTANCE réévalué en DURÉE, non optimalité temporelle
+Source de référence          : data/instances/R101.sol
+Comparaison à la référence   : Référence dépassée — solution améliorante validée
+Gap certifié                 : NON DISPONIBLE
+Temps CPU résolution         : 4.938 s
+Temps réel résolution        : 5.001 s
+Temps total processus        : 6.194 s
+Budget demandé               : 5.000 s
+Garde-fou processus          : 120.000 s
+Dépassement budget demandé   : 0.001 s
+Contraintes                  : VALIDÉES
+Solution améliorante vérifiée ; référence heuristique dépassée, sans preuve d’optimalité.
+
+RÉSULTATS COMPARÉS POUR CETTE INSTANCE ET CETTE GRAINE
+
+COMPARAISON — classement en durée réalisable, par instance et graine
+Budgets de recherche et temps totaux sont distincts ; échecs non classés.
+Instance / n / graine | Méthode | Durée | Faisable | Véhicules | Réel(s) | CPU(s) | Budget(s) | Comparaison / statut | Rang
+R101 / 100 / 4101 | ils | 3399.200 | OUI | 19 | 5.028 | 5.000 | 5.000 | Référence dépassée — solution améliorante validée | 1
+R101 / 100 / 4101 | size_based | 3399.200 | OUI | 19 | 5.001 | 4.938 | 5.000 | Référence dépassée — solution améliorante validée | 1
+Meilleure(s) méthode(s) sur ce cas/essai : ils, size_based
+
+INITIAL / RENFORCÉ — mêmes instances et graines
+Initial = notre ILS autonome. Renforcé = size_based, intégrant la recherche locale et éventuellement le HGS externes PyVRP.
+Gain durée = 100 × (durée ILS − durée renforcée) / durée ILS ; ce gain entre méthodes n’est pas le gap à la référence.
+Budget demandé identique si fourni par la commande ; ILS : recherche + construction, renforcé : total souple. Comparer aussi réel et CPU.
+Instance / n / graine | Durée initiale | Durée renforcée | Gain durée (%) | Réel initial/renforcé (s) | CPU initial/renforcé (s) | Conclusion
+R101 / 100 / 4101 | 3399.200 | 3399.200 | 0.000 | 5.028 / 5.001 | 5.000 / 4.938 | Égalité de durée
+
+========================================================================
+TEST CVRPTW
+========================================================================
+Instance                     : R201
+Famille                      : R2
+Nombre de clients            : 100
+Méthode                      : ils — ILS autonome, opérateurs propres
+Moteur exécuté               : ils
+Graine                       : 4101
+FAISABILITÉ                  : OUI
+Statut                       : feasible
+Véhicules utilisés           : 4
+Durée des trajets            : 1950.100 u.t.
+Durée des attentes           : 64.700 u.t.
+Durée des services           : 1000.000 u.t.
+DURÉE TOTALE                 : 3014.800 u.t.
+Durée de référence           : 6296.600 u.t.
+Type de référence            : Plan public DISTANCE réévalué en DURÉE, non optimalité temporelle
+Source de référence          : data/instances/R201.sol
+Comparaison à la référence   : Référence dépassée — solution améliorante validée
+Gap certifié                 : NON DISPONIBLE
+Temps CPU résolution         : 5.031 s
+Temps réel résolution        : 5.029 s
+Temps total processus        : 6.270 s
+Budget demandé               : 5.000 s
+Garde-fou processus          : 120.000 s
+Dépassement budget demandé   : 0.029 s
+Contraintes                  : VALIDÉES
+Solution améliorante vérifiée ; référence heuristique dépassée, sans preuve d’optimalité.
+
+========================================================================
+TEST CVRPTW
+========================================================================
+Instance                     : R201
+Famille                      : R2
+Nombre de clients            : 100
+Méthode                      : size_based — Sélection v2 : construction + LS PyVRP + ILS jusqu’à 100 clients ; renforcé puis HGS externe au-delà
+Moteur exécuté               : construction_ls_ils
+Graine                       : 4101
+FAISABILITÉ                  : OUI
+Statut                       : feasible
+Véhicules utilisés           : 4
+Durée des trajets            : 1810.000 u.t.
+Durée des attentes           : 92.200 u.t.
+Durée des services           : 1000.000 u.t.
+DURÉE TOTALE                 : 2902.200 u.t.
+Durée de référence           : 6296.600 u.t.
+Type de référence            : Plan public DISTANCE réévalué en DURÉE, non optimalité temporelle
+Source de référence          : data/instances/R201.sol
+Comparaison à la référence   : Référence dépassée — solution améliorante validée
+Gap certifié                 : NON DISPONIBLE
+Temps CPU résolution         : 4.891 s
+Temps réel résolution        : 5.001 s
+Temps total processus        : 6.225 s
+Budget demandé               : 5.000 s
+Garde-fou processus          : 120.000 s
+Dépassement budget demandé   : 0.001 s
+Contraintes                  : VALIDÉES
+Solution améliorante vérifiée ; référence heuristique dépassée, sans preuve d’optimalité.
+
+RÉSULTATS COMPARÉS POUR CETTE INSTANCE ET CETTE GRAINE
+
+COMPARAISON — classement en durée réalisable, par instance et graine
+Budgets de recherche et temps totaux sont distincts ; échecs non classés.
+Instance / n / graine | Méthode | Durée | Faisable | Véhicules | Réel(s) | CPU(s) | Budget(s) | Comparaison / statut | Rang
+R201 / 100 / 4101 | size_based | 2902.200 | OUI | 4 | 5.001 | 4.891 | 5.000 | Référence dépassée — solution améliorante validée | 1
+R201 / 100 / 4101 | ils | 3014.800 | OUI | 4 | 5.029 | 5.031 | 5.000 | Référence dépassée — solution améliorante validée | 2
+Meilleure(s) méthode(s) sur ce cas/essai : size_based
+
+INITIAL / RENFORCÉ — mêmes instances et graines
+Initial = notre ILS autonome. Renforcé = size_based, intégrant la recherche locale et éventuellement le HGS externes PyVRP.
+Gain durée = 100 × (durée ILS − durée renforcée) / durée ILS ; ce gain entre méthodes n’est pas le gap à la référence.
+Budget demandé identique si fourni par la commande ; ILS : recherche + construction, renforcé : total souple. Comparer aussi réel et CPU.
+Instance / n / graine | Durée initiale | Durée renforcée | Gain durée (%) | Réel initial/renforcé (s) | CPU initial/renforcé (s) | Conclusion
+R201 / 100 / 4101 | 3014.800 | 2902.200 | 3.735 | 5.029 / 5.001 | 5.031 / 4.891 | Renforcé meilleur
+
+========================================================================
+TEST CVRPTW
+========================================================================
+Instance                     : RC101
+Famille                      : RC1
+Nombre de clients            : 100
+Méthode                      : ils — ILS autonome, opérateurs propres
+Moteur exécuté               : ils
+Graine                       : 4101
+FAISABILITÉ                  : OUI
+Statut                       : feasible
+Véhicules utilisés           : 15
+Durée des trajets            : 1719.900 u.t.
+Durée des attentes           : 197.800 u.t.
+Durée des services           : 1000.000 u.t.
+DURÉE TOTALE                 : 2917.700 u.t.
+Durée de référence           : 2991.600 u.t.
+Type de référence            : Plan public DISTANCE réévalué en DURÉE, non optimalité temporelle
+Source de référence          : data/instances/RC101.sol
+Comparaison à la référence   : Référence dépassée — solution améliorante validée
+Gap certifié                 : NON DISPONIBLE
+Temps CPU résolution         : 5.016 s
+Temps réel résolution        : 5.027 s
+Temps total processus        : 6.187 s
+Budget demandé               : 5.000 s
+Garde-fou processus          : 120.000 s
+Dépassement budget demandé   : 0.027 s
+Contraintes                  : VALIDÉES
+Solution améliorante vérifiée ; référence heuristique dépassée, sans preuve d’optimalité.
+
+========================================================================
+TEST CVRPTW
+========================================================================
+Instance                     : RC101
+Famille                      : RC1
+Nombre de clients            : 100
+Méthode                      : size_based — Sélection v2 : construction + LS PyVRP + ILS jusqu’à 100 clients ; renforcé puis HGS externe au-delà
+Moteur exécuté               : construction_ls_ils
+Graine                       : 4101
+FAISABILITÉ                  : OUI
+Statut                       : feasible
+Véhicules utilisés           : 15
+Durée des trajets            : 1708.900 u.t.
+Durée des attentes           : 212.200 u.t.
+Durée des services           : 1000.000 u.t.
+DURÉE TOTALE                 : 2921.100 u.t.
+Durée de référence           : 2991.600 u.t.
+Type de référence            : Plan public DISTANCE réévalué en DURÉE, non optimalité temporelle
+Source de référence          : data/instances/RC101.sol
+Comparaison à la référence   : Référence dépassée — solution améliorante validée
+Gap certifié                 : NON DISPONIBLE
+Temps CPU résolution         : 4.938 s
+Temps réel résolution        : 5.001 s
+Temps total processus        : 6.152 s
+Budget demandé               : 5.000 s
+Garde-fou processus          : 120.000 s
+Dépassement budget demandé   : 0.001 s
+Contraintes                  : VALIDÉES
+Solution améliorante vérifiée ; référence heuristique dépassée, sans preuve d’optimalité.
+
+RÉSULTATS COMPARÉS POUR CETTE INSTANCE ET CETTE GRAINE
+
+COMPARAISON — classement en durée réalisable, par instance et graine
+Budgets de recherche et temps totaux sont distincts ; échecs non classés.
+Instance / n / graine | Méthode | Durée | Faisable | Véhicules | Réel(s) | CPU(s) | Budget(s) | Comparaison / statut | Rang
+RC101 / 100 / 4101 | ils | 2917.700 | OUI | 15 | 5.027 | 5.016 | 5.000 | Référence dépassée — solution améliorante validée | 1
+RC101 / 100 / 4101 | size_based | 2921.100 | OUI | 15 | 5.001 | 4.938 | 5.000 | Référence dépassée — solution améliorante validée | 2
+Meilleure(s) méthode(s) sur ce cas/essai : ils
+
+INITIAL / RENFORCÉ — mêmes instances et graines
+Initial = notre ILS autonome. Renforcé = size_based, intégrant la recherche locale et éventuellement le HGS externes PyVRP.
+Gain durée = 100 × (durée ILS − durée renforcée) / durée ILS ; ce gain entre méthodes n’est pas le gap à la référence.
+Budget demandé identique si fourni par la commande ; ILS : recherche + construction, renforcé : total souple. Comparer aussi réel et CPU.
+Instance / n / graine | Durée initiale | Durée renforcée | Gain durée (%) | Réel initial/renforcé (s) | CPU initial/renforcé (s) | Conclusion
+RC101 / 100 / 4101 | 2917.700 | 2921.100 | -0.117 | 5.027 / 5.001 | 5.016 / 4.938 | ILS initial meilleur
+
+========================================================================
+TEST CVRPTW
+========================================================================
+Instance                     : RC201
+Famille                      : RC2
+Nombre de clients            : 100
+Méthode                      : ils — ILS autonome, opérateurs propres
+Moteur exécuté               : ils
+Graine                       : 4101
+FAISABILITÉ                  : OUI
+Statut                       : feasible
+Véhicules utilisés           : 4
+Durée des trajets            : 1817.300 u.t.
+Durée des attentes           : 218.900 u.t.
+Durée des services           : 1000.000 u.t.
+DURÉE TOTALE                 : 3036.200 u.t.
+Durée de référence           : 6505.300 u.t.
+Type de référence            : Plan public DISTANCE réévalué en DURÉE, non optimalité temporelle
+Source de référence          : data/instances/RC201.sol
+Comparaison à la référence   : Référence dépassée — solution améliorante validée
+Gap certifié                 : NON DISPONIBLE
+Temps CPU résolution         : 5.016 s
+Temps réel résolution        : 5.028 s
+Temps total processus        : 6.191 s
+Budget demandé               : 5.000 s
+Garde-fou processus          : 120.000 s
+Dépassement budget demandé   : 0.028 s
+Contraintes                  : VALIDÉES
+Solution améliorante vérifiée ; référence heuristique dépassée, sans preuve d’optimalité.
+
+========================================================================
+TEST CVRPTW
+========================================================================
+Instance                     : RC201
+Famille                      : RC2
+Nombre de clients            : 100
+Méthode                      : size_based — Sélection v2 : construction + LS PyVRP + ILS jusqu’à 100 clients ; renforcé puis HGS externe au-delà
+Moteur exécuté               : construction_ls_ils
+Graine                       : 4101
+FAISABILITÉ                  : OUI
+Statut                       : feasible
+Véhicules utilisés           : 4
+Durée des trajets            : 1949.400 u.t.
+Durée des attentes           : 111.700 u.t.
+Durée des services           : 1000.000 u.t.
+DURÉE TOTALE                 : 3061.100 u.t.
+Durée de référence           : 6505.300 u.t.
+Type de référence            : Plan public DISTANCE réévalué en DURÉE, non optimalité temporelle
+Source de référence          : data/instances/RC201.sol
+Comparaison à la référence   : Référence dépassée — solution améliorante validée
+Gap certifié                 : NON DISPONIBLE
+Temps CPU résolution         : 4.891 s
+Temps réel résolution        : 5.001 s
+Temps total processus        : 6.133 s
+Budget demandé               : 5.000 s
+Garde-fou processus          : 120.000 s
+Dépassement budget demandé   : 0.001 s
+Contraintes                  : VALIDÉES
+Solution améliorante vérifiée ; référence heuristique dépassée, sans preuve d’optimalité.
+
+RÉSULTATS COMPARÉS POUR CETTE INSTANCE ET CETTE GRAINE
+
+COMPARAISON — classement en durée réalisable, par instance et graine
+Budgets de recherche et temps totaux sont distincts ; échecs non classés.
+Instance / n / graine | Méthode | Durée | Faisable | Véhicules | Réel(s) | CPU(s) | Budget(s) | Comparaison / statut | Rang
+RC201 / 100 / 4101 | ils | 3036.200 | OUI | 4 | 5.028 | 5.016 | 5.000 | Référence dépassée — solution améliorante validée | 1
+RC201 / 100 / 4101 | size_based | 3061.100 | OUI | 4 | 5.001 | 4.891 | 5.000 | Référence dépassée — solution améliorante validée | 2
+Meilleure(s) méthode(s) sur ce cas/essai : ils
+
+INITIAL / RENFORCÉ — mêmes instances et graines
+Initial = notre ILS autonome. Renforcé = size_based, intégrant la recherche locale et éventuellement le HGS externes PyVRP.
+Gain durée = 100 × (durée ILS − durée renforcée) / durée ILS ; ce gain entre méthodes n’est pas le gap à la référence.
+Budget demandé identique si fourni par la commande ; ILS : recherche + construction, renforcé : total souple. Comparer aussi réel et CPU.
+Instance / n / graine | Durée initiale | Durée renforcée | Gain durée (%) | Réel initial/renforcé (s) | CPU initial/renforcé (s) | Conclusion
+RC201 / 100 / 4101 | 3036.200 | 3061.100 | -0.820 | 5.028 / 5.001 | 5.016 / 4.891 | ILS initial meilleur
+
+COMPARAISON — classement en durée réalisable, par instance et graine
+Budgets de recherche et temps totaux sont distincts ; échecs non classés.
+Instance / n / graine | Méthode | Durée | Faisable | Véhicules | Réel(s) | CPU(s) | Budget(s) | Comparaison / statut | Rang
+C101 / 100 / 4101 | size_based | 9827.300 | OUI | 10 | 5.001 | 2.453 | 5.000 | Référence égalée — optimalité non démontrée | 1
+C101 / 100 / 4101 | ils | 9961.000 | OUI | 11 | 5.026 | 5.031 | 5.000 | 1.3605 % | 2
+Meilleure(s) méthode(s) sur ce cas/essai : size_based
+C201 / 100 / 4101 | ils | 9589.100 | OUI | 3 | 5.026 | 5.016 | 5.000 | Référence égalée — optimalité non démontrée | 1
+C201 / 100 / 4101 | size_based | 9589.100 | OUI | 3 | 5.001 | 4.953 | 5.000 | Référence égalée — optimalité non démontrée | 1
+Meilleure(s) méthode(s) sur ce cas/essai : ils, size_based
+R101 / 100 / 4101 | ils | 3399.200 | OUI | 19 | 5.028 | 5.000 | 5.000 | Référence dépassée — solution améliorante validée | 1
+R101 / 100 / 4101 | size_based | 3399.200 | OUI | 19 | 5.001 | 4.938 | 5.000 | Référence dépassée — solution améliorante validée | 1
+Meilleure(s) méthode(s) sur ce cas/essai : ils, size_based
+R201 / 100 / 4101 | size_based | 2902.200 | OUI | 4 | 5.001 | 4.891 | 5.000 | Référence dépassée — solution améliorante validée | 1
+R201 / 100 / 4101 | ils | 3014.800 | OUI | 4 | 5.029 | 5.031 | 5.000 | Référence dépassée — solution améliorante validée | 2
+Meilleure(s) méthode(s) sur ce cas/essai : size_based
+RC101 / 100 / 4101 | ils | 2917.700 | OUI | 15 | 5.027 | 5.016 | 5.000 | Référence dépassée — solution améliorante validée | 1
+RC101 / 100 / 4101 | size_based | 2921.100 | OUI | 15 | 5.001 | 4.938 | 5.000 | Référence dépassée — solution améliorante validée | 2
+Meilleure(s) méthode(s) sur ce cas/essai : ils
+RC201 / 100 / 4101 | ils | 3036.200 | OUI | 4 | 5.028 | 5.016 | 5.000 | Référence dépassée — solution améliorante validée | 1
+RC201 / 100 / 4101 | size_based | 3061.100 | OUI | 4 | 5.001 | 4.891 | 5.000 | Référence dépassée — solution améliorante validée | 2
+Meilleure(s) méthode(s) sur ce cas/essai : ils
+
+INITIAL / RENFORCÉ — mêmes instances et graines
+Initial = notre ILS autonome. Renforcé = size_based, intégrant la recherche locale et éventuellement le HGS externes PyVRP.
+Gain durée = 100 × (durée ILS − durée renforcée) / durée ILS ; ce gain entre méthodes n’est pas le gap à la référence.
+Budget demandé identique si fourni par la commande ; ILS : recherche + construction, renforcé : total souple. Comparer aussi réel et CPU.
+Instance / n / graine | Durée initiale | Durée renforcée | Gain durée (%) | Réel initial/renforcé (s) | CPU initial/renforcé (s) | Conclusion
+C101 / 100 / 4101 | 9961.000 | 9827.300 | 1.342 | 5.026 / 5.001 | 5.031 / 2.453 | Renforcé meilleur
+C201 / 100 / 4101 | 9589.100 | 9589.100 | 0.000 | 5.026 / 5.001 | 5.016 / 4.953 | Égalité de durée
+R101 / 100 / 4101 | 3399.200 | 3399.200 | 0.000 | 5.028 / 5.001 | 5.000 / 4.938 | Égalité de durée
+R201 / 100 / 4101 | 3014.800 | 2902.200 | 3.735 | 5.029 / 5.001 | 5.031 / 4.891 | Renforcé meilleur
+RC101 / 100 / 4101 | 2917.700 | 2921.100 | -0.117 | 5.027 / 5.001 | 5.016 / 4.938 | ILS initial meilleur
+RC201 / 100 / 4101 | 3036.200 | 3061.100 | -0.820 | 5.028 / 5.001 | 5.016 / 4.891 | ILS initial meilleur
+
+BILAN : 12/12 réalisables.
+CSV : C:\Users\user\Downloads\CVRPTW_REMISE_PROF_20261112T203928\results\local\verification_env_six_familles\RESULTATS.csv
+Label : verification_env_six_familles
