@@ -60,7 +60,7 @@ consultables dans l’audit ; aucune mesure historique n’est effacée.
 
 ```powershell
 python scripts/test_instances.py --instances RC101 --seconds 5 --label verification_RC101
-python scripts/test_instances.py --all --sizes 25 50 100 --seconds 5 --workers 2 --label correction_petites
+python scripts/test_instances.py --all --sizes 25 50 100 --method size_based --seconds 5 --workers 2 --label correction_petites
 python scripts/test_instances.py --instances C2_10_2 C2_10_7 --seconds 60 --label verification_grandes
 ```
 

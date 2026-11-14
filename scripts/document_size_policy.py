@@ -87,7 +87,7 @@ consultables dans l’audit ; aucune mesure historique n’est effacée.
 
 ```powershell
 python scripts/test_instances.py --instances RC101 --seconds 5 --label verification_RC101
-python scripts/test_instances.py --all --sizes 25 50 100 --seconds 5 --workers 2 --label correction_petites
+python scripts/test_instances.py --all --sizes 25 50 100 --method size_based --seconds 5 --workers 2 --label correction_petites
 python scripts/test_instances.py --instances C2_10_2 C2_10_7 --seconds 60 --label verification_grandes
 ```
 
@@ -136,7 +136,7 @@ pas la robustesse du résultat sur toutes les instances de grande taille.
     nbformat.validate(nb);nbformat.write(nb,path);write_markdown(nb)
     notice='''## Configuration actuelle des commandes : sélection par taille
 
-Le profil par défaut `size_based` est en version 2 : construction regret-2,
+Le profil renforcé `size_based` est en version 2 : construction regret-2,
 recherche locale **PyVRP externe** puis notre ILS jusqu’à 100 clients ; profil
 renforcé puis HGS externe selon le temps restant au-delà. La meilleure durée
 est conservée à chaque étape.

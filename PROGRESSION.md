@@ -1,5 +1,33 @@
 # Progression — finalisation CVRPTW CESI
 
+## 14 novembre 2026 — comparaison automatique initial / renforcé
+
+- Les commandes sans méthode explicite lancent désormais `ils` et `size_based`
+  sur chaque instance/graine. Une option `--method` explicite conserve le mode
+  à un seul moteur. Deux méthodes impliquent deux résolutions, pas un seul run.
+- Le tableau terminal montre pour chaque méthode durée, faisabilité, flotte,
+  comparaison au témoin, réel, CPU et budget. Un second tableau calcule le gain
+  signé entre méthodes, distinct du gap à la référence ; égalités, régressions
+  et échecs ne sont pas masqués. CSV apparié sauvegardé et relecture disponible.
+- Le budget ILS reste un budget de recherche avec construction en supplément ;
+  celui du renforcé est un total souple. Les temps mesurés restent explicites,
+  sans présenter ces configurations comme un temps total strictement égal.
+- Démonstrations : RC101, C204, R109 (100 clients, 5 s) et C2_10_7 (1000,
+  30 s), graine 4101, un processus : huit solutions réalisables, contrôlées
+  indépendamment ainsi que leurs références et les empreintes de sources.
+- C2_10_7 : ILS 124703,9 / 33,37 s, renforcé 112338,0 / 29,60 s, gain de
+  durée 9,9162 %. Au plan témoin : +16,6111 % contre +5,0477 %.
+- Petits cas : renforcé meilleur sur C204 ; ILS légèrement meilleur sur R109
+  et RC101. Ces résultats sont conservés : pas de supériorité universelle annoncée.
+- Tests : **229 réussis, 2 ignorés**. Syntaxe PowerShell vérifiée ; le script
+  de démonstration utilise aussi les deux moteurs sauf `-Method` explicite.
+- Preuves : `results/terminal_comparison/`, guide
+  `docs/COMPARAISON_INITIAL_RENFORCE.md`. Notebook réexécuté : seize cellules,
+  zéro erreur, 32,68 s. Validations statique et présentation réussies ; HTML
+  et copie notebook à envoyer synchronisés. Sauvegarde par commit local,
+  sans push, ZIP, Word ou PDF.
+- Reprise : `python scripts/finalize_static.py --execute --validate`.
+
 ## 14 novembre 2026 — correction du profil de test et audit des dépassements
 
 - Cause RC101 identifiée : le défaut v1 appelait la construction seule sur les

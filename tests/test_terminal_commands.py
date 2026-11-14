@@ -3,7 +3,7 @@ import json
 from pathlib import Path
 import pytest
 from scripts import terminal_support as terminal
-from scripts.run_benchmark import parser,replay
+from scripts.run_benchmark import parser,replay,selected_methods
 
 
 def test_default_selection_is_one_c101_not_whole_catalogue():
@@ -71,6 +71,39 @@ def test_cli_aliases_accept_legacy_usage():
     assert args.method=='duration_refined'
     args=parser().parse_args(['--instance','C101','--size','25','--methods','ils','refined'])
     assert args.sizes==[25] and args.methods==['ils','refined']
+
+
+def test_default_executes_initial_and_reinforced_but_explicit_method_stays_single():
+    assert selected_methods(parser().parse_args([]))==['ils','size_based']
+    assert selected_methods(parser().parse_args(['--method','size_based']))==['size_based']
+    assert selected_methods(parser().parse_args(['--method','duration_refined']))==['refined']
+    with pytest.raises(ValueError):
+        selected_methods(parser().parse_args(['--method','ils','--methods','size_based']))
+
+
+@pytest.mark.parametrize('cost,expected,conclusion',[(90,10,'Renforcé meilleur'),
+    (100,0,'Égalité de durée'),(110,-10,'ILS initial meilleur')])
+def test_paired_gain_is_separate_from_reference_gap_and_keeps_regressions(cost,expected,conclusion):
+    base=dict(instance='manual',n=2,seed=4101,valid=True,wall_s=5,cpu_s=4,
+              requested_seconds=5,reference_duration=50,vehicles=1)
+    rows=[dict(base,method='ils',duration=100),dict(base,method='size_based',duration=cost)]
+    pair=terminal.paired_comparisons(rows)[0]
+    assert pair['duration_gain_pct']==pytest.approx(expected)
+    assert pair['conclusion']==conclusion
+    assert pair['initial_comparison']=='100.0000 %'
+    text=terminal.comparison(rows)
+    assert 'CPU(s)' in text and 'INITIAL / RENFORCÉ' in text and conclusion in text
+
+
+def test_failed_pair_has_no_invented_gain_and_csv_is_saved(tmp_path):
+    base=dict(instance='manual',n=2,seed=4101,wall_s=1,cpu_s=1,
+              requested_seconds=5,reference_duration=100,vehicles=1)
+    rows=[dict(base,method='ils',duration=None,valid=False),
+          dict(base,method='size_based',duration=90,valid=True)]
+    pair=terminal.paired_comparisons(rows)[0]
+    assert pair['duration_gain_pct'] is None and 'échec' in pair['conclusion']
+    terminal.save_tables(tmp_path,[dict(measurement=r) for r in rows],2)
+    assert (tmp_path/'COMPARAISON_INITIAL_RENFORCE.csv').is_file()
 
 
 def test_failed_results_keep_na_and_are_not_ranked(tmp_path):

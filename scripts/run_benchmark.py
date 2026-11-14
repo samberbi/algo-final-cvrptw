@@ -77,8 +77,8 @@ def parser():
     p.add_argument('--progressive',action='store_true',help='Un cas C1 par taille, sauf familles explicites')
     p.add_argument('--all',action='store_true',dest='all_cases',help='Toutes les instances correspondant à la sélection explicite')
     p.add_argument('--limit',type=int)
-    p.add_argument('--method',choices=support.METHODS+['duration_refined'])
-    p.add_argument('--methods',nargs='+',choices=support.METHODS+['duration_refined'])
+    p.add_argument('--method',choices=support.METHODS+['duration_refined'],help='Une seule méthode ; sinon comparaison ILS initial / renforcé par défaut')
+    p.add_argument('--methods',nargs='+',choices=support.METHODS+['duration_refined'],help='Méthodes explicites ; défaut : ils size_based')
     p.add_argument('--seconds',type=float,default=5.)
     p.add_argument('--max-seconds',type=float,default=120.,help='Garde-fou CPU et réel, processus et préchauffage compris')
     p.add_argument('--seeds',nargs='+',type=int,default=[4101])
@@ -92,6 +92,14 @@ def parser():
     return p
 
 
+def selected_methods(args):
+    """Une méthode explicite reste seule ; sinon exécuter les deux vrais moteurs."""
+    if args.method and args.methods:
+        raise ValueError('Choisir --method ou --methods')
+    requested=args.methods or ([args.method] if args.method else ['ils',support.DEFAULT_METHOD])
+    return list(dict.fromkeys('refined' if m=='duration_refined' else m for m in requested))
+
+
 def main(argv=None):
     if hasattr(sys.stdout,'reconfigure'):sys.stdout.reconfigure(encoding='utf-8',errors='replace')
     p=parser();args=p.parse_args(argv)
@@ -103,13 +111,14 @@ def main(argv=None):
         or not 0<args.seconds<=args.max_seconds or args.workers<1
         or (args.limit is not None and args.limit<1) or any(not 0<=s<2**31 for s in args.seeds)):
         p.error('Budgets positifs finis, budget <= garde-fou, graines sur 31 bits et workers/limit positifs requis')
-    if args.method and args.methods:p.error('Choisir --method ou --methods')
-    methods=list(dict.fromkeys('refined' if m=='duration_refined' else m for m in (args.methods or [args.method or support.DEFAULT_METHOD])))
+    try:methods=selected_methods(args)
+    except ValueError as error:p.error(str(error))
     try:
         entries=support.select_cases(support.catalog(),args.instances,args.sizes,args.families,args.progressive,args.all_cases,args.limit)
     except (ValueError,FileNotFoundError) as error:p.error(str(error))
     jobs=[(entry,method,seed) for entry in entries for seed in sorted(set(args.seeds)) for method in methods]
     print(f'{len(entries)} instances ; {len(jobs)} résolutions ; {args.workers} processus maximum',flush=True)
+    print('Méthodes exécutées : '+', '.join(methods),flush=True)
     print('Départs zéro ; trajets fixes/symétriques ; objectif trajets + attentes + services, retour compris.',flush=True)
     if args.dry_run:
         for entry in entries:print(f"{entry['instance']}:{entry['n']} | {entry['family']} | {entry['path']}")

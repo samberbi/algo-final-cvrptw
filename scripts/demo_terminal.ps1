@@ -19,7 +19,14 @@ if (-not $Python) {
 }
 Push-Location -LiteralPath $projectDirectory
 try {
-    & $Python -X utf8 scripts/test_instances.py --instances $Instance --size $Size --seconds $Seconds --method $Method --show-routes --label soutenance_demo
+    $benchmarkArguments = @('-X', 'utf8', 'scripts/test_instances.py', '--instances', $Instance,
+        '--size', $Size, '--seconds', $Seconds, '--show-routes', '--label', 'soutenance_demo')
+    if ($PSBoundParameters.ContainsKey('Method')) {
+        $benchmarkArguments += @('--method', $Method)
+    } else {
+        $benchmarkArguments += @('--methods', 'ils', 'size_based')
+    }
+    & $Python @benchmarkArguments
     if ($LASTEXITCODE -ne 0) {
         throw 'La commande a signalé un échec. Lire le statut et le dossier sauvegardé dans le terminal.'
     }

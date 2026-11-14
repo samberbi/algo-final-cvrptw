@@ -21,6 +21,8 @@ def main():
     scripts=['figures_final_static.py','recenter_final_static.py','complete_final_static_report.py']
     if (ROOT/'results/policy_v2_audit/AUDIT.json').exists():
         scripts.append('document_size_policy.py')
+    if (ROOT/'results/terminal_comparison/comparaison_initial_renforce_v1/VALIDATION.json').exists():
+        scripts.append('document_initial_comparison.py')
     if (ROOT/'results/presentation_status/AUDIT.json').exists():
         # Reclasser les comparaisons après génération, avant exécution du notebook.
         scripts.append('present_gap_status.py')

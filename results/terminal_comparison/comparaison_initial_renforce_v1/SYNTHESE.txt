@@ -1,0 +1,31 @@
+
+COMPARAISON — classement en durée réalisable, par instance et graine
+Budgets de recherche et temps totaux sont distincts ; échecs non classés.
+Instance / n / graine | Méthode | Durée | Faisable | Véhicules | Réel(s) | CPU(s) | Budget(s) | Comparaison / statut | Rang
+C204 / 100 / 4101 | size_based | 9738.300 | OUI | 3 | 5.001 | 4.969 | 5.000 | 1.5665 % | 1
+C204 / 100 / 4101 | ils | 9793.600 | OUI | 4 | 5.032 | 5.031 | 5.000 | 2.1433 % | 2
+Meilleure(s) méthode(s) sur ce cas/essai : size_based
+R109 / 100 / 4101 | ils | 2394.600 | OUI | 14 | 5.027 | 5.016 | 5.000 | Référence dépassée — solution améliorante validée | 1
+R109 / 100 / 4101 | size_based | 2420.700 | OUI | 14 | 5.001 | 4.891 | 5.000 | 0.1241 % | 2
+Meilleure(s) méthode(s) sur ce cas/essai : ils
+RC101 / 100 / 4101 | ils | 2917.700 | OUI | 15 | 5.030 | 5.031 | 5.000 | Référence dépassée — solution améliorante validée | 1
+RC101 / 100 / 4101 | size_based | 2921.100 | OUI | 15 | 5.002 | 4.875 | 5.000 | Référence dépassée — solution améliorante validée | 2
+Meilleure(s) méthode(s) sur ce cas/essai : ils
+
+INITIAL / RENFORCÉ — mêmes instances et graines
+Initial = notre ILS autonome. Renforcé = size_based, intégrant la recherche locale et éventuellement le HGS externes PyVRP.
+Gain durée = 100 × (durée ILS − durée renforcée) / durée ILS ; ce gain entre méthodes n’est pas le gap à la référence.
+Budget demandé identique si fourni par la commande ; ILS : recherche + construction, renforcé : total souple. Comparer aussi réel et CPU.
+Instance / n / graine | Durée initiale | Durée renforcée | Gain durée (%) | Réel initial/renforcé (s) | CPU initial/renforcé (s) | Conclusion
+C204 / 100 / 4101 | 9793.600 | 9738.300 | 0.565 | 5.032 / 5.001 | 5.031 / 4.969 | Renforcé meilleur
+R109 / 100 / 4101 | 2394.600 | 2420.700 | -1.090 | 5.027 / 5.001 | 5.016 / 4.891 | ILS initial meilleur
+RC101 / 100 / 4101 | 2917.700 | 2921.100 | -0.117 | 5.030 / 5.002 | 5.031 / 4.875 | ILS initial meilleur
+
+{
+  "completed": 6,
+  "valid": 6,
+  "failed": 0,
+  "batch_wall_s": 38.60193549992982,
+  "resolution_cpu_sum_s": 29.8125,
+  "note": "Signed gap against feasible reference, not a certified duration optimum. Warmup excluded from solve time but included in process guard."
+}

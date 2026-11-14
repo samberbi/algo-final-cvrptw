@@ -8587,7 +8587,7 @@ supérieurs à 6 % et les échecs restent visibles ; aucun pourcentage n'est pla
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=b1b585ab">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=0f8446af">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -10240,13 +10240,7 @@ présente pas cette distribution filtrée comme celle du catalogue complet.</p>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>Covariance</pre>
-</div>
-</div>
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre> 284197949.8013 Pearson 0.9131048308422159 a 1.0512282348000792 b -13752.399983180032 R² 0.8337604321073924
+<pre>Covariance 284197949.8013 Pearson 0.9131048308422159 a 1.0512282348000792 b -13752.399983180032 R² 0.8337604321073924
 SCT 21499478574.316 SCR 17925414546.205322 SCE 3574064028.110669
 </pre>
 </div>
@@ -12290,7 +12284,7 @@ les tournées, les chronologies d’amélioration, les budgets et les sources so
 conservés dans <code>results/policy_v2_audit/</code>. Les anciens dépassements restent
 consultables dans l’audit ; aucune mesure historique n’est effacée.</p>
 <div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">scripts</span><span class="p">/</span><span class="n">test_instances</span><span class="p">.</span><span class="n">py</span> <span class="p">-</span><span class="n">-instances</span> <span class="n">RC101</span> <span class="p">-</span><span class="n">-seconds</span> <span class="n">5</span> <span class="p">-</span><span class="n">-label</span> <span class="n">verification_RC101</span>
-<span class="n">python</span> <span class="n">scripts</span><span class="p">/</span><span class="n">test_instances</span><span class="p">.</span><span class="n">py</span> <span class="p">-</span><span class="n">-all</span> <span class="p">-</span><span class="n">-sizes</span> <span class="n">25</span> <span class="n">50</span> <span class="n">100</span> <span class="p">-</span><span class="n">-seconds</span> <span class="n">5</span> <span class="p">-</span><span class="n">-workers</span> <span class="n">2</span> <span class="p">-</span><span class="n">-label</span> <span class="n">correction_petites</span>
+<span class="n">python</span> <span class="n">scripts</span><span class="p">/</span><span class="n">test_instances</span><span class="p">.</span><span class="n">py</span> <span class="p">-</span><span class="n">-all</span> <span class="p">-</span><span class="n">-sizes</span> <span class="n">25</span> <span class="n">50</span> <span class="n">100</span> <span class="p">-</span><span class="n">-method</span> <span class="n">size_based</span> <span class="p">-</span><span class="n">-seconds</span> <span class="n">5</span> <span class="p">-</span><span class="n">-workers</span> <span class="n">2</span> <span class="p">-</span><span class="n">-label</span> <span class="n">correction_petites</span>
 <span class="n">python</span> <span class="n">scripts</span><span class="p">/</span><span class="n">test_instances</span><span class="p">.</span><span class="n">py</span> <span class="p">-</span><span class="n">-instances</span> <span class="n">C2_10_2</span> <span class="n">C2_10_7</span> <span class="p">-</span><span class="n">-seconds</span> <span class="n">60</span> <span class="p">-</span><span class="n">-label</span> <span class="n">verification_grandes</span>
 </pre></div>
 <p>Le moteur réellement exécuté et son attribution sont affichés dans le terminal.
@@ -12495,6 +12489,128 @@ natifs et la surveillance peuvent dépasser légèrement un budget ; le
 dépassement est mesuré. L'arrêt surveillé ne promet pas une borne stricte
 à l'instant exact. Les références manquantes sont affichées NON DISPONIBLE,
 sans invalider une solution réalisable ; les pourcentages signés sont conservés.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=a1ee69f3">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<h2 id="Comparaison-automatique-:-ILS-initial-et-profil-renforc%C3%A9">Comparaison automatique : ILS initial et profil renforcé<a class="anchor-link" href="#Comparaison-automatique-:-ILS-initial-et-profil-renforc%C3%A9">¶</a></h2><p>Sans <code>--method</code> ou <code>--methods</code>, chaque commande exécute maintenant <strong>deux
+résolutions par instance et par graine</strong> : notre <code>ils</code> autonome, puis le profil
+hybride <code>size_based</code>. Le renforcé utilise la recherche locale externe PyVRP
+et, sur les grands cas selon le temps restant, son HGS. Ces contributions sont
+attribuées à la bibliothèque. L'initial n'est pas une construction seule.</p>
+<p>Le terminal affiche pour chaque moteur la durée complète, la faisabilité,
+la flotte, la référence et l'écart compatible, le temps réel, le CPU et le
+budget demandé. Un second tableau donne le gain entre méthodes :</p>
+<p><code>gain = 100 × (durée ILS initial − durée renforcée) / durée ILS initial</code>.</p>
+<p>Ce gain n'est pas le gap au plan témoin. Une valeur positive signifie que le
+renforcé améliore l'ILS ; une égalité ou une régression reste explicitement
+affichée. Un échec interdit de chiffrer le gain. Nous ne sélectionnons pas une
+mauvaise exécution de l'initial pour rendre le renforcé artificiellement meilleur.</p>
+<p><strong>Budgets :</strong> <code>--seconds</code> s'applique séparément à chaque moteur. Pour l'ILS,
+la construction s'ajoute au budget de recherche ; le renforcé utilise un
+budget total souple. Le même paramètre ne constitue donc pas un temps total
+strictement égal. Les temps réellement mesurés sont affichés pour juger le
+compromis qualité/coût. Le garde-fou de 120 secondes concerne chaque processus,
+pas la somme des deux méthodes. Par défaut, les exécutions sont séquentielles.</p>
+<div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">scripts</span><span class="p">/</span><span class="n">test_instances</span><span class="p">.</span><span class="n">py</span> <span class="p">-</span><span class="n">-instances</span> <span class="n">RC101</span> <span class="p">-</span><span class="n">-methods</span> <span class="n">ils</span> <span class="n">size_based</span> <span class="p">-</span><span class="n">-seconds</span> <span class="n">5</span> <span class="p">-</span><span class="n">-label</span> <span class="n">comparaison_RC1</span>
+<span class="n">python</span> <span class="n">scripts</span><span class="p">/</span><span class="n">test_instances</span><span class="p">.</span><span class="n">py</span> <span class="p">-</span><span class="n">-instances</span> <span class="n">C101</span> <span class="n">C201</span> <span class="p">-</span><span class="n">-methods</span> <span class="n">ils</span> <span class="n">size_based</span> <span class="p">-</span><span class="n">-seconds</span> <span class="n">5</span> <span class="p">-</span><span class="n">-label</span> <span class="n">comparaison_C</span>
+<span class="n">python</span> <span class="n">scripts</span><span class="p">/</span><span class="n">test_instances</span><span class="p">.</span><span class="n">py</span> <span class="p">-</span><span class="n">-instances</span> <span class="n">R101</span> <span class="n">R201</span> <span class="p">-</span><span class="n">-methods</span> <span class="n">ils</span> <span class="n">size_based</span> <span class="p">-</span><span class="n">-seconds</span> <span class="n">5</span> <span class="p">-</span><span class="n">-label</span> <span class="n">comparaison_R</span>
+<span class="n">python</span> <span class="n">scripts</span><span class="p">/</span><span class="n">test_instances</span><span class="p">.</span><span class="n">py</span> <span class="p">-</span><span class="n">-instances</span> <span class="n">RC101</span> <span class="n">RC201</span> <span class="p">-</span><span class="n">-methods</span> <span class="n">ils</span> <span class="n">size_based</span> <span class="p">-</span><span class="n">-seconds</span> <span class="n">5</span> <span class="p">-</span><span class="n">-label</span> <span class="n">comparaison_RC</span>
+<span class="n">python</span> <span class="n">scripts</span><span class="p">/</span><span class="n">test_instances</span><span class="p">.</span><span class="n">py</span> <span class="p">-</span><span class="n">-instances</span> <span class="n">C2_10_7</span> <span class="p">-</span><span class="n">-methods</span> <span class="n">ils</span> <span class="n">size_based</span> <span class="p">-</span><span class="n">-seconds</span> <span class="n">60</span> <span class="p">-</span><span class="n">-label</span> <span class="n">comparaison_1000</span>
+</pre></div>
+<p>Le couple <code>--methods ils size_based</code> est explicite ici, mais il est désormais
+le défaut lorsqu'aucune méthode n'est donnée. Pour une seule résolution,
+utiliser <code>--method size_based</code> ou <code>--method ils</code>. Les labels déjà utilisés
+reçoivent automatiquement un suffixe, sans écraser les résultats antérieurs.</p>
+<p>Les fichiers <code>RESULTATS.csv</code>, <code>SYNTHESE.txt</code> et
+<code>COMPARAISON_INITIAL_RENFORCE.csv</code> sont sauvegardés dans le dossier annoncé.
+<code>--show-results &lt;label&gt;</code> réaffiche aussi le comparatif, sans relancer les moteurs.</p>
+<p><strong>Essai de vérification réellement exécuté :</strong> RC101, C204 et R109 à 100
+clients, graine 4101, cinq secondes demandées par moteur, un processus.
+Les six solutions et leurs références ont été recalculées indépendamment.
+Un contrôle complémentaire de C2_10_7 à 1000 clients utilise trente secondes
+par moteur, avec la même graine et le même ordre d'exécution séquentiel.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">instance</th>
+<th style="text-align:right">n</th>
+<th style="text-align:right">initial_requested_s</th>
+<th style="text-align:right">initial_duration</th>
+<th style="text-align:right">reinforced_duration</th>
+<th style="text-align:right">duration_gain_pct</th>
+<th style="text-align:right">initial_wall_s</th>
+<th style="text-align:right">reinforced_wall_s</th>
+<th style="text-align:right">initial_cpu_s</th>
+<th style="text-align:right">reinforced_cpu_s</th>
+<th style="text-align:left">conclusion</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">C204</td>
+<td style="text-align:right">100</td>
+<td style="text-align:right">5.0000</td>
+<td style="text-align:right">9793.6000</td>
+<td style="text-align:right">9738.3000</td>
+<td style="text-align:right">0.5647</td>
+<td style="text-align:right">5.0316</td>
+<td style="text-align:right">5.0013</td>
+<td style="text-align:right">5.0312</td>
+<td style="text-align:right">4.9688</td>
+<td style="text-align:left">Renforcé meilleur</td>
+</tr>
+<tr>
+<td style="text-align:left">C2_10_7</td>
+<td style="text-align:right">1000</td>
+<td style="text-align:right">30.0000</td>
+<td style="text-align:right">124703.9000</td>
+<td style="text-align:right">112338.0000</td>
+<td style="text-align:right">9.9162</td>
+<td style="text-align:right">33.3713</td>
+<td style="text-align:right">29.5966</td>
+<td style="text-align:right">33.3594</td>
+<td style="text-align:right">29.4531</td>
+<td style="text-align:left">Renforcé meilleur</td>
+</tr>
+<tr>
+<td style="text-align:left">R109</td>
+<td style="text-align:right">100</td>
+<td style="text-align:right">5.0000</td>
+<td style="text-align:right">2394.6000</td>
+<td style="text-align:right">2420.7000</td>
+<td style="text-align:right">-1.0900</td>
+<td style="text-align:right">5.0274</td>
+<td style="text-align:right">5.0014</td>
+<td style="text-align:right">5.0156</td>
+<td style="text-align:right">4.8906</td>
+<td style="text-align:left">ILS initial meilleur</td>
+</tr>
+<tr>
+<td style="text-align:left">RC101</td>
+<td style="text-align:right">100</td>
+<td style="text-align:right">5.0000</td>
+<td style="text-align:right">2917.7000</td>
+<td style="text-align:right">2921.1000</td>
+<td style="text-align:right">-0.1165</td>
+<td style="text-align:right">5.0299</td>
+<td style="text-align:right">5.0015</td>
+<td style="text-align:right">5.0312</td>
+<td style="text-align:right">4.8750</td>
+<td style="text-align:left">ILS initial meilleur</td>
+</tr>
+</tbody>
+</table>
+<p>Les résultats de ces cas restent un contrôle de fonctionnement des
+commandes. Ils ne constituent pas une nouvelle preuve statistique de supériorité
+universelle. Les tournées et sources sont dans
+<code>results/terminal_comparison/</code>.</p>
 </div>
 </div>
 </div>

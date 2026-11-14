@@ -344,6 +344,11 @@ PowerShell réellement testées. Les scripts `test_instances.py` et
 anciennes reprises restent conservées ; les algorithmes et les résultats
 historiques ne sont pas remplacés.
 
+Les nouvelles commandes sans méthode explicite exécutent `ils` et `size_based`
+pour chaque instance/graine. Le comparatif distingue le gain entre moteurs
+de l'écart au plan témoin, avec les temps réel et CPU de chaque méthode.
+Une option `--method` explicite permet toujours de ne lancer qu'un moteur.
+
 ```powershell
 python scripts/test_instances.py --instances C101 --size 25 --seconds 5 --show-routes
 python scripts/run_benchmark.py --progressive --seconds 5 --label commandes_terminal_runs_progressif

@@ -263,10 +263,43 @@ def show(record,show_routes=False):
                 print(f"  retour au dépôt : {metrics['routes'][index-1]['duration']/10:.2f}",flush=True)
 
 
+def paired_comparisons(rows):
+    """Gain signé entre deux méthodes, distinct de l'écart à la référence externe.
+
+    Une valeur négative est conservée : le renforcé n'est pas toujours meilleur.
+    Les échecs et l'absence d'une méthode empêchent tout gain chiffré.
+    """
+    pairs=[]
+    keys=sorted({(r['instance'],r.get('n'),r['seed']) for r in rows},key=str)
+    for key in keys:
+        group={r['method']:r for r in rows if (r['instance'],r.get('n'),r['seed'])==key}
+        if 'ils' not in group or 'size_based' not in group:continue
+        initial,strong=group['ils'],group['size_based']
+        usable=initial['valid'] and strong['valid']
+        gain=initial['duration']-strong['duration'] if usable else None
+        pct=100*gain/initial['duration'] if usable and initial['duration']>0 else None
+        conclusion=('Renforcé meilleur' if gain is not None and gain>1e-8 else
+                    'Égalité de durée' if gain is not None and abs(gain)<=1e-8 else
+                    'ILS initial meilleur' if gain is not None else
+                    'Comparaison incomplète : au moins un échec')
+        pairs.append(dict(instance=key[0],n=key[1],seed=key[2],
+            initial_method='ils',reinforced_method='size_based',
+            initial_valid=initial['valid'],reinforced_valid=strong['valid'],
+            initial_duration=initial.get('duration'),reinforced_duration=strong.get('duration'),
+            initial_comparison=present(initial.get('duration'),initial.get('reference_duration'),valid=initial['valid']),
+            reinforced_comparison=present(strong.get('duration'),strong.get('reference_duration'),valid=strong['valid']),
+            duration_gain=gain,duration_gain_pct=pct,
+            initial_wall_s=initial.get('wall_s'),reinforced_wall_s=strong.get('wall_s'),
+            initial_cpu_s=initial.get('cpu_s'),reinforced_cpu_s=strong.get('cpu_s'),
+            initial_requested_s=initial.get('requested_seconds'),reinforced_requested_s=strong.get('requested_seconds'),
+            conclusion=conclusion))
+    return pairs
+
+
 def comparison(rows):
     lines=['\nCOMPARAISON — classement en durée réalisable, par instance et graine',
            'Budgets de recherche et temps totaux sont distincts ; échecs non classés.',
-           'Instance / n / graine | Méthode | Durée | Faisable | Véhicules | Réel(s) | Budget(s) | Comparaison / statut | Rang']
+           'Instance / n / graine | Méthode | Durée | Faisable | Véhicules | Réel(s) | CPU(s) | Budget(s) | Comparaison / statut | Rang']
     keys=sorted({(r['instance'],r.get('n'),r['seed']) for r in rows},key=str)
     for key in keys:
         group=[r for r in rows if (r['instance'],r.get('n'),r['seed'])==key]
@@ -275,10 +308,21 @@ def comparison(rows):
             rank=str(costs.index(r['duration'])+1) if r['valid'] else '—'
             lines.append(f"{key[0]} / {key[1]} / {key[2]} | {r['method']} | {number(r.get('duration'))} | "
                 f"{'OUI' if r['valid'] else 'NON'} | {r.get('vehicles') or '—'} | {number(r.get('wall_s'))} | "
-                f"{number(r.get('requested_seconds'))} | {present(r.get('duration'),r.get('reference_duration'),valid=r['valid'])} | {rank}")
+                f"{number(r.get('cpu_s'))} | {number(r.get('requested_seconds'))} | {present(r.get('duration'),r.get('reference_duration'),valid=r['valid'])} | {rank}")
         best=[r['method'] for r in group if r['valid'] and r['duration']==costs[0]] if costs else []
         lines.append('Meilleure(s) méthode(s) sur ce cas/essai : '+(', '.join(best) if best else 'aucune solution réalisable'))
         if len(group)==1:lines.append('Une seule méthode exécutée : le rang ne constitue pas un jugement de qualité.')
+    pairs=paired_comparisons(rows)
+    if pairs:
+        lines.extend(['\nINITIAL / RENFORCÉ — mêmes instances et graines',
+            'Initial = notre ILS autonome. Renforcé = size_based, intégrant la recherche locale et éventuellement le HGS externes PyVRP.',
+            'Gain durée = 100 × (durée ILS − durée renforcée) / durée ILS ; ce gain entre méthodes n’est pas le gap à la référence.',
+            'Budget demandé identique si fourni par la commande ; ILS : recherche + construction, renforcé : total souple. Comparer aussi réel et CPU.',
+            'Instance / n / graine | Durée initiale | Durée renforcée | Gain durée (%) | Réel initial/renforcé (s) | CPU initial/renforcé (s) | Conclusion'])
+        for p in pairs:
+            lines.append(f"{p['instance']} / {p['n']} / {p['seed']} | {number(p['initial_duration'])} | {number(p['reinforced_duration'])} | "
+                f"{number(p['duration_gain_pct'])} | {number(p['initial_wall_s'])} / {number(p['reinforced_wall_s'])} | "
+                f"{number(p['initial_cpu_s'])} / {number(p['reinforced_cpu_s'])} | {p['conclusion']}")
     return '\n'.join(lines)
 
 
@@ -292,5 +336,9 @@ def save_tables(folder,records,batch_wall_s):
         note='Signed gap against feasible reference, not a certified duration optimum. Warmup excluded from solve time but included in process guard.')
     dump(folder/'BILAN.json',summary)
     text=comparison(rows)
+    pairs=paired_comparisons(rows)
+    if pairs:
+        with (folder/'COMPARAISON_INITIAL_RENFORCE.csv').open('w',newline='',encoding='utf-8-sig') as stream:
+            writer=csv.DictWriter(stream,fieldnames=list(pairs[0]));writer.writeheader();writer.writerows(pairs)
     (folder/'SYNTHESE.txt').write_text(text+'\n\n'+json.dumps(summary,ensure_ascii=False,indent=2),encoding='utf-8')
     return text

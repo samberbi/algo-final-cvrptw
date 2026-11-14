@@ -1,8 +1,15 @@
 # CVRPTW — Minimisation de la durée totale
 
+## Comparaison automatique : ILS initial et profil renforcé
+
+Les commandes sans méthode explicite exécutent désormais `ils` **et**
+`size_based` : deux résolutions par instance/graine, avec tableau de durées,
+écarts au témoin et temps, puis gain signé entre méthodes. Les égalités,
+régressions et échecs sont conservés. Pour un seul moteur : `--method size_based`.
+Voir [COMPARAISON_INITIAL_RENFORCE.md](docs/COMPARAISON_INITIAL_RENFORCE.md).
 ## Configuration actuelle des commandes : sélection par taille
 
-Le profil par défaut `size_based` est en version 2 : construction regret-2,
+Le profil renforcé `size_based` est en version 2 : construction regret-2,
 recherche locale **PyVRP externe** puis notre ILS jusqu’à 100 clients ; profil
 renforcé puis HGS externe selon le temps restant au-delà. La meilleure durée
 est conservée à chaque étape.
