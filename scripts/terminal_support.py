@@ -17,8 +17,10 @@ from algo.comparison_status import present
 ROOT=Path(__file__).resolve().parents[1]
 SIZES=[25,50,100,200,400,600,800,1000]
 FAMILIES=['C1','C2','R1','R2','RC1','RC2']
-METHODS=['construction','ils','sa','pyvrp','hybrid','refined','refined_no_partition','refined_ils','ortools']
+METHODS=['size_based','construction','ils','sa','pyvrp','hybrid','refined','refined_no_partition','refined_ils','ortools']
+DEFAULT_METHOD='size_based'
 METHOD_LABELS={
+    'size_based':'Sélection par taille : construction seule jusqu’à 100 clients, renforcé au-delà',
     'construction':'Construction propre regret-2',
     'ils':'ILS autonome, opérateurs propres',
     'sa':'Recuit autonome, opérateurs propres',
@@ -130,10 +132,12 @@ def worker(entry,method,seconds,seed,target):
     started=cpu=None
     try:
         ins=load_case(entry)
-        if method not in ['pyvrp','ortools']:
+        from algo.size_policy import selected_method
+        effective=selected_method(ins.n) if method=='size_based' else method
+        if effective not in ['pyvrp','ortools']:
             from algo.duration import warmup
             warmup()
-        if method.startswith('refined'):
+        if effective.startswith('refined'):
             from algo.iterated import arrays
             from algo.savings import savings_construct
             from algo.sequential import sequential_insert
@@ -142,7 +146,10 @@ def worker(entry,method,seconds,seed,target):
             savings_construct(*arrays(small),small.vehicles,1,0.)
             sequential_insert(*arrays(small),small.vehicles,1,1.,.5,0)
         started,cpu=time.perf_counter(),time.process_time()
-        if method=='refined':
+        if method=='size_based':
+            from algo.size_policy import solve
+            result=solve(ins,seed=seed,seconds=seconds)
+        elif method=='refined':
             from algo.duration_refine import solve
             result=solve(ins,seed=seed,seconds=seconds)
         else:
@@ -152,7 +159,7 @@ def worker(entry,method,seconds,seed,target):
         if metrics is not None:result.update(metrics=metrics,cost=metrics['duration']/10)
         elapsed,used=time.perf_counter()-started,time.process_time()-cpu
         record=dict(result=result,valid=metrics is not None,wall_s=elapsed,cpu_s=used,
-                    status=result.get('status','error'),timing_scope='solve_and_final_verification')
+                    selected_method=effective,status=result.get('status','error'),timing_scope='solve_and_final_verification')
     except Exception as error:
         record=dict(valid=False,status='error',result=dict(routes=None,status='error',error=repr(error)),
             error=traceback.format_exc(),wall_s=time.perf_counter()-(started or process_start),
@@ -203,7 +210,7 @@ def row_from(record,reference):
     duration=metrics.get('duration',0)/10 if r['valid'] else None
     ref=reference.get('duration')
     delta=100*(duration/ref-1) if duration is not None and ref is not None and ref>0 else None
-    row={k:r.get(k) for k in ['instance','family','n','method','seed','valid','status','wall_s','cpu_s',
+    row={k:r.get(k) for k in ['instance','family','n','method','selected_method','seed','valid','status','wall_s','cpu_s',
                             'requested_seconds','process_wall_s','process_cpu_s','timing_scope','guard_s']}
     row.update(duration=duration,vehicles=metrics.get('vehicles'),
         travel=metrics.get('travel',0)/10 if r['valid'] else None,
@@ -224,7 +231,8 @@ def number(value,suffix='',signed=False):
 def show(record,show_routes=False):
     r=record['measurement']
     values=[('Instance',r['instance']),('Famille',r.get('family',family(r['instance']))),
-        ('Nombre de clients',r.get('n','NON DISPONIBLE')),('Méthode',r['method']+' — '+METHOD_LABELS.get(r['method'],r['method'])),('Graine',r['seed']),
+        ('Nombre de clients',r.get('n','NON DISPONIBLE')),('Méthode',r['method']+' — '+METHOD_LABELS.get(r['method'],r['method'])),
+        ('Moteur exécuté',r.get('selected_method') or r['method']),('Graine',r['seed']),
         ('FAISABILITÉ','OUI' if r['valid'] else 'NON'),('Statut',r.get('status','historique')),
         ('Véhicules utilisés',r.get('vehicles') if r['valid'] else 'NON DISPONIBLE'),
         ('Durée des trajets',number(r.get('travel'),' u.t.')),('Durée des attentes',number(r.get('waiting'),' u.t.')),

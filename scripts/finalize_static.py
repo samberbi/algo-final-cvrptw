@@ -19,6 +19,9 @@ def main():
         with (folder/'CONSOLE_RAPPORT.txt').open('w',encoding='utf-8') as out,redirect_stdout(out):
             report(folder)
     scripts=['figures_final_static.py','recenter_final_static.py','complete_final_static_report.py']
+    if ((ROOT/'results/local/selection_par_taille_validation/RESULTATS.csv').exists()
+        or (ROOT/'results/size_policy/selection_par_taille_validation/VALIDATION.json').exists()):
+        scripts.append('document_size_policy.py')
     if (ROOT/'results/presentation_status/AUDIT.json').exists():
         # Reclasser les comparaisons après génération, avant exécution du notebook.
         scripts.append('present_gap_status.py')

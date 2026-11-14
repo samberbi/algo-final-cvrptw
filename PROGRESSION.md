@@ -363,6 +363,31 @@ et résultats de cette passe sauvegardés ; aucun push demandé.
 - Relecture/validation des résultats : `python scripts/report_simplified_variant.py`.
   Ce rapport est une étude séparée, non une réécriture du benchmark principal.
 
+## Nouvelle configuration de test : sélection par taille
+
+- Profil `size_based` ajouté ; nouveau défaut des commandes `test_instances.py`
+  et `run_benchmark.py`. Seuil déclaré avant le pilote : **au plus 100 clients,
+  construction seule (12 tentatives)** ; **plus de 100, renforcé existant**.
+  Les moteurs exécutés sont affichés et enregistrés dans `selected_method`.
+- La décision dépend uniquement du nombre de clients, jamais d'une référence
+  ou d'un gap. Les contraintes et le coût durée complète sont conservés.
+- Les moteurs historiques et leurs API restent disponibles ; aucun résultat
+  historique n'est renommé comme résultat de la nouvelle sélection.
+- Pilote réel : six instances 25/50/100/200/1000, graine 4101, budget demandé
+  cinq secondes : **6/6 réalisables**, coûts et références revérifiés depuis
+  les coordonnées par le calculateur indépendant.
+- C101/25 : construction, +8,4925 % ; C101/50 : construction, +1,1826 % ;
+  C101/100 : construction, +5,0848 % ; C1_10_6/1000 : renforcé, +5,0452 %.
+  C1_2_1/200 et R2_10_8/1000 améliorent leurs témoins réalisables.
+  Aucun intervalle de gap garanti ni référence supposée optimale.
+- Tests complets : **222 réussites, deux modules optionnels ignorés** ;
+  seuil 100/101, sélection, graines/budgets et métadonnées contrôlés.
+- Rapport et tableau : `docs/SELECTION_PAR_TAILLE.md` ; preuves et sources :
+  `results/size_policy/selection_par_taille_validation/`.
+- Notebook : nouvelle section 6.14, introduction et guide terminal mis à jour.
+  Pour forcer le profil historique sur petit cas : `--method refined`.
+  Pour expliciter le nouveau choix : `--method size_based`.
+
 ## Tableau complet des écarts conservés
 
 - Export sans nouvelle résolution : `scripts/export_all_gaps.py`.

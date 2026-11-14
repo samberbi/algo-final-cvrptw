@@ -1,0 +1,38 @@
+{
+  "validated": true,
+  "policy": "size_based",
+  "small_max_clients": 100,
+  "small_engine": "construction",
+  "large_engine": "refined",
+  "selection_uses_only_n": true,
+  "checked_trials": 6,
+  "feasible": 6,
+  "input_instances": [
+    {
+      "instance": "C101",
+      "n": 100
+    },
+    {
+      "instance": "C101",
+      "n": 25
+    },
+    {
+      "instance": "C101",
+      "n": 50
+    },
+    {
+      "instance": "C1_10_6",
+      "n": 1000
+    },
+    {
+      "instance": "C1_2_1",
+      "n": 200
+    },
+    {
+      "instance": "R2_10_8",
+      "n": 1000
+    }
+  ],
+  "no_target_gap_guarantee": true,
+  "original_engine_implementations_changed": false
+}

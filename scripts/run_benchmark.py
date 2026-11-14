@@ -104,7 +104,7 @@ def main(argv=None):
         or (args.limit is not None and args.limit<1) or any(not 0<=s<2**31 for s in args.seeds)):
         p.error('Budgets positifs finis, budget <= garde-fou, graines sur 31 bits et workers/limit positifs requis')
     if args.method and args.methods:p.error('Choisir --method ou --methods')
-    methods=list(dict.fromkeys('refined' if m=='duration_refined' else m for m in (args.methods or [args.method or 'refined'])))
+    methods=list(dict.fromkeys('refined' if m=='duration_refined' else m for m in (args.methods or [args.method or support.DEFAULT_METHOD])))
     try:
         entries=support.select_cases(support.catalog(),args.instances,args.sizes,args.families,args.progressive,args.all_cases,args.limit)
     except (ValueError,FileNotFoundError) as error:p.error(str(error))
@@ -130,6 +130,9 @@ def main(argv=None):
         packages={name:importlib.metadata.version(name) for name in ['numpy','numba','scipy','pyvrp','psutil']},
         budget='Search plus construction/setup for ILS/SA/hybrid/PyVRP; refined soft total. Guard CPU and wall includes process startup/loading/warmup.',
         reference='Read after solve; public duration or cached independent OR-Tools. No certified Phonin gap.')
+    if 'size_based' in methods:
+        protocol['size_selection_policy']=dict(small_max_clients=100,small_engine='construction',large_engine='refined',
+            selection_uses='number_of_clients_only',no_reference_or_gap_used=True)
     support.dump(folder/'protocol.json',protocol)
     raw=folder/'raw';raw.mkdir()
     records=[];batch=time.perf_counter()
