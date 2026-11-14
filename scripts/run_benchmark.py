@@ -131,7 +131,7 @@ def main(argv=None):
         budget='Search plus construction/setup for ILS/SA/hybrid/PyVRP; refined soft total. Guard CPU and wall includes process startup/loading/warmup.',
         reference='Read after solve; public duration or cached independent OR-Tools. No certified Phonin gap.')
     if 'size_based' in methods:
-        protocol['size_selection_policy']=dict(small_max_clients=100,small_engine='construction',large_engine='refined',
+        protocol['size_selection_policy']=dict(version=2,small_max_clients=100,small_engine='construction_ls_ils',large_engine='refined_hgs',
             selection_uses='number_of_clients_only',no_reference_or_gap_used=True)
     support.dump(folder/'protocol.json',protocol)
     raw=folder/'raw';raw.mkdir()

@@ -7805,7 +7805,7 @@ a.anchor-link {
 <h1 id="Livrable-final-%E2%80%94-CVRPTW-:-minimisation-de-la-dur%C3%A9e-totale">Livrable final — CVRPTW : minimisation de la durée totale<a class="anchor-link" href="#Livrable-final-%E2%80%94-CVRPTW-:-minimisation-de-la-dur%C3%A9e-totale">¶</a></h1><p><strong>CESI — Algorithmique et optimisation — 13 novembre 2026</strong></p>
 <p><strong>Contexte métier.</strong> Dans le cadre de la réponse de CesiCDP à l'appel de l'ADEME, nous étudions l'organisation de livraisons réalisées par une flotte homogène. Il faut servir les clients dans les créneaux convenus, respecter la charge des camions et limiter le temps total mobilisé. L'enjeu opérationnel est de réduire les trajets et attentes évitables tout en maintenant la faisabilité des livraisons. La durée est notre indicateur d'optimisation ; nous ne calculons pas ici une réduction d'émissions de CO₂, qui nécessiterait un modèle énergétique distinct.</p>
 <p>Nous cherchons des tournées livrant chaque client exactement une fois, respectant la capacité, les fenêtres strictes et la fermeture du dépôt. Notre objectif est la <strong>somme des durées des tournées</strong>, avec trajets, attentes et services, pour des départs fixés à zéro. Le temps d’exécution du solveur est mesuré séparément.</p>
-<p>Les expériences historiques comparent notre constructeur et notre ILS aux hybrides intégrant le moteur externe <strong>PyVRP 0.12.2</strong>, explicitement attribué à ses auteurs. La nouvelle configuration des commandes choisit la construction seule jusqu’à 100 clients et notre profil renforcé au-delà ; son fonctionnement et son pilote sont documentés en section 6.14. Les expériences utilisent les données Solomon et Gehring–Homberger, sans les modifier. Conformément aux hypothèses professorales confirmées, les temps de trajet sont fixes et symétriques. Les fenêtres concernent le début des services.</p>
+<p>Les expériences historiques comparent notre constructeur et notre ILS aux hybrides intégrant le moteur externe <strong>PyVRP 0.12.2</strong>, explicitement attribué à ses auteurs. La nouvelle configuration des commandes choisit la construction suivie de la recherche locale PyVRP et de notre ILS jusqu’à 100 clients et notre profil renforcé suivi du HGS externe selon le temps restant au-delà ; son fonctionnement et son pilote sont documentés en section 6.14. Les expériences utilisent les données Solomon et Gehring–Homberger, sans les modifier. Conformément aux hypothèses professorales confirmées, les temps de trajet sont fixes et symétriques. Les fenêtres concernent le début des services.</p>
 <p>Le rapport présente successivement le problème, sa formulation, l’algorithme, le protocole, les statistiques descriptives et les limites. Les fichiers individuels permettent de vérifier les solutions et les calculs.</p>
 <!-- RESULTATS_ACTUELS_DUREE_BEGIN -->
 <p><strong>Archive actuelle.</strong> 472 solutions réalisables sur 356 instances, à budgets différents : 364 références dépassées, 24 références égalées et 84 écarts positifs. La moyenne conditionnelle des seuls écarts positifs est 2.5957 %, avec un maximum de 5.7589 %. Ces indicateurs ne certifient pas un gap à l’optimum temporel sur toutes les instances. Le tableau des effectifs et les mesures originales permettent de vérifier le périmètre de chaque résultat.</p>
@@ -8587,7 +8587,7 @@ supérieurs à 6 % et les échecs restent visibles ; aucun pourcentage n'est pla
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=6895b61c">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=b1b585ab">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -12190,127 +12190,165 @@ exacte serait incapable de résoudre C101/25 avec un modèle ou budget différen
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h3 id="6.14.-Nouvelle-configuration-:-s%C3%A9lection-explicite-selon-la-taille">6.14. Nouvelle configuration : sélection explicite selon la taille<a class="anchor-link" href="#6.14.-Nouvelle-configuration-:-s%C3%A9lection-explicite-selon-la-taille">¶</a></h3><p>Les nouvelles commandes de test utilisent le profil <code>size_based</code> par défaut :</p>
+<h3 id="6.14.-Correction-du-profil-de-test-:-pr%C3%A9server-la-meilleure-dur%C3%A9e">6.14. Correction du profil de test : préserver la meilleure durée<a class="anchor-link" href="#6.14.-Correction-du-profil-de-test-:-pr%C3%A9server-la-meilleure-dur%C3%A9e">¶</a></h3><p>Le premier sélecteur utilisait la construction seule jusqu’à 100 clients.
+Cette variante rapide était une ablation, mais son emploi par défaut faisait
+perdre de la qualité : RC101/100, graine 4101, coûtait 3 335,2 unités de temps
+contre 2 991,6 pour le plan public réévalué, soit +11,4855 %. Son rang 1
+signifiait seulement qu’une seule méthode avait été lancée.</p>
+<p><strong>La version 2 corrige cette cause algorithmique.</strong> Jusqu’à 100 clients, elle
+construit douze candidats regret-2, conserve le meilleur, applique la recherche
+locale externe PyVRP avec 40, 80 puis 120 voisins tant que le budget le permet,
+puis consacre le temps restant à notre ILS et ses opérateurs propres. Chaque
+étape est vérifiée et conserve une durée au plus égale à celle de l’étape
+précédente. Les tournées initiales et finales sont archivées pour le contrôler.
+Le calcul ne lit aucune référence ni cible de gap. Ce profil est hybride :
+la recherche locale PyVRP n’est pas présentée comme notre implémentation.</p>
+<p>Au-delà de 100 clients, le profil renforcé fournit d’abord une solution :
+constructions propres, recherche locale PyVRP et partitionnement sur un pool
+de tournées par HiGHS. Son budget est limité à cinq secondes (ou au budget
+demandé s’il est inférieur). Avec plus de deux secondes restantes, une
+continuation <strong>HGS externe PyVRP</strong>, à 60 voisins, reçoit cette solution.
+Une seconde est réservée à la préparation ; le temps réellement mesuré reste
+affiché car cette réserve n’est pas une garantie stricte. Les contraintes et
+la durée complète sont revérifiées, et aucune solution moins bonne n’est retenue.
+Le seuil dépend uniquement du nombre de clients. Les moteurs historiques,
+leurs résultats et la première ablation restent disponibles ; ils ne sont pas
+réétiquetés comme des résultats de la version 2.</p>
+<p><strong>Campagne réellement exécutée : 72 essais</strong>, une graine (4101), budget souple
+de cinq secondes, deux processus indépendants : les 56 Solomon à 100 clients
+et les 16 préfixes disponibles à 25/50 clients. Chaque solution et chaque plan
+de référence sont recalculés indépendamment depuis les coordonnées originales,
+avec contrôle de couverture, capacité, fenêtres, retour au dépôt et flotte.
+Le budget demandé et le temps total mesuré restent distincts.</p>
 <table>
 <thead>
 <tr>
-<th>Taille</th>
-<th>Moteur choisi</th>
+<th>Clients</th>
+<th>Essais</th>
+<th>Réalisables</th>
+<th>Référence_améliorée</th>
+<th>Référence_égalée</th>
+<th>Sans_référence</th>
+<th>Écarts_positifs / statut</th>
+<th>Au_dessus_de_6</th>
+<th>Moyenne_positive_pct</th>
+<th>Réel_moyen_s</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Au plus 100 clients</td>
-<td>Construction regret-2 seule, douze tentatives</td>
+<td>25</td>
+<td>8</td>
+<td>8</td>
+<td>0</td>
+<td>3</td>
+<td>5</td>
+<td>Référence égalée — optimalité non démontrée</td>
+<td>0</td>
+<td>Sans écart positif</td>
+<td>5.0006</td>
 </tr>
 <tr>
-<td>Plus de 100 clients</td>
-<td>Profil renforcé existant : constructions propres, recherche locale PyVRP et partitionnement HiGHS</td>
+<td>50</td>
+<td>8</td>
+<td>8</td>
+<td>0</td>
+<td>1</td>
+<td>7</td>
+<td>Référence égalée — optimalité non démontrée</td>
+<td>0</td>
+<td>Sans écart positif</td>
+<td>5.0008</td>
+</tr>
+<tr>
+<td>100</td>
+<td>56</td>
+<td>56</td>
+<td>41</td>
+<td>8</td>
+<td>0</td>
+<td>7.0000 %</td>
+<td>0</td>
+<td>0.40340650973485254</td>
+<td>5.0014</td>
 </tr>
 </tbody>
 </table>
-<p>Le seuil de 100 est une règle déclarée avant les mesures, alignée sur la
-séparation des petites tailles Solomon et des grandes tailles testées. Ce
-sélecteur n'est pas une nouvelle métaheuristique : il choisit un moteur existant.
-Il ne consulte ni référence, ni coût cible, ni gap. Aucune solution n'est rejetée
-ou détériorée pour forcer son écart dans un intervalle.</p>
-<p>Pour les petits cas, cette configuration privilégie une construction rapide.
-Elle peut être moins bonne que notre ILS ou le renforcé : cette perte de qualité
-est mesurée, pas masquée. La variante ne garantit pas le seuil académique. Les
-ILS et recuit autonomes restent disponibles, ainsi que les anciens hybrides.
-Le code des deux moteurs sélectionnés reste inchangé ; ils minimisent toujours
-la durée complète avec les mêmes contraintes. L'API et les campagnes historiques
-conservent leurs configurations pour la reproductibilité. Les résultats déjà
-enregistrés ne sont pas réétiquetés comme résultats de cette nouvelle sélection.</p>
-<p><strong>Vérification réellement exécutée.</strong> Six instances, une graine (4101), budget
-demandé cinq secondes. Les choix, les tournées et les coûts ont été revérifiés
-indépendamment. Sur les petits cas, la construction s'arrête après douze
-tentatives ; sur les grands cas, le renforcé utilise un budget total souple.
-Les limites de temps et dépassements éventuels sont ceux mesurés, pas des valeurs
-artificiellement plafonnées. Le garde-fou par processus reste 120 secondes.</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:left">Instance</th>
-<th style="text-align:right">Clients</th>
-<th style="text-align:left">Moteur</th>
-<th style="text-align:right">Duree</th>
-<th style="text-align:left">Comparaison</th>
-<th style="text-align:right">CPU_s</th>
-<th style="text-align:right">Reel_s</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left">C101</td>
-<td style="text-align:right">25</td>
-<td style="text-align:left">construction</td>
-<td style="text-align:right">2846.3000</td>
-<td style="text-align:left">8.4925 %</td>
-<td style="text-align:right">0.0000</td>
-<td style="text-align:right">0.0045</td>
-</tr>
-<tr>
-<td style="text-align:left">C101</td>
-<td style="text-align:right">50</td>
-<td style="text-align:left">construction</td>
-<td style="text-align:right">5013.7000</td>
-<td style="text-align:left">1.1826 %</td>
-<td style="text-align:right">0.0156</td>
-<td style="text-align:right">0.0100</td>
-</tr>
-<tr>
-<td style="text-align:left">C101</td>
-<td style="text-align:right">100</td>
-<td style="text-align:left">construction</td>
-<td style="text-align:right">10327.0000</td>
-<td style="text-align:left">5.0848 %</td>
-<td style="text-align:right">0.0312</td>
-<td style="text-align:right">0.0309</td>
-</tr>
-<tr>
-<td style="text-align:left">C1_2_1</td>
-<td style="text-align:right">200</td>
-<td style="text-align:left">refined</td>
-<td style="text-align:right">20760.7000</td>
-<td style="text-align:left">Référence dépassée — solution améliorante validée</td>
-<td style="text-align:right">0.8125</td>
-<td style="text-align:right">1.0026</td>
-</tr>
-<tr>
-<td style="text-align:left">C1_10_6</td>
-<td style="text-align:right">1000</td>
-<td style="text-align:left">refined</td>
-<td style="text-align:right">140502.9000</td>
-<td style="text-align:left">5.0452 %</td>
-<td style="text-align:right">4.7031</td>
-<td style="text-align:right">5.0072</td>
-</tr>
-<tr>
-<td style="text-align:left">R2_10_8</td>
-<td style="text-align:right">1000</td>
-<td style="text-align:left">refined</td>
-<td style="text-align:right">86097.4000</td>
-<td style="text-align:left">Référence dépassée — solution améliorante validée</td>
-<td style="text-align:right">4.7344</td>
-<td style="text-align:right">5.0475</td>
-</tr>
-</tbody>
-</table>
-<p>Les références sont OR-Tools enregistré pour C101/25 et C101/50, puis les plans
-publics optimisés en distance et réévalués en durée. Ce ne sont pas des optima
-temporels démontrés ; les statuts de comparaison gardent donc cette qualification.
-Le dépassement de six pour cent observé sur C101/25 est conservé. Ce petit pilote
-ne démontre pas la performance du sélecteur sur tous les scénarios.</p>
-<div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">scripts</span><span class="p">/</span><span class="n">test_instances</span><span class="p">.</span><span class="n">py</span> <span class="p">-</span><span class="n">-instances</span> <span class="n">C101</span><span class="p">:</span><span class="n">25</span> <span class="n">C101</span><span class="p">:</span><span class="n">50</span> <span class="n">C101</span><span class="p">:</span><span class="n">100</span> <span class="n">C1_2_1</span><span class="p">:</span><span class="n">200</span> <span class="n">C1_10_6</span><span class="p">:</span><span class="n">1000</span> <span class="n">R2_10_8</span><span class="p">:</span><span class="n">1000</span> <span class="p">-</span><span class="n">-seconds</span> <span class="n">5</span> <span class="p">-</span><span class="n">-label</span> <span class="n">selection_par_taille_validation</span>
-<span class="n">python</span> <span class="n">scripts</span><span class="p">/</span><span class="n">test_instances</span><span class="p">.</span><span class="n">py</span> <span class="p">-</span><span class="n">-instances</span> <span class="n">C101</span> <span class="p">-</span><span class="n">-method</span> <span class="n">refined</span> <span class="p">-</span><span class="n">-seconds</span> <span class="n">5</span>
+<p>Sur RC101/100, la nouvelle durée est <strong>2921.1</strong>, contre
+3335.2 à la construction : réduction réelle de
+414.1 unités, soit 12.42 %.
+Elle améliore le comparateur heuristique réévalué. Ce résultat ne prouve pas
+un optimum temporel et ne reçoit pas un faux écart positif.</p>
+<p>La moyenne indiquée est conditionnelle aux seuls écarts strictement positifs :
+les autres effectifs sont affichés séparément. Les références sont des plans
+publics optimisés en distance puis réévalués en durée, ou des solutions OR-Tools
+indépendantes pour les petits préfixes ; aucune n’est déclarée optimum temporel.
+Une égalité de coût ne constitue donc pas une preuve d’optimalité.</p>
+<p>L’absence de dépassement dans ces 72 essais ne garantit pas le résultat de
+toute graine ou de toute grande instance. Les tableaux complets avant/après,
+les tournées, les chronologies d’amélioration, les budgets et les sources sont
+conservés dans <code>results/policy_v2_audit/</code>. Les anciens dépassements restent
+consultables dans l’audit ; aucune mesure historique n’est effacée.</p>
+<div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">scripts</span><span class="p">/</span><span class="n">test_instances</span><span class="p">.</span><span class="n">py</span> <span class="p">-</span><span class="n">-instances</span> <span class="n">RC101</span> <span class="p">-</span><span class="n">-seconds</span> <span class="n">5</span> <span class="p">-</span><span class="n">-label</span> <span class="n">verification_RC101</span>
+<span class="n">python</span> <span class="n">scripts</span><span class="p">/</span><span class="n">test_instances</span><span class="p">.</span><span class="n">py</span> <span class="p">-</span><span class="n">-all</span> <span class="p">-</span><span class="n">-sizes</span> <span class="n">25</span> <span class="n">50</span> <span class="n">100</span> <span class="p">-</span><span class="n">-seconds</span> <span class="n">5</span> <span class="p">-</span><span class="n">-workers</span> <span class="n">2</span> <span class="p">-</span><span class="n">-label</span> <span class="n">correction_petites</span>
+<span class="n">python</span> <span class="n">scripts</span><span class="p">/</span><span class="n">test_instances</span><span class="p">.</span><span class="n">py</span> <span class="p">-</span><span class="n">-instances</span> <span class="n">C2_10_2</span> <span class="n">C2_10_7</span> <span class="p">-</span><span class="n">-seconds</span> <span class="n">60</span> <span class="p">-</span><span class="n">-label</span> <span class="n">verification_grandes</span>
 </pre></div>
-<p>La première commande explicite la sélection (également active sans <code>--method</code>).
-La seconde force le profil renforcé, y compris sur une petite instance. Les
-sorties affichent <code>size_based</code> et <strong>Moteur exécuté</strong>, conservés aussi dans les
-CSV/JSON. Les résultats et sources de ce pilote sont dans
-<code>results/size_policy/selection_par_taille_validation/</code>.</p>
-<p><strong>Tests après ajout du sélecteur : 222 réussites</strong>, deux modules optionnels ignorés. Les bornes 100/101 et le transfert des paramètres aux moteurs sont contrôlés.</p>
+<p>Le moteur réellement exécuté et son attribution sont affichés dans le terminal.
+Le garde-fou du processus est de 120 secondes ; les dépassements éventuels du
+budget souple restent mesurés, sans plafonnement artificiel.</p>
+<p><strong>Contrôle ciblé à 1 000 clients.</strong> Le profil renforcé fini s’arrêtait après
+environ cinq secondes malgré un budget de trente secondes. Sur C2_10_2 et
+C2_10_7, nous testons maintenant le pipeline avec un budget de soixante
+secondes, graine 4101. Les coûts « avant » sont les solutions initiales
+réellement transmises au HGS pendant ces mêmes essais, et non des solutions
+choisies après coup. Deux processus ont été utilisés. Le coût et le temps
+incluent le profil initial et la continuation ; préparation et contrôle
+du processus restent distingués dans les fichiers JSON.</p>
+<table>
+<thead>
+<tr>
+<th>instance</th>
+<th>n</th>
+<th>initial_duration</th>
+<th>duration</th>
+<th>reference</th>
+<th>initial_delta_pct / statut</th>
+<th>signed_delta_pct / statut</th>
+<th>wall_s</th>
+<th>cpu_s</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>C2_10_2</td>
+<td>1000</td>
+<td>115983.7000</td>
+<td>111539.1000</td>
+<td>109395.8000</td>
+<td>Voir répartition par statut et statistiques conditionnelles</td>
+<td>Voir répartition par statut et statistiques conditionnelles</td>
+<td>59.6041</td>
+<td>58.8438</td>
+</tr>
+<tr>
+<td>C2_10_7</td>
+<td>1000</td>
+<td>115159.9000</td>
+<td>111486.9000</td>
+<td>106940.0000</td>
+<td>Voir répartition par statut et statistiques conditionnelles</td>
+<td>Voir répartition par statut et statistiques conditionnelles</td>
+<td>59.7897</td>
+<td>58.5156</td>
+</tr>
+</tbody>
+</table>
+<p>Le gain provient d’une exploration HGS supplémentaire sur une population
+initialisée avec notre solution réalisable. Il n’est pas attribué à l’ILS
+autonome. Cette comparaison montre le bénéfice de cette continuation sur
+ces deux cas, avec une augmentation du temps effectivement utilisé ; elle
+n’isole pas un avantage à temps de calcul égal. Une seule graine ne démontre
+pas la robustesse du résultat sur toutes les instances de grande taille.</p>
 </div>
 </div>
 </div>

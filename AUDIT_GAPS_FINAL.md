@@ -1,5 +1,11 @@
 # Audit des comparaisons négatives et nulles — annexe technique
 
+**Complément du 14 novembre 2026 :** les nouvelles corrections algorithmiques,
+72 petits essais et deux continuations HGS ciblées sont documentés séparément
+dans [CORRECTION_DEPASSEMENTS.md](results/policy_v2_audit/CORRECTION_DEPASSEMENTS.md).
+Les 166 enregistrements du terminal ont également été contrôlés sans anomalie.
+Le tableau ci-dessous reste l'audit historique, sans réécriture de ses coûts.
+
 Les pourcentages originaux ci-dessous sont conservés pour la traçabilité ;
 ils ne sont pas transformés en faux pourcentages positifs. Le livrable principal
 utilise des statuts pour ces cas et des statistiques conditionnelles explicites.

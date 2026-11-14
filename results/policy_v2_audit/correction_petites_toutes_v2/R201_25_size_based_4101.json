@@ -1,0 +1,340 @@
+{
+  "schema": "terminal_v2",
+  "measurement": {
+    "instance": "R201",
+    "family": "R2",
+    "n": 25,
+    "method": "size_based",
+    "selected_method": "construction_ls_ils",
+    "seed": 4101,
+    "valid": true,
+    "status": "feasible",
+    "wall_s": 5.000670999987051,
+    "cpu_s": 4.953125,
+    "requested_seconds": 5.0,
+    "process_wall_s": 6.526962000061758,
+    "process_cpu_s": 5.703125,
+    "timing_scope": "solve_and_final_verification",
+    "guard_s": 120.0,
+    "duration": 1345.9,
+    "vehicles": 2,
+    "travel": 736.8,
+    "waiting": 359.1,
+    "service": 250.0,
+    "reference_duration": null,
+    "reference_type": "NON DISPONIBLE",
+    "reference_source": null,
+    "delta_reference_pct": null,
+    "gap_duree_pct": null,
+    "certified_gap_pct": null,
+    "overrun_s": 0.0006709999870508909,
+    "error": null
+  },
+  "result": {
+    "status": "feasible",
+    "routes": [
+      [
+        14,
+        5,
+        15,
+        12,
+        19,
+        11,
+        7,
+        9,
+        6,
+        22,
+        3,
+        10,
+        20,
+        4,
+        13,
+        17,
+        1,
+        24,
+        25
+      ],
+      [
+        2,
+        21,
+        23,
+        16,
+        18,
+        8
+      ]
+    ],
+    "construction": {
+      "seconds": 0.003963200026191771,
+      "attempts": 12,
+      "duration": 2403.7
+    },
+    "trace": [
+      {
+        "phase": "construction",
+        "elapsed_s": 0.004045100067742169,
+        "best": 2403.7
+      },
+      {
+        "phase": "external_pyvrp_ls",
+        "neighbors": 40,
+        "elapsed_s": 0.37666740000713617,
+        "best": 1345.9
+      },
+      {
+        "phase": "external_pyvrp_ls",
+        "neighbors": 80,
+        "elapsed_s": 0.3772912999847904,
+        "best": 1345.9
+      },
+      {
+        "phase": "external_pyvrp_ls",
+        "neighbors": 120,
+        "elapsed_s": 0.3778918000170961,
+        "best": 1345.9
+      },
+      {
+        "phase": "own_ils",
+        "elapsed_s": 5.00036830001045,
+        "best": 1345.9
+      }
+    ],
+    "attribution": "Own regret-2 and ILS; external PyVRP Local Search; no HGS or set partitioning on small cases",
+    "metrics": {
+      "valid": true,
+      "errors": [],
+      "vehicles": 2,
+      "duration": 13459.0,
+      "distance": 7368.0,
+      "travel": 7368.0,
+      "waiting": 3591.0,
+      "makespan": 9057.0,
+      "routes": [
+        {
+          "duration": 9057.0,
+          "travel": 5841.0,
+          "distance": 5841.0,
+          "waiting": 1316.0,
+          "load": 245.0,
+          "schedule": [
+            {
+              "client": 14,
+              "arrival": 320.0,
+              "start": 320.0,
+              "finish": 420.0
+            },
+            {
+              "client": 5,
+              "arrival": 620.0,
+              "start": 620.0,
+              "finish": 720.0
+            },
+            {
+              "client": 15,
+              "arrival": 1011.0,
+              "start": 1750.0,
+              "finish": 1850.0
+            },
+            {
+              "client": 12,
+              "arrival": 2210.0,
+              "start": 2280.0,
+              "finish": 2380.0
+            },
+            {
+              "client": 19,
+              "arrival": 2810.0,
+              "start": 2810.0,
+              "finish": 2910.0
+            },
+            {
+              "client": 11,
+              "arrival": 2980.0,
+              "start": 2980.0,
+              "finish": 3080.0
+            },
+            {
+              "client": 7,
+              "arrival": 3230.0,
+              "start": 3310.0,
+              "finish": 3410.0
+            },
+            {
+              "client": 9,
+              "arrival": 3774.0,
+              "start": 4000.0,
+              "finish": 4100.0
+            },
+            {
+              "client": 6,
+              "arrival": 4524.0,
+              "start": 4524.0,
+              "finish": 4624.0
+            },
+            {
+              "client": 22,
+              "arrival": 4906.0,
+              "start": 4906.0,
+              "finish": 5006.0
+            },
+            {
+              "client": 3,
+              "arrival": 5370.0,
+              "start": 5370.0,
+              "finish": 5470.0
+            },
+            {
+              "client": 10,
+              "arrival": 5761.0,
+              "start": 5770.0,
+              "finish": 5870.0
+            },
+            {
+              "client": 20,
+              "arrival": 6028.0,
+              "start": 6028.0,
+              "finish": 6128.0
+            },
+            {
+              "client": 4,
+              "arrival": 6588.0,
+              "start": 6780.0,
+              "finish": 6880.0
+            },
+            {
+              "client": 13,
+              "arrival": 7134.0,
+              "start": 7134.0,
+              "finish": 7234.0
+            },
+            {
+              "client": 17,
+              "arrival": 7488.0,
+              "start": 7488.0,
+              "finish": 7588.0
+            },
+            {
+              "client": 1,
+              "arrival": 7995.0,
+              "start": 7995.0,
+              "finish": 8095.0
+            },
+            {
+              "client": 24,
+              "arrival": 8372.0,
+              "start": 8372.0,
+              "finish": 8472.0
+            },
+            {
+              "client": 25,
+              "arrival": 8622.0,
+              "start": 8622.0,
+              "finish": 8722.0
+            }
+          ]
+        },
+        {
+          "duration": 4402.0,
+          "travel": 1527.0,
+          "distance": 1527.0,
+          "waiting": 2275.0,
+          "load": 87.0,
+          "schedule": [
+            {
+              "client": 2,
+              "arrival": 180.0,
+              "start": 1430.0,
+              "finish": 1530.0
+            },
+            {
+              "client": 21,
+              "arrival": 1634.0,
+              "start": 2140.0,
+              "finish": 2240.0
+            },
+            {
+              "client": 23,
+              "arrival": 2420.0,
+              "start": 2420.0,
+              "finish": 2520.0
+            },
+            {
+              "client": 16,
+              "arrival": 2994.0,
+              "start": 2994.0,
+              "finish": 3094.0
+            },
+            {
+              "client": 18,
+              "arrival": 3317.0,
+              "start": 3770.0,
+              "finish": 3870.0
+            },
+            {
+              "client": 8,
+              "arrival": 3974.0,
+              "start": 4040.0,
+              "finish": 4140.0
+            }
+          ]
+        }
+      ]
+    },
+    "cost": 1345.9,
+    "initial_routes": [
+      [
+        12,
+        19,
+        11,
+        7,
+        8,
+        18,
+        9,
+        3,
+        20,
+        10,
+        1
+      ],
+      [
+        2,
+        14,
+        15,
+        21,
+        23,
+        22,
+        4,
+        25,
+        24
+      ],
+      [
+        5,
+        16,
+        6,
+        17,
+        13
+      ]
+    ],
+    "initial_cost": 2403.7,
+    "improvement": 1057.7999999999997,
+    "runtime_s": 5.000370700028725,
+    "objective": "duration",
+    "method": "size_based",
+    "selected_method": "construction_ls_ils",
+    "selection_policy": {
+      "version": 2,
+      "small_max_clients": 100,
+      "decision_input": "number_of_clients_only",
+      "criterion": "regret-2 + PyVRP LS + own ILS for n<=100, existing refined profile otherwise",
+      "no_reference_or_gap_used": true
+    },
+    "requested_seconds": 5.0,
+    "budget_kind": "soft total solve budget"
+  },
+  "reference": {
+    "duration": null,
+    "type": "NON DISPONIBLE",
+    "source": null,
+    "certified": false
+  },
+  "error": null,
+  "instance_sha256": "dcc488ab63829bc1b50dc74e9173a092deabb7f4655367a366bc7ac2ea295370"
+}

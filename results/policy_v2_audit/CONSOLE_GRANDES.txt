@@ -1,0 +1,145 @@
+﻿4 instances ; 4 résolutions ; 2 processus maximum
+Départs zéro ; trajets fixes/symétriques ; objectif trajets + attentes + services, retour compris.
+Dossier : C:\Users\user\Downloads\CVRPTW_REMISE_PROF_20261112T203928\results\local\correction_grandes_v2
+Budget : recherche + construction pour ILS/SA/hybride/PyVRP ; total souple pour renforcé.
+CPU/réel résolution excluent le préchauffage ; le garde-fou inclut tout le processus.
+Un arrêt par surveillance peut dépasser légèrement la limite lors de l’arrêt du processus.
+
+========================================================================
+TEST CVRPTW
+========================================================================
+Instance                     : C1_10_6
+Famille                      : C1
+Nombre de clients            : 1000
+Méthode                      : size_based — Sélection v2 : construction + LS PyVRP + ILS jusqu’à 100 clients, renforcé au-delà
+Moteur exécuté               : refined
+Graine                       : 4101
+FAISABILITÉ                  : OUI
+Statut                       : feasible
+Véhicules utilisés           : 112
+Durée des trajets            : 49182.600 u.t.
+Durée des attentes           : 1320.300 u.t.
+Durée des services           : 90000.000 u.t.
+DURÉE TOTALE                 : 140502.900 u.t.
+Durée de référence           : 133754.700 u.t.
+Type de référence            : Plan public DISTANCE réévalué en DURÉE, non optimalité temporelle
+Source de référence          : data/instances/C1_10_6.sol
+Comparaison à la référence   : 5.0452 %
+Gap certifié                 : NON DISPONIBLE
+Temps CPU résolution         : 3.516 s
+Temps réel résolution        : 3.597 s
+Temps total processus        : 5.965 s
+Budget demandé               : 30.000 s
+Garde-fou processus          : 120.000 s
+Dépassement budget demandé   : 0.000 s
+Contraintes                  : VALIDÉES
+
+========================================================================
+TEST CVRPTW
+========================================================================
+Instance                     : C2_10_2
+Famille                      : C2
+Nombre de clients            : 1000
+Méthode                      : size_based — Sélection v2 : construction + LS PyVRP + ILS jusqu’à 100 clients, renforcé au-delà
+Moteur exécuté               : refined
+Graine                       : 4101
+FAISABILITÉ                  : OUI
+Statut                       : feasible
+Véhicules utilisés           : 37
+Durée des trajets            : 25606.700 u.t.
+Durée des attentes           : 377.000 u.t.
+Durée des services           : 90000.000 u.t.
+DURÉE TOTALE                 : 115983.700 u.t.
+Durée de référence           : 109395.800 u.t.
+Type de référence            : Plan public DISTANCE réévalué en DURÉE, non optimalité temporelle
+Source de référence          : data/instances/C2_10_2.sol
+Comparaison à la référence   : 6.0221 %
+Gap certifié                 : NON DISPONIBLE
+Temps CPU résolution         : 5.094 s
+Temps réel résolution        : 5.225 s
+Temps total processus        : 7.553 s
+Budget demandé               : 30.000 s
+Garde-fou processus          : 120.000 s
+Dépassement budget demandé   : 0.000 s
+Contraintes                  : VALIDÉES
+Le seuil indicatif de +6 % est dépassé. Valeur réelle conservée.
+
+========================================================================
+TEST CVRPTW
+========================================================================
+Instance                     : C2_10_7
+Famille                      : C2
+Nombre de clients            : 1000
+Méthode                      : size_based — Sélection v2 : construction + LS PyVRP + ILS jusqu’à 100 clients, renforcé au-delà
+Moteur exécuté               : refined
+Graine                       : 4101
+FAISABILITÉ                  : OUI
+Statut                       : feasible
+Véhicules utilisés           : 36
+Durée des trajets            : 24341.100 u.t.
+Durée des attentes           : 818.800 u.t.
+Durée des services           : 90000.000 u.t.
+DURÉE TOTALE                 : 115159.900 u.t.
+Durée de référence           : 106940.000 u.t.
+Type de référence            : Plan public DISTANCE réévalué en DURÉE, non optimalité temporelle
+Source de référence          : data/instances/C2_10_7.sol
+Comparaison à la référence   : 7.6865 %
+Gap certifié                 : NON DISPONIBLE
+Temps CPU résolution         : 4.484 s
+Temps réel résolution        : 4.532 s
+Temps total processus        : 6.100 s
+Budget demandé               : 30.000 s
+Garde-fou processus          : 120.000 s
+Dépassement budget demandé   : 0.000 s
+Contraintes                  : VALIDÉES
+Le seuil indicatif de +6 % est dépassé. Valeur réelle conservée.
+
+========================================================================
+TEST CVRPTW
+========================================================================
+Instance                     : R2_10_8
+Famille                      : R2
+Nombre de clients            : 1000
+Méthode                      : size_based — Sélection v2 : construction + LS PyVRP + ILS jusqu’à 100 clients, renforcé au-delà
+Moteur exécuté               : refined
+Graine                       : 4101
+FAISABILITÉ                  : OUI
+Statut                       : feasible
+Véhicules utilisés           : 19
+Durée des trajets            : 63017.600 u.t.
+Durée des attentes           : 13079.800 u.t.
+Durée des services           : 10000.000 u.t.
+DURÉE TOTALE                 : 86097.400 u.t.
+Durée de référence           : 114208.000 u.t.
+Type de référence            : Plan public DISTANCE réévalué en DURÉE, non optimalité temporelle
+Source de référence          : data/instances/R2_10_8.sol
+Comparaison à la référence   : Référence dépassée — solution améliorante validée
+Gap certifié                 : NON DISPONIBLE
+Temps CPU résolution         : 4.828 s
+Temps réel résolution        : 4.827 s
+Temps total processus        : 6.407 s
+Budget demandé               : 30.000 s
+Garde-fou processus          : 120.000 s
+Dépassement budget demandé   : 0.000 s
+Contraintes                  : VALIDÉES
+Solution améliorante vérifiée ; référence heuristique dépassée, sans preuve d’optimalité.
+
+COMPARAISON — classement en durée réalisable, par instance et graine
+Budgets de recherche et temps totaux sont distincts ; échecs non classés.
+Instance / n / graine | Méthode | Durée | Faisable | Véhicules | Réel(s) | Budget(s) | Comparaison / statut | Rang
+C1_10_6 / 1000 / 4101 | size_based | 140502.900 | OUI | 112 | 3.597 | 30.000 | 5.0452 % | 1
+Meilleure(s) méthode(s) sur ce cas/essai : size_based
+Une seule méthode exécutée : le rang ne constitue pas un jugement de qualité.
+C2_10_2 / 1000 / 4101 | size_based | 115983.700 | OUI | 37 | 5.225 | 30.000 | 6.0221 % | 1
+Meilleure(s) méthode(s) sur ce cas/essai : size_based
+Une seule méthode exécutée : le rang ne constitue pas un jugement de qualité.
+C2_10_7 / 1000 / 4101 | size_based | 115159.900 | OUI | 36 | 4.532 | 30.000 | 7.6865 % | 1
+Meilleure(s) méthode(s) sur ce cas/essai : size_based
+Une seule méthode exécutée : le rang ne constitue pas un jugement de qualité.
+R2_10_8 / 1000 / 4101 | size_based | 86097.400 | OUI | 19 | 4.827 | 30.000 | Référence dépassée — solution améliorante validée | 1
+Meilleure(s) méthode(s) sur ce cas/essai : size_based
+Une seule méthode exécutée : le rang ne constitue pas un jugement de qualité.
+
+BILAN : 4/4 réalisables.
+CSV : C:\Users\user\Downloads\CVRPTW_REMISE_PROF_20261112T203928\results\local\correction_grandes_v2\RESULTATS.csv
+Label : correction_grandes_v2

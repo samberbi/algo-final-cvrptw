@@ -151,7 +151,7 @@ le tableau : un classement sur un cas n'est pas une supériorité générale.
 
 | Code | Méthode et attribution |
 |---|---|
-| `size_based` | Nouveau défaut : construction seule jusqu'à 100 clients, renforcé au-delà |
+| `size_based` | Défaut v2 : construction + LS PyVRP + ILS jusqu'à 100 clients, renforcé puis HGS externe selon le budget au-delà |
 | `ils` | Notre ILS et nos opérateurs, sans optimisation PyVRP |
 | `sa` | Notre recuit simulé et nos opérateurs |
 | `pyvrp` | PyVRP/HGS externe seul, population native |

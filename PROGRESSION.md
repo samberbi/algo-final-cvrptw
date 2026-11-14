@@ -1,5 +1,33 @@
 # Progression — finalisation CVRPTW CESI
 
+## 14 novembre 2026 — correction du profil de test et audit des dépassements
+
+- Cause RC101 identifiée : le défaut v1 appelait la construction seule sur les
+  petits cas. Passage à construction regret-2 + Local Search **PyVRP externe**
+  + notre ILS, avec conservation et contrôle du meilleur coût à chaque étape.
+- 72 nouveaux essais complets, graine 4101, cinq secondes, deux processus :
+  72 réalisables, zéro dépassement de six pour cent parmi les comparaisons
+  disponibles. Les 56 cas à 100 clients ont une référence ; 12 des 16 préfixes
+  25/50 restent sans référence indépendante. Aucun chiffre inventé pour ces cas.
+- RC101/100 : durée 3335,2 -> 2921,1, référence 2991,6. Solution améliorante
+  vérifiée ; pas un optimum temporel battu. Les anciennes mesures sont conservées.
+- Quatre contrôles 1000 clients révèlent l'arrêt du renforcé vers cinq secondes
+  et les dépassements C2_10_2 (+6,0221 %) et C2_10_7 (+7,6865 %).
+- Ajout d'une continuation HGS **externe PyVRP** dans le budget restant des
+  grands cas, sans lecture de référence et sans modifier les moteurs historiques.
+  Deux essais soixante secondes : +1,9592 % et +4,2518 %, réalisables, environ
+  59,6/59,8 s écoulées et 58,8/58,5 s CPU. Gains non attribués à l'ILS autonome.
+- Audit historique relancé : 1321 comparaisons, zéro anomalie. Audit terminal :
+  166 enregistrements, 163 réalisables, trois échecs conservés, zéro anomalie.
+  Ces registres se chevauchent : ne pas additionner leurs effectifs de runs.
+- Tests : **224 réussis, 2 ignorés**, XML actualisé. Notebook réexécuté :
+  seize cellules de code, zéro erreur, 34,05 secondes. Validations statique et
+  présentation réussies ; HTML et copie notebook à envoyer synchronisés.
+- Résultats et sources figées : `results/policy_v2_audit/`, rapport
+  `CORRECTION_DEPASSEMENTS.md`, tableaux avant/après et statuts par instance.
+- Reprise sans benchmark : `python scripts/finalize_static.py --execute --validate`.
+  Aucun push, ZIP, Word ou PDF automatique. Quota restant non accessible.
+
 Date de référence : 13 novembre 2026 (Europe/Paris).
 Quota restant : non accessible. Les résultats et commandes sont sauvegardés ici.
 

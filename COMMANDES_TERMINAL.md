@@ -2,19 +2,16 @@
 
 ## Configuration actuelle des commandes : sélection par taille
 
-Depuis cette révision, les nouvelles commandes de test utilisent `size_based`
-par défaut : construction seule pour 25/50/100 clients, renforcé au-delà.
-Le moteur choisi est affiché et enregistré. Pour reproduire un ancien test
-implicitement renforcé, ajouter `--method refined`. Les résultats historiques
-et leurs références restent conservés ; ils ne deviennent pas des résultats
-du nouveau sélecteur. Le seuil ne dépend pas du gap. La validation de six cas
-et les limites sont dans [SELECTION_PAR_TAILLE.md](docs/SELECTION_PAR_TAILLE.md).
-
-Les commandes de cette fiche ont été vérifiées sur le projet. Les transcriptions,
-codes retour et résultats sont dans `results/terminal_validation/`.
-`scripts/test_instances.py` et `scripts/run_benchmark.py` utilisent la même
-interface. Les fonctions historiques importées par les scripts CPU sont conservées.
-
+Le profil par défaut `size_based` est en version 2 : construction regret-2,
+recherche locale **PyVRP externe** puis notre ILS jusqu’à 100 clients ; profil
+renforcé puis HGS externe selon le temps restant au-delà. La meilleure durée
+est conservée à chaque étape.
+Le moteur et les temps mesurés sont affichés et enregistrés. Le choix ne lit
+aucun gap. La campagne de 72 essais et ses limites sont documentées dans
+[SELECTION_PAR_TAILLE.md](docs/SELECTION_PAR_TAILLE.md).
+Pour lancer la construction seule comme ablation : `--method construction`.
+Pour forcer le renforcé : `--method refined`. Les anciens résultats restent
+conservés et ne représentent pas la nouvelle configuration.
 ## 1. Choisir le bon Python
 
 Sur le PC actuel, copier ce bloc dans PowerShell :
@@ -113,7 +110,7 @@ le tableau : un classement sur un cas n'est pas une supériorité générale.
 
 | Code | Méthode et attribution |
 |---|---|
-| `size_based` | Nouveau défaut : construction seule jusqu'à 100 clients, renforcé au-delà |
+| `size_based` | Défaut v2 : construction + LS PyVRP + ILS jusqu’à 100 clients, renforcé puis HGS au-delà |
 | `ils` | Notre ILS et nos opérateurs, sans optimisation PyVRP |
 | `sa` | Notre recuit simulé et nos opérateurs |
 | `pyvrp` | PyVRP/HGS externe seul, population native |

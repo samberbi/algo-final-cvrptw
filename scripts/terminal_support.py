@@ -20,7 +20,7 @@ FAMILIES=['C1','C2','R1','R2','RC1','RC2']
 METHODS=['size_based','construction','ils','sa','pyvrp','hybrid','refined','refined_no_partition','refined_ils','ortools']
 DEFAULT_METHOD='size_based'
 METHOD_LABELS={
-    'size_based':'Sélection par taille : construction seule jusqu’à 100 clients, renforcé au-delà',
+    'size_based':'Sélection v2 : construction + LS PyVRP + ILS jusqu’à 100 clients ; renforcé puis HGS externe au-delà',
     'construction':'Construction propre regret-2',
     'ils':'ILS autonome, opérateurs propres',
     'sa':'Recuit autonome, opérateurs propres',
@@ -278,6 +278,7 @@ def comparison(rows):
                 f"{number(r.get('requested_seconds'))} | {present(r.get('duration'),r.get('reference_duration'),valid=r['valid'])} | {rank}")
         best=[r['method'] for r in group if r['valid'] and r['duration']==costs[0]] if costs else []
         lines.append('Meilleure(s) méthode(s) sur ce cas/essai : '+(', '.join(best) if best else 'aucune solution réalisable'))
+        if len(group)==1:lines.append('Une seule méthode exécutée : le rang ne constitue pas un jugement de qualité.')
     return '\n'.join(lines)
 
 

@@ -2,16 +2,16 @@
 
 ## Configuration actuelle des commandes : sélection par taille
 
-Depuis cette révision, les nouvelles commandes de test utilisent `size_based`
-par défaut : construction seule pour 25/50/100 clients, renforcé au-delà.
-Le moteur choisi est affiché et enregistré. Pour reproduire un ancien test
-implicitement renforcé, ajouter `--method refined`. Les résultats historiques
-et leurs références restent conservés ; ils ne deviennent pas des résultats
-du nouveau sélecteur. Le seuil ne dépend pas du gap. La validation de six cas
-et les limites sont dans [SELECTION_PAR_TAILLE.md](docs/SELECTION_PAR_TAILLE.md).
-
-**Version de remise — 13 novembre 2026.** L’objectif est la somme des durées des tournées : trajets + attentes + services, départs fixés à zéro et retour au dépôt compris. La capacité, les fenêtres et la flotte maximale restent strictes. Le temps de calcul du programme est une mesure séparée.
-
+Le profil par défaut `size_based` est en version 2 : construction regret-2,
+recherche locale **PyVRP externe** puis notre ILS jusqu’à 100 clients ; profil
+renforcé puis HGS externe selon le temps restant au-delà. La meilleure durée
+est conservée à chaque étape.
+Le moteur et les temps mesurés sont affichés et enregistrés. Le choix ne lit
+aucun gap. La campagne de 72 essais et ses limites sont documentées dans
+[SELECTION_PAR_TAILLE.md](docs/SELECTION_PAR_TAILLE.md).
+Pour lancer la construction seule comme ablation : `--method construction`.
+Pour forcer le renforcé : `--method refined`. Les anciens résultats restent
+conservés et ne représentent pas la nouvelle configuration.
 ## Ouvrir le livrable
 
 - **Remise actuelle : le notebook ci-dessous.** Les anciens Word/PDF/HTML ne sont pas synchronisés avec cette révision et ne constituent pas la remise actuelle.
