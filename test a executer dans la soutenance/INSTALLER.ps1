@@ -10,8 +10,13 @@ try {
         & py -3.12 -m venv .venv
         if ($LASTEXITCODE -ne 0) { throw 'Installer Python 3.12 en 64 bits et son lanceur py.' }
     }
+    & $projectPython -c "import struct,sys; sys.exit(0 if sys.version_info[:2] == (3,12) and struct.calcsize('P') == 8 else 'Python 3.12 en 64 bits requis.')"
+    if ($LASTEXITCODE -ne 0) { throw 'Recreer .venv sur ce PC avec Python 3.12 en 64 bits. Consulter DEMARRAGE_WINDOWS11.md.' }
     if (-not $VerifierSeulement) {
-        & $projectPython -m pip install -r requirements-reference-final.txt
+        $installationArguments = @('-m','pip','install','-r','requirements-reference-final.txt')
+        $constraints = 'results/terminal_comparison/CONTRAINTES_INSTALLATION_LOCALE.txt'
+        if (Test-Path -LiteralPath $constraints) { $installationArguments += @('-c',$constraints) }
+        & $projectPython @installationArguments
         if ($LASTEXITCODE -ne 0) { throw 'Installation incomplete : lire le message de pip.' }
     }
     & $projectPython -m pip check

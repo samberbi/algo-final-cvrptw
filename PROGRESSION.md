@@ -1,5 +1,19 @@
 # Progression — finalisation CVRPTW CESI
 
+## 14 novembre 2026 — préparation Windows 11 et publication des ajouts
+
+- Dossier de soutenance corrigé : guide `DEMARRAGE_WINDOWS11.md`, installation
+  avec contraintes de versions enregistrées et vérification de Python 3.12 x64.
+- Lanceur enrichi : `-SansOuvertureGraphiques` et `-SansGraphiques`, avec
+  graphiques activés par défaut. Les 116 commandes individuelles sont conservées.
+- Vérifications sur Windows 10 x64 / PowerShell du PC de développement :
+  syntaxe des deux scripts, installation en mode vérification, `pip check`,
+  dépendances du rendu et mode Selection (116 instances / 232 résolutions).
+  Les étapes de contrôle à effectuer sur le portable Windows 11 sont explicites.
+- Publication demandée sur `origin/rendu-professeur`, incluant les graphiques
+  automatiques et les commandes individuelles. Le ZIP antérieur n'est pas
+  réécrit ; le guide recommande de prendre cette branche GitHub à jour.
+
 ## 14 novembre 2026 — commandes exhaustives instance par instance
 
 - 116 commandes individuelles enregistrées en Markdown et texte dans le dossier

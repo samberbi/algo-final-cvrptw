@@ -4,6 +4,8 @@ Ce dossier rassemble les commandes de démonstration et la préparation du PC
 portable. Le livrable à présenter est `notebooks/Livrable_Final_CVRPTW.ipynb`.
 Sa version HTML permet une lecture sans exécuter Jupyter.
 
+**PC portable Windows 11 : commencer par [DEMARRAGE_WINDOWS11.md](DEMARRAGE_WINDOWS11.md).**
+
 **Liste exhaustive pour tester une instance à la fois :**
 [116 commandes Markdown](TOUTES_COMMANDES_INSTANCE_PAR_INSTANCE.md) ou
 [version texte à copier](TOUTES_COMMANDES_INSTANCE_PAR_INSTANCE.txt).
@@ -35,7 +37,7 @@ Installer Python **3.12 en 64 bits**, avec le lanceur Windows `py`. Vérifier :
 ```powershell
 py -3.12 --version
 py -3.12 -m venv .venv
-.\.venv\Scripts\python.exe -m pip install -r requirements-reference-final.txt
+.\.venv\Scripts\python.exe -m pip install -r requirements-reference-final.txt -c results/terminal_comparison/CONTRAINTES_INSTALLATION_LOCALE.txt
 .\.venv\Scripts\python.exe -m pip check
 ```
 
@@ -99,6 +101,9 @@ powershell -NoProfile -ExecutionPolicy Bypass -File ".\test a executer dans la s
 
 Le chemin vers le lanceur doit désigner son emplacement réel. Les options
 `-Seconds`, `-Seed` et `-Workers` permettent d'adapter explicitement les essais.
+`-SansOuvertureGraphiques` conserve les figures sans ouvrir le navigateur ;
+`-SansGraphiques` désactive le rendu. Pour une démonstration standard, les
+graphiques sont générés et ouverts à la fin du lot.
 
 Vérifier les 116 instances et 232 résolutions sélectionnées sans lancer de calcul :
 

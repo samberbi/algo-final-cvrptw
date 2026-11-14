@@ -3,7 +3,9 @@ param(
     [string]$Mode = 'SixFamilles',
     [double]$Seconds = 0,
     [int]$Seed = 4101,
-    [int]$Workers = 1
+    [int]$Workers = 1,
+    [switch]$SansOuvertureGraphiques,
+    [switch]$SansGraphiques
 )
 
 $ErrorActionPreference = 'Stop'
@@ -21,6 +23,8 @@ switch ($Mode) {
 }
 if ($Seconds -eq 0) { $Seconds = if ($Mode -eq 'Toutes1000') { 30 } else { 5 } }
 $testArguments += @('--seconds',$Seconds,'--seeds',$Seed,'--workers',$Workers)
+if ($SansOuvertureGraphiques) { $testArguments += '--no-open-plots' }
+if ($SansGraphiques) { $testArguments += '--no-plots' }
 Push-Location -LiteralPath $projectDirectory
 try {
     & $projectPython @testArguments
