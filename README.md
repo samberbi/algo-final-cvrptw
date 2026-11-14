@@ -1,5 +1,12 @@
 # CVRPTW — Minimisation de la durée totale
 
+## Préparer la soutenance sur le portable
+
+Le dossier [test a executer dans la soutenance](<test a executer dans la soutenance/README.md>)
+contient les commandes rapides, les campagnes complètes, l'installation Python
+et les points à adapter sur un autre PC. Cette remise correspond à la branche
+GitHub **rendu-professeur** ; utiliser cette branche pour le clone du portable.
+
 ## Comparaison automatique : ILS initial et profil renforcé
 
 Les commandes sans méthode explicite exécutent désormais `ils` **et**
@@ -22,7 +29,7 @@ Pour forcer le renforcé : `--method refined`. Les anciens résultats restent
 conservés et ne représentent pas la nouvelle configuration.
 ## Ouvrir le livrable
 
-- **Remise actuelle : le notebook ci-dessous.** Les anciens Word/PDF/HTML ne sont pas synchronisés avec cette révision et ne constituent pas la remise actuelle.
+- **Remise actuelle : le notebook ci-dessous et son HTML synchronisé.** Les anciens rapports Word/PDF conservés dans le projet ne constituent pas la remise actuelle.
 - [Notebook exécuté](notebooks/Livrable_Final_CVRPTW.ipynb), [HTML](notebooks/Livrable_Final_CVRPTW.html), [Markdown illustré](LIVRABLE_FINAL.md).
 - [Formulation mathématique](docs/MODELE_DUREE.md), [évolution de l’algorithme](docs/JOURNAL_EVOLUTION_ALGORITHME.md).
 - [Tous les résultats en durée](livraison/RESULTATS_DUREE.html), [CSV des 646 essais](livraison/RESULTATS_DUREE.csv), [356 instances](livraison/INSTANCES_DUREE.csv), [statistiques descriptives](livraison/STATISTIQUES_DESCRIPTIVES_DUREE.csv).

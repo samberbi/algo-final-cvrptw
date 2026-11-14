@@ -1,5 +1,29 @@
 # Progression — finalisation CVRPTW CESI
 
+## 14 novembre 2026 — dossier de soutenance et livraison portable
+
+- Dossier `test a executer dans la soutenance` : README avec les trois commandes
+  demandées, lecture des résultats, coûts des campagnes et points à adapter sur
+  le portable ; installateur et lanceur PowerShell indépendants du chemin du PC.
+- Branche de remise identifiée : `rendu-professeur`. La branche par défaut main
+  contient une autre version ; le guide fournit le clone explicite de la branche
+  de remise. Les commits de main sont préservés, sans écrasement forcé.
+- Scripts PowerShell contrôlés : syntaxe valide, vérification de l'environnement
+  réussie, mode Selection exécuté avec 116 instances et 232 résolutions annoncées.
+  Pas de relance des longues campagnes. Validation du livrable inchangé réussie,
+  avec le dernier XML de 232 tests réussis et deux modules ignorés.
+- Export reproductible : `scripts/prepare_soutenance_zip.py`. Il conserve tous
+  les fichiers versionnés et les résultats locaux disponibles ; environnements,
+  caches, métadonnées Git et identifiants privés exclus. CRC et SHA-256 de chaque
+  fichier archivé vérifiés, avec manifeste complet à l'intérieur du ZIP.
+- Destination de cette livraison :
+  `C:\Users\user\Downloads\CVRPTW_SOUTENANCE_FINAL_20261114.zip`.
+  Le manifeste `CONTENU_ARCHIVE.json` identifie la branche et le commit exact.
+- Étapes de livraison / reprise : `git push origin rendu-professeur`, puis
+  `.\.venv\Scripts\python.exe scripts/prepare_soutenance_zip.py --output C:\Users\user\Downloads\CVRPTW_SOUTENANCE_FINAL_20261114.zip`.
+  Le script refuse d'écraser un ZIP existant. Contrôle de livraison local :
+  `.tools/ARCHIVE_SOUTENANCE.json`, après création réussie.
+
 ## 14 novembre 2026 — explication des tableaux pour la correction
 
 - Vingt-huit tableaux chiffrés disposent désormais de clés de lecture locales :
