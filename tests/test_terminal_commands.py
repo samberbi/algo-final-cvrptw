@@ -3,7 +3,7 @@ import json
 from pathlib import Path
 import pytest
 from scripts import terminal_support as terminal
-from scripts.run_benchmark import parser,replay,selected_methods
+from scripts.run_benchmark import parser,replay,selected_methods,completed_comparison,check_environment
 
 
 def test_default_selection_is_one_c101_not_whole_catalogue():
@@ -79,6 +79,45 @@ def test_default_executes_initial_and_reinforced_but_explicit_method_stays_singl
     assert selected_methods(parser().parse_args(['--method','duration_refined']))==['refined']
     with pytest.raises(ValueError):
         selected_methods(parser().parse_args(['--method','ils','--methods','size_based']))
+
+
+def test_each_instance_and_seed_is_compared_once_when_both_methods_finish():
+    def row(name,method,seed=4101):
+        return dict(instance=name,n=100,seed=seed,method=method)
+    methods=['ils','size_based'];shown=set()
+    first=row('C101','ils');second=row('RC101','size_based')
+    other_seed=row('C101','size_based',4102)
+    rows=[first,second,other_seed]
+    assert completed_comparison(rows,second,methods,shown)==[]
+    assert completed_comparison(rows,other_seed,methods,shown)==[]
+    finish=row('RC101','ils');rows.append(finish)
+    assert completed_comparison(rows,finish,methods,shown)==[second,finish]
+    assert completed_comparison(rows,finish,methods,shown)==[]
+    finish_c=row('C101','size_based');rows.append(finish_c)
+    assert completed_comparison(rows,finish_c,methods,shown)==[first,finish_c]
+
+
+def test_missing_dependency_explains_active_interpreter_and_static_environment(monkeypatch):
+    import importlib.metadata as metadata
+    def version(name):
+        if name in ['numba','pyvrp','scipy']:raise metadata.PackageNotFoundError(name)
+        return 'test-version'
+    monkeypatch.setattr(metadata,'version',version)
+    with pytest.raises(ValueError) as error:check_environment(['ils','size_based'])
+    text=str(error.value)
+    assert 'numba' in text and 'pyvrp' in text and 'scipy' in text
+    assert '.venv_dabia' in text and 'requirements-reference-final.txt' in text
+    assert 'python.exe scripts/test_instances.py' in text
+
+
+def test_optional_unused_solver_metadata_does_not_block_own_ils(monkeypatch):
+    import importlib.metadata as metadata
+    def version(name):
+        if name in ['pyvrp','scipy','ortools']:raise metadata.PackageNotFoundError(name)
+        return 'test-version'
+    monkeypatch.setattr(metadata,'version',version)
+    result=check_environment(['ils'])
+    assert result['numba']=='test-version' and result['pyvrp'] is None
 
 
 @pytest.mark.parametrize('cost,expected,conclusion',[(90,10,'Renforcé meilleur'),

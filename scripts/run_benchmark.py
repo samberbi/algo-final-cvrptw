@@ -100,6 +100,41 @@ def selected_methods(args):
     return list(dict.fromkeys('refined' if m=='duration_refined' else m for m in requested))
 
 
+def completed_comparison(rows,latest,methods,shown):
+    """Émettre chaque couple instance/taille/graine une fois, même hors ordre."""
+    key=(latest['instance'],latest['n'],latest['seed'])
+    if len(methods)<2 or key in shown:return []
+    group=[r for r in rows if (r['instance'],r['n'],r['seed'])==key]
+    if not set(methods).issubset({r['method'] for r in group}):return []
+    shown.add(key)
+    return group
+
+
+def check_environment(methods):
+    """Diagnostiquer le Python actif avant de créer une campagne vide."""
+    required={'numpy','psutil','vrplib'}
+    if any(m not in ['pyvrp','ortools'] for m in methods):required.add('numba')
+    if any(m in ['size_based','hybrid','pyvrp'] or m.startswith('refined') for m in methods):
+        required.add('pyvrp')
+    if any(m=='size_based' or m.startswith('refined') for m in methods):required.add('scipy')
+    if 'ortools' in methods:required.add('ortools')
+    packages={}
+    for name in sorted(required | {'numpy','numba','scipy','pyvrp','psutil','vrplib','ortools'}):
+        try:packages[name]=importlib.metadata.version(name)
+        except importlib.metadata.PackageNotFoundError:packages[name]=None
+    missing=sorted(name for name in required if packages[name] is None)
+    if missing:
+        raise ValueError('Environnement Python incomplet : '+', '.join(missing)+
+            '\nPython utilisé : '+sys.executable+
+            '\nLe solveur statique utilise .venv ; .venv_dabia est réservé à l’extension optionnelle.'+
+            '\nDepuis la racine du projet, préparer une fois :'+
+            '\n  py -3.12 -m venv .venv'+
+            '\n  .\\.venv\\Scripts\\python.exe -m pip install -r requirements-reference-final.txt'+
+            '\nPuis lancer sans activation :'+
+            '\n  .\\.venv\\Scripts\\python.exe scripts/test_instances.py --instances RC101 --seconds 5')
+    return packages
+
+
 def main(argv=None):
     if hasattr(sys.stdout,'reconfigure'):sys.stdout.reconfigure(encoding='utf-8',errors='replace')
     p=parser();args=p.parse_args(argv)
@@ -113,6 +148,9 @@ def main(argv=None):
         p.error('Budgets positifs finis, budget <= garde-fou, graines sur 31 bits et workers/limit positifs requis')
     try:methods=selected_methods(args)
     except ValueError as error:p.error(str(error))
+    if not args.dry_run:
+        try:packages=check_environment(methods)
+        except ValueError as error:p.error(str(error))
     try:
         entries=support.select_cases(support.catalog(),args.instances,args.sizes,args.families,args.progressive,args.all_cases,args.limit)
     except (ValueError,FileNotFoundError) as error:p.error(str(error))
@@ -136,7 +174,7 @@ def main(argv=None):
         target.write_bytes(source.read_bytes());sources[rel.as_posix()]=support.sha(source)
     protocol=dict(schema='terminal_v2',arguments=vars(args),effective_label=folder.name,entries=entries,
         methods=methods,python=sys.executable,platform=platform.platform(),sources=sources,
-        packages={name:importlib.metadata.version(name) for name in ['numpy','numba','scipy','pyvrp','psutil']},
+        packages=packages,
         budget='Search plus construction/setup for ILS/SA/hybrid/PyVRP; refined soft total. Guard CPU and wall includes process startup/loading/warmup.',
         reference='Read after solve; public duration or cached independent OR-Tools. No certified Phonin gap.')
     if 'size_based' in methods:
@@ -144,7 +182,7 @@ def main(argv=None):
             selection_uses='number_of_clients_only',no_reference_or_gap_used=True)
     support.dump(folder/'protocol.json',protocol)
     raw=folder/'raw';raw.mkdir()
-    records=[];batch=time.perf_counter()
+    records=[];shown=set();batch=time.perf_counter()
     def one(job):
         entry,method,seed=job
         temporary=raw/f"{entry['instance']}_{entry['n']}_{method}_{seed}.json"
@@ -166,6 +204,10 @@ def main(argv=None):
             record=future.result();records.append(record)
             support.show(record,args.show_routes)
             support.save_tables(folder,records,time.perf_counter()-batch)
+            group=completed_comparison([r['measurement'] for r in records],record['measurement'],methods,shown)
+            if group:
+                print('\nRÉSULTATS COMPARÉS POUR CETTE INSTANCE ET CETTE GRAINE',flush=True)
+                print(support.comparison(group),flush=True)
     records.sort(key=lambda r:(r['measurement']['n'],r['measurement']['instance'],r['measurement']['seed'],r['measurement']['method']))
     print(support.save_tables(folder,records,time.perf_counter()-batch),flush=True)
     print(f"\nBILAN : {sum(r['measurement']['valid'] for r in records)}/{len(records)} réalisables.\nCSV : {folder/'RESULTATS.csv'}\nLabel : {folder.name}",flush=True)

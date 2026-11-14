@@ -54,7 +54,26 @@ def main():
     assert len(pairs)==3+len(folders)-1
     frame=pd.DataFrame(pairs)
     frame.to_csv(out.parent/'COMPARAISON_COMPLETE.csv',index=False,encoding='utf-8-sig')
-    text='''## Comparaison automatique : ILS initial et profil renforcé
+    text=r'''## Comparaison automatique : ILS initial et profil renforcé
+
+**Python à utiliser.** Depuis la racine du projet, appeler directement
+`.\.venv\Scripts\python.exe` pour le solveur statique. L'activation de
+`.venv_dabia` ne fournit pas ses dépendances : cet environnement appartient
+à l'extension optionnelle. Le script vérifie maintenant les bibliothèques
+nécessaires avant toute résolution et donne une erreur explicite si le
+Python choisi est incomplet, sans créer une campagne vide.
+
+Préparation unique sur un nouvel ordinateur :
+
+```powershell
+py -3.12 -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -r requirements-reference-final.txt
+.\.venv\Scripts\python.exe -m pip check
+```
+
+Les commandes ci-dessous utilisent ce Python directement : elles fonctionnent
+même si le terminal affiche encore `(.venv_dabia)` et ne nécessitent pas de
+changer la politique d'exécution PowerShell.
 
 Sans `--method` ou `--methods`, chaque commande exécute maintenant **deux
 résolutions par instance et par graine** : notre `ils` autonome, puis le profil
@@ -67,6 +86,11 @@ la flotte, la référence et l'écart compatible, le temps réel, le CPU et le
 budget demandé. Un second tableau donne le gain entre méthodes :
 
 `gain = 100 × (durée ILS initial − durée renforcée) / durée ILS initial`.
+
+Dans un lot, le comparatif est affiché **après chaque instance et chaque graine**,
+dès que toutes les méthodes demandées sont terminées pour ce cas. Le bilan
+global reprend ensuite tous les cas. Cette règle fonctionne aussi avec plusieurs
+processus, sans mélanger les instances, tailles ou graines.
 
 Ce gain n'est pas le gap au plan témoin. Une valeur positive signifie que le
 renforcé améliore l'ILS ; une égalité ou une régression reste explicitement
@@ -87,6 +111,30 @@ python scripts/test_instances.py --instances R101 R201 --methods ils size_based 
 python scripts/test_instances.py --instances RC101 RC201 --methods ils size_based --seconds 5 --label comparaison_RC
 python scripts/test_instances.py --instances C2_10_7 --methods ils size_based --seconds 60 --label comparaison_1000
 ```
+
+**Lots de test :** chaque ligne suivante compare les deux méthodes pour toutes
+les instances sélectionnées. Une graine est utilisée par défaut (4101).
+
+```powershell
+# Un cas de chacune des six familles : six instances, douze résolutions.
+python scripts/test_instances.py --instances C101 C201 R101 R201 RC101 RC201 --seconds 5 --label comparaison_six_familles
+
+# Toutes les 56 Solomon à 100 clients : 112 résolutions.
+python scripts/test_instances.py --all --sizes 100 --seconds 5 --label comparaison_solomon_complete
+
+# Toutes les 60 instances à 1000 clients : 120 résolutions, campagne longue.
+python scripts/test_instances.py --all --sizes 1000 --seconds 30 --label comparaison_1000_complete
+
+# Vérifier la sélection et le nombre de résolutions sans lancer de calcul.
+python scripts/test_instances.py --all --sizes 100 1000 --seconds 5 --dry-run
+```
+
+Pour avancer famille par famille, ajouter `--families C1`, `C2`, `R1`, `R2`,
+`RC1` ou `RC2` à une commande avec `--all --sizes 100` ou `1000`.
+Les campagnes complètes ci-dessus sont des commandes proposées, pas des
+comparaisons exhaustives déjà exécutées. Deux moteurs doublent le nombre
+de résolutions. Avec un processus, les 60 grands cas peuvent demander
+environ une heure à trente secondes par moteur, plus construction et préparation.
 
 Le couple `--methods ils size_based` est explicite ici, mais il est désormais
 le défaut lorsqu'aucune méthode n'est donnée. Pour une seule résolution,
@@ -111,16 +159,18 @@ commandes. Ils ne constituent pas une nouvelle preuve statistique de supériorit
 universelle. Les tournées et sources sont dans
 `results/terminal_comparison/`.
 '''
+    text=text.replace('python scripts/test_instances.py',r'.\.venv\Scripts\python.exe scripts/test_instances.py')
     (ROOT/'docs/COMPARAISON_INITIAL_RENFORCE.md').write_text(text,encoding='utf-8')
     for doc in [ROOT/'COMMANDES_TERMINAL.md',ROOT/'README.md']:
         body=doc.read_text(encoding='utf-8')
         title='## Comparaison automatique : ILS initial et profil renforcé'
-        short=text if doc.name=='COMMANDES_TERMINAL.md' else '''## Comparaison automatique : ILS initial et profil renforcé
+        short=text if doc.name=='COMMANDES_TERMINAL.md' else r'''## Comparaison automatique : ILS initial et profil renforcé
 
 Les commandes sans méthode explicite exécutent désormais `ils` **et**
 `size_based` : deux résolutions par instance/graine, avec tableau de durées,
 écarts au témoin et temps, puis gain signé entre méthodes. Les égalités,
 régressions et échecs sont conservés. Pour un seul moteur : `--method size_based`.
+Utiliser directement `.\.venv\Scripts\python.exe`, même si `.venv_dabia` est actif.
 Voir [COMPARAISON_INITIAL_RENFORCE.md](docs/COMPARAISON_INITIAL_RENFORCE.md).
 '''
         if title in body:

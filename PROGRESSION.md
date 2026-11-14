@@ -1,5 +1,26 @@
 # Progression — finalisation CVRPTW CESI
 
+## 14 novembre 2026 — lots comparatifs et correction de l'environnement Python
+
+- Comparatif immédiat après chaque instance/taille/graine dès que toutes les
+  méthodes demandées sont terminées, puis bilan global. L'affichage est aussi
+  correct lorsque les processus terminent dans un ordre différent.
+- Essai réel de deux instances (C101/25 et C201/25), deux moteurs, deux secondes :
+  quatre solutions réalisables et deux comparatifs immédiats affichés. Preuves
+  `results/terminal_comparison/comparaison_affichage_lot_v1/` et transcription.
+- Sélection complète vérifiée sans résolution : 56 Solomon/100 + 60 Homberger/1000,
+  116 instances, 232 résolutions pour les deux moteurs. Commandes par famille,
+  par taille et pour les lots complets ajoutées au guide et au notebook.
+- Erreur utilisateur reproduite : `.venv_dabia` ne fournit pas numba, scipy,
+  PyVRP ni VRPLIB. Nouveau contrôle avant création de campagne : message explicite,
+  Python actif et procédure d'installation ; sortie 2 sans traceback. Les paquets
+  optionnels non utilisés ne bloquent pas une méthode autonome.
+- Environnement statique local `.venv` en préparation avec les versions validées.
+  Utilisation directe de son python.exe : aucune activation PowerShell requise.
+- Tests CLI : vingt réussites après correction. Validation complète du nouvel
+  environnement et synchronisation finale du notebook restent à terminer.
+- Reprise : `.\.venv\Scripts\python.exe scripts/test_instances.py --instances C101 C201 R101 R201 RC101 RC201 --seconds 5 --label verification_env_six_familles`.
+
 ## 14 novembre 2026 — comparaison automatique initial / renforcé
 
 - Les commandes sans méthode explicite lancent désormais `ils` et `size_based`

@@ -1,0 +1,29 @@
+﻿python.exe : usage: test_instances.py [-h] [--instances INSTANCES [INSTANCES ...]]
+Au caractère Ligne:2 : 81
++ ... t -Tail 12; & .\.venv_dabia\Scripts\python.exe -X utf8 scripts/test_i ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (usage: test_ins...INSTANCES ...]]:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+                         [--sizes {25,50,100,200,400,600,800,1000} [{25,50,100,200,400,600,800,1000} ...]]
+                         [--families {C1,C2,R1,R2,RC1,RC2} [{C1,C2,R1,R2,RC1,RC2} ...]]
+                         [--progressive] [--all] [--limit LIMIT]
+                         [--method 
+{size_based,construction,ils,sa,pyvrp,hybrid,refined,refined_no_partition,refined_ils,ortools,duration_refined}]
+                         [--methods 
+{size_based,construction,ils,sa,pyvrp,hybrid,refined,refined_no_partition,refined_ils,ortools,duration_refined} 
+[{size_based,construction,ils,sa,pyvrp,hybrid,refined,refined_no_partition,refined_ils,ortools,duration_refined} ...]]
+                         [--seconds SECONDS] [--max-seconds MAX_SECONDS]
+                         [--seeds SEEDS [SEEDS ...]] [--workers WORKERS]
+                         [--reference {auto,public,independent,none}]
+                         [--label LABEL] [--dry-run]
+                         [--show-results [SHOW_RESULTS]] [--show-routes]
+                         [--gaps-only]
+test_instances.py: error: Environnement Python incomplet : numba, pyvrp, scipy, vrplib
+Python utilisé : C:\Users\user\Downloads\CVRPTW_REMISE_PROF_20261112T203928\.venv_dabia\Scripts\python.exe
+Le solveur statique utilise .venv ; .venv_dabia est réservé à l’extension optionnelle.
+Depuis la racine du projet, préparer une fois :
+  py -3.12 -m venv .venv
+  .\.venv\Scripts\python.exe -m pip install -r requirements-reference-final.txt
+Puis lancer sans activation :
+  .\.venv\Scripts\python.exe scripts/test_instances.py --instances RC101 --seconds 5

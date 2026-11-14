@@ -6,6 +6,7 @@ Les commandes sans méthode explicite exécutent désormais `ils` **et**
 `size_based` : deux résolutions par instance/graine, avec tableau de durées,
 écarts au témoin et temps, puis gain signé entre méthodes. Les égalités,
 régressions et échecs sont conservés. Pour un seul moteur : `--method size_based`.
+Utiliser directement `.\.venv\Scripts\python.exe`, même si `.venv_dabia` est actif.
 Voir [COMPARAISON_INITIAL_RENFORCE.md](docs/COMPARAISON_INITIAL_RENFORCE.md).
 ## Configuration actuelle des commandes : sélection par taille
 

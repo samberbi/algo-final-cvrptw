@@ -1,0 +1,27 @@
+
+COMPARAISON — classement en durée réalisable, par instance et graine
+Budgets de recherche et temps totaux sont distincts ; échecs non classés.
+Instance / n / graine | Méthode | Durée | Faisable | Véhicules | Réel(s) | CPU(s) | Budget(s) | Comparaison / statut | Rang
+C101 / 25 / 4101 | ils | 2623.500 | OUI | 3 | 2.007 | 1.969 | 2.000 | Référence égalée — optimalité non démontrée | 1
+C101 / 25 / 4101 | size_based | 2623.500 | OUI | 3 | 2.001 | 1.891 | 2.000 | Référence égalée — optimalité non démontrée | 1
+Meilleure(s) méthode(s) sur ce cas/essai : ils, size_based
+C201 / 25 / 4101 | ils | 3194.700 | OUI | 2 | 2.006 | 2.016 | 2.000 | Référence insuffisante — comparaison non concluante | 1
+C201 / 25 / 4101 | size_based | 3194.700 | OUI | 2 | 2.001 | 1.906 | 2.000 | Référence insuffisante — comparaison non concluante | 1
+Meilleure(s) méthode(s) sur ce cas/essai : ils, size_based
+
+INITIAL / RENFORCÉ — mêmes instances et graines
+Initial = notre ILS autonome. Renforcé = size_based, intégrant la recherche locale et éventuellement le HGS externes PyVRP.
+Gain durée = 100 × (durée ILS − durée renforcée) / durée ILS ; ce gain entre méthodes n’est pas le gap à la référence.
+Budget demandé identique si fourni par la commande ; ILS : recherche + construction, renforcé : total souple. Comparer aussi réel et CPU.
+Instance / n / graine | Durée initiale | Durée renforcée | Gain durée (%) | Réel initial/renforcé (s) | CPU initial/renforcé (s) | Conclusion
+C101 / 25 / 4101 | 2623.500 | 2623.500 | 0.000 | 2.007 / 2.001 | 1.969 / 1.891 | Égalité de durée
+C201 / 25 / 4101 | 3194.700 | 3194.700 | 0.000 | 2.006 / 2.001 | 2.016 / 1.906 | Égalité de durée
+
+{
+  "completed": 4,
+  "valid": 4,
+  "failed": 0,
+  "batch_wall_s": 15.003337200032547,
+  "resolution_cpu_sum_s": 7.78125,
+  "note": "Signed gap against feasible reference, not a certified duration optimum. Warmup excluded from solve time but included in process guard."
+}
