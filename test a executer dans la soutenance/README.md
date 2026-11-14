@@ -4,6 +4,12 @@ Ce dossier rassemble les commandes de démonstration et la préparation du PC
 portable. Le livrable à présenter est `notebooks/Livrable_Final_CVRPTW.ipynb`.
 Sa version HTML permet une lecture sans exécuter Jupyter.
 
+**Liste exhaustive pour tester une instance à la fois :**
+[116 commandes Markdown](TOUTES_COMMANDES_INSTANCE_PAR_INSTANCE.md) ou
+[version texte à copier](TOUTES_COMMANDES_INSTANCE_PAR_INSTANCE.txt).
+Chaque ligne compare les deux moteurs sur une instance : 56 cas à 100 clients
+et 60 cas à 1000 clients. Lancer uniquement la ligne choisie.
+
 ## 1. Récupérer la bonne version sur le portable
 
 Deux possibilités : extraire intégralement le ZIP, ou cloner cette branche :

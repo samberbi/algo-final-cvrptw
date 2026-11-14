@@ -1,5 +1,13 @@
 # Progression — finalisation CVRPTW CESI
 
+## 14 novembre 2026 — commandes exhaustives instance par instance
+
+- 116 commandes individuelles enregistrées en Markdown et texte dans le dossier
+  `test a executer dans la soutenance` : 56 instances/100 clients à cinq secondes,
+  60 instances/1000 clients à trente secondes, deux moteurs par commande.
+- Les commandes sont vérifiées contre le catalogue local et le parseur du CLI,
+  sans relancer les résolutions. Chaque lot garde son propre label et ses figures.
+
 ## 14 novembre 2026 — graphiques automatiques après chaque lot de tests
 
 - Chaque couple instance/taille/graine produit une figure de convergence et
